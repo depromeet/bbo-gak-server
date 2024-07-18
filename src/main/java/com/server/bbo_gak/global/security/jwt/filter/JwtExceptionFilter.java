@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class JwtExceptionFilter extends OncePerRequestFilter {
@@ -18,37 +19,35 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (JwtException ex) {
-            String message = ex.getMessage();
-            logger.error(ex);
-            if (ErrorCode.UNKNOWN_ERROR.getMessage().equals(message)) {
-                setResponse(response, ErrorCode.UNKNOWN_ERROR);
-            }
-            //잘못된 타입의 토큰인 경우
-            else if (ErrorCode.WRONG_TYPE_TOKEN.getMessage().equals(message)) {
-                setResponse(response, ErrorCode.WRONG_TYPE_TOKEN);
-            }
-            //Access 토큰 만료된 경우
-            else if (ErrorCode.EXPIRED_ACCESS_TOKEN.getMessage().equals(message)) {
-                setResponse(response, ErrorCode.EXPIRED_ACCESS_TOKEN);
-            }
-            //Refresh 토큰 만료된 경우
-            else if (ErrorCode.EXPIRED_REFRESH_TOKEN.getMessage().equals(message)) {
-                setResponse(response, ErrorCode.EXPIRED_REFRESH_TOKEN);
-            }
-            //지원되지 않는 토큰인 경우
-            else if (ErrorCode.UNSUPPORTED_TOKEN.getMessage().equals(message)) {
-                setResponse(response, ErrorCode.UNSUPPORTED_TOKEN);
-            } else {
-                setResponse(response, ErrorCode.ACCESS_DENIED);
-            }
+            setResponse(response, getJwtExceptionErrorCode(ex));
         } catch (NumberFormatException ex) {
             setResponse(response, ErrorCode.TOKEN_SUBJECT_FORMAT_ERROR);
         }
     }
 
-    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws RuntimeException, IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(errorCode.getStatus().value());
-        response.getWriter().print(errorCode.getMessage());
+    private ErrorCode getJwtExceptionErrorCode(JwtException ex) {
+        ErrorCode[] errorCodes = {
+            ErrorCode.UNKNOWN_ERROR,
+            ErrorCode.WRONG_TYPE_TOKEN,
+            ErrorCode.EXPIRED_ACCESS_TOKEN,
+            ErrorCode.EXPIRED_REFRESH_TOKEN,
+            ErrorCode.UNSUPPORTED_TOKEN
+        };
+
+        return Arrays.stream(errorCodes)
+            .filter(errorCode -> errorCode.getMessage().equals(ex.getMessage()))
+            .findFirst()
+            .orElse(ErrorCode.ACCESS_DENIED);
+    }
+
+    private void setResponse(HttpServletResponse response, ErrorCode errorCode) {
+        try {
+            logger.error(errorCode.getMessage());
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(errorCode.getStatus().value());
+            response.getWriter().print(errorCode.getMessage());
+        } catch (IOException e) {
+            logger.error("Error setting response : ", e);
+        }
     }
 }

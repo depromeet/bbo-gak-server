@@ -35,34 +35,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String refreshTokenHeaderValue = extractRefreshTokenFromHeader(request);
 
         AccessTokenDto accessTokenDto;
-        //accessToken이 헤더에 존재하면
-        if (accessTokenHeaderValue != null) {
 
-            try {
-                if (jwtTokenService.validateAccessToken(accessTokenHeaderValue)) {
-                    //AccessToken이 유효하므로 SecurityContextHolder에 유저 정보를 저장합니다.
-                    accessTokenDto = jwtTokenService.retrieveAccessToken(accessTokenHeaderValue);
-                    setAuthenticationToContext(accessTokenDto.memberId(), accessTokenDto.role());
-                }
-            } catch (ExpiredJwtException e) {
-                if (refreshTokenHeaderValue == null) {
-                    //Access Token 만료되고 refresh Token이 헤더에 없는 경우
-                    throw new JwtException(ErrorCode.AT_EXPIRED_AND_RT_NOT_FOUND.getMessage());
-                } else if (jwtTokenService.validateRefreshToken(refreshTokenHeaderValue)) {
-                    // 어세스 토큰이 만료된 상황 && 리프레시 토큰 또한 존재하는 상황
-                    boolean isRefreshToken = jwtTokenService.existsRefreshToken(refreshTokenHeaderValue);
-                    if (isRefreshToken) {
-                        TokenDto tokenDto = jwtTokenService.recreateTokenDto(refreshTokenHeaderValue);
+        if (accessTokenHeaderValue == null) {
+            filterChain.doFilter(request, response); //AT null
+        }
 
-                        //Refresh, Access Token을 헤더에 넣어 전송합니다 (GET 요청시에는 body가 없기 때문에)
-                        jwtTokenService.setHeaderAccessToken(response, tokenDto.accessToken());
-                        jwtTokenService.setHeaderRefreshToken(response, tokenDto.refreshToken());
+        try {
+            if (jwtTokenService.validateAccessToken(accessTokenHeaderValue)) {
+                //AT 유효
+                accessTokenDto = jwtTokenService.retrieveAccessToken(accessTokenHeaderValue);
+                setAuthenticationToContext(accessTokenDto.memberId(), accessTokenDto.role());
+            }
+        } catch (ExpiredJwtException e) {
+            if (refreshTokenHeaderValue == null) {
+                throw new JwtException(ErrorCode.AT_EXPIRED_AND_RT_NOT_FOUND.getMessage()); //AT 만료 RT null
+            }
 
-                        //Refresh Token으로 발급한 AccessToken으로 유저 정보를 저장합니다.
-                        accessTokenDto = jwtTokenService.retrieveAccessToken(tokenDto.accessToken());
-                        setAuthenticationToContext(accessTokenDto.memberId(), accessTokenDto.role());
-                    }
-                }
+            if (jwtTokenService.validateRefreshToken(refreshTokenHeaderValue)) {
+                // AT 만료 && RT 유효
+                TokenDto tokenDto = jwtTokenService.recreateTokenDto(refreshTokenHeaderValue);
+
+                //Refresh, Access Token을 헤더에 넣어 전송합니다 (GET 요청시에는 body가 없기 때문에)
+                jwtTokenService.setHeaderAccessToken(response, tokenDto.accessToken());
+                jwtTokenService.setHeaderRefreshToken(response, tokenDto.refreshToken());
+
+                accessTokenDto = jwtTokenService.retrieveAccessToken(tokenDto.accessToken());
+                setAuthenticationToContext(accessTokenDto.memberId(), accessTokenDto.role());
             }
         }
         filterChain.doFilter(request, response);
