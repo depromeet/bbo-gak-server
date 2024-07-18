@@ -1,16 +1,17 @@
 package com.server.bbo_gak.global.error;
 
-import com.vivid.apiserver.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.error.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {
 
     private String message;
-    private int status;
+    private HttpStatus status;
 
     private ErrorResponse(final ErrorCode code) {
         this.message = code.getMessage();
