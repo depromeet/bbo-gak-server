@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -16,4 +16,6 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> memberInfo() {
         return ResponseEntity.ok().body(null);
     }
+
+
 }
