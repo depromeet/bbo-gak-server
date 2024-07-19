@@ -1,5 +1,6 @@
 package com.server.bbo_gak.global.security.jwt.service;
 
+import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
@@ -117,7 +118,13 @@ public class JwtTokenService {
         return refreshTokenRepository.existsRefreshTokenByToken(refreshToken);
     }
 
-    public TokenDto recreateTokenDto(String refreshToken) {
+    public TokenDto recreateTokenDtoAtInValidate(User user) {
+        refreshTokenRepository.deleteById(user.getId());
+
+        return createTokenDto(user.getId(), user.getRole());
+    }
+
+    public TokenDto recreateTokenDtoAtValidate(String refreshToken) {
         Jws<Claims> claims = jwtUtil.getRefreshTokenClaims(refreshToken);
         Long memberId = Long.parseLong(claims.getBody().getSubject());
         UserRole role = UserRole.findByKey(claims.getBody().get(TOKEN_ROLE_NAME, String.class));

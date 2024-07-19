@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtTokenService.validateRefreshToken(refreshTokenHeaderValue)) {
                 // AT 만료 && RT 유효
-                TokenDto tokenDto = jwtTokenService.recreateTokenDto(refreshTokenHeaderValue);
+                TokenDto tokenDto = jwtTokenService.recreateTokenDtoAtValidate(refreshTokenHeaderValue);
 
                 //Refresh, Access Token을 헤더에 넣어 전송합니다 (GET 요청시에는 body가 없기 때문에)
                 jwtTokenService.setHeaderAccessToken(response, tokenDto.accessToken());
