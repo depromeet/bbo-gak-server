@@ -11,25 +11,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class PrincipalDetails implements UserDetails {
 
-    private final String loginId;
 
-    private final String password;
-
-    private final Long memberId;
+    private final Long userId;
 
     private final UserRole role;
 
     @Builder
-    public PrincipalDetails(String loginId, String password, Long memberId, UserRole role) {
-        this.loginId = loginId;
-        this.password = password;
-        this.memberId = memberId;
+    public PrincipalDetails(Long userId, UserRole role) {
+        this.userId = userId;
         this.role = role;
     }
 
-    public static PrincipalDetails ofJwt(Long memberId, UserRole role) {
+    public static PrincipalDetails ofJwt(Long userId, UserRole role) {
         return PrincipalDetails.builder()
-            .memberId(memberId)
+            .userId(userId)
             .role(role)
             .build();
     }
@@ -43,12 +38,12 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return loginId;
+        return userId.toString();
     }
 
     @Override
@@ -71,7 +66,4 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
-    public Long getMemberId() {
-        return memberId;
-    }
 }

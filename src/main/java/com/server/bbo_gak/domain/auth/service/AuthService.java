@@ -1,10 +1,15 @@
 package com.server.bbo_gak.domain.auth.service;
 
+import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
+import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
+import org.springframework.stereotype.Service;
+
+@Service
 public interface AuthService {
 
-    void login();
+    TokenDto login(LoginRequest request);
 
-    void logout();
+    void logout(User user);
 
-    void socialLogin();
 }
