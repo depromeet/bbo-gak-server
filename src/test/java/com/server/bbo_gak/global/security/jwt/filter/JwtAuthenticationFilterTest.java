@@ -117,7 +117,6 @@ public class JwtAuthenticationFilterTest {
         when(jwtTokenService.validateAccessToken(expiredAccessToken)).thenThrow(
             new ExpiredJwtException(null, null, "Expired"));
         when(jwtTokenService.validateRefreshToken(validRefreshToken)).thenReturn(true);
-        when(jwtTokenService.existsRefreshToken(validRefreshToken)).thenReturn(true);
         when(jwtTokenService.recreateTokenDto(validRefreshToken)).thenReturn(tokenDto);
         when(jwtTokenService.retrieveAccessToken(tokenDto.accessToken())).thenReturn(accessTokenDto);
 
@@ -128,7 +127,6 @@ public class JwtAuthenticationFilterTest {
 
         verify(jwtTokenService, times(1)).validateAccessToken(expiredAccessToken);
         verify(jwtTokenService, times(1)).validateRefreshToken(validRefreshToken);
-        verify(jwtTokenService, times(1)).existsRefreshToken(validRefreshToken);
         verify(jwtTokenService, times(1)).recreateTokenDto(validRefreshToken);
         verify(jwtTokenService, times(1)).retrieveAccessToken(tokenDto.accessToken());
     }

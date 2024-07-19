@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: security, datasource
+    include: security, datasource, aws
 
 logging:
   level:
