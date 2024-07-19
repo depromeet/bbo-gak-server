@@ -42,9 +42,9 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     }
 
     private Long getCurrentMemberId() {
-        PrincipalDetails customUserDetails =
-            (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         try {
+            PrincipalDetails customUserDetails =
+                (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             return Long.valueOf(customUserDetails.getUsername());
         } catch (Exception e) {
             throw new BusinessException(ErrorCode.AUTH_NOT_FOUND);

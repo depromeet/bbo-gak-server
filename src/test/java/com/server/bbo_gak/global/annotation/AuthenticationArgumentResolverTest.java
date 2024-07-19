@@ -1,4 +1,4 @@
-package com.server.bbo_gak.global.utils;
+package com.server.bbo_gak.global.annotation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -19,17 +19,21 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
-class UserUtilTest {
+class AuthenticationArgumentResolverTest {
 
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserUtil userUtil;
+    private AuthenticationArgumentResolver resolver;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +41,7 @@ class UserUtilTest {
     }
 
     @Test
-    void Auth에서_현재_유저_가져오기() {
+    void Auth에서_현재_유저_가져오기() throws Exception {
         // Given
         User user = new User("name", "testUser", UserRole.USER);
         setField(user, "id", 1L); // 리플렉션을 사용하여 ID 설정
@@ -54,8 +58,13 @@ class UserUtilTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
+        MethodParameter parameter = mock(MethodParameter.class);
+        ModelAndViewContainer mavContainer = mock(ModelAndViewContainer.class);
+        NativeWebRequest webRequest = mock(NativeWebRequest.class);
+        WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
+
         // When
-        User result = userUtil.getCurrentUser();
+        User result = resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
 
         // Then
         assertEquals(user, result);
@@ -71,6 +80,12 @@ class UserUtilTest {
         SecurityContextHolder.setContext(securityContext);
 
         // When & Then
-        assertThrows(BusinessException.class, () -> userUtil.getCurrentUser());
+        assertThrows(BusinessException.class, () -> {
+            MethodParameter parameter = mock(MethodParameter.class);
+            ModelAndViewContainer mavContainer = mock(ModelAndViewContainer.class);
+            NativeWebRequest webRequest = mock(NativeWebRequest.class);
+            WebDataBinderFactory binderFactory = mock(WebDataBinderFactory.class);
+            resolver.resolveArgument(parameter, mavContainer, webRequest, binderFactory);
+        });
     }
 }
