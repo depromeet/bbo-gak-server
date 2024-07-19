@@ -1,0 +1,85 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "뽀각 API 문서",
+    "description" : "뽀각 API 문서입니다.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/users/test/login" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "summary" : "로그인 테스트-jwt 토큰 생성",
+        "description" : "로그인 테스트-jwt 토큰 생성",
+        "operationId" : "login",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginRequest.Post"
+              },
+              "examples" : {
+                "login" : {
+                  "value" : "{\n  \"loginId\" : \"loginId\",\n  \"password\" : \"password\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenDto.Post"
+                },
+                "examples" : {
+                  "login" : {
+                    "value" : "{\n  \"accessToken\" : \"accessToken\",\n  \"refreshToken\" : \"refreshToken\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "LoginRequest.Post" : {
+        "title" : "LoginRequest.Post",
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string",
+            "description" : "비밀번호"
+          },
+          "loginId" : {
+            "type" : "string",
+            "description" : "로그인 id"
+          }
+        }
+      },
+      "TokenDto.Post" : {
+        "title" : "TokenDto.Post",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "access token"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "refresh token"
+          }
+        }
+      }
+    }
+  }
+}
