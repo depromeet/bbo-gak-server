@@ -27,12 +27,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
-    private String[] allowUrls = {"/", "/api/v1/users"};
+    private String[] allowUrls = {"/", "/api/v1/users/test/**"};
 
     @Bean
     public WebSecurityCustomizer configure() {
         // filter 안타게 무시
-        return (web) -> web.ignoring().requestMatchers("/");
+        return (web) -> web.ignoring().requestMatchers(allowUrls);
     }
 
     @Bean

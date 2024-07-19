@@ -6,9 +6,4 @@ class CardImageServiceImpl implements CardImageService {
     public void addImage() {
 
     }
-
-    @Override
-    public void deleteImage() {
-        
-    }
 }

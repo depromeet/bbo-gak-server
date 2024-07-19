@@ -4,6 +4,4 @@ public interface CardImageService {
 
     void addImage();
 
-    void deleteImage();
-    
 }
