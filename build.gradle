@@ -43,7 +43,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'com.h2database:h2'
     testImplementation 'com.h2database:h2'
-    
+
     // Test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -83,6 +83,9 @@ tasks.withType(GenerateSwaggerUI) {
     }
 }
 
+build {
+    dependsOn(':openapi3')
+}
 
 //openAPI 작성 자동화를 위해 패키징 전에 openapi3 테스크 선실행을 유발
 bootJar {
