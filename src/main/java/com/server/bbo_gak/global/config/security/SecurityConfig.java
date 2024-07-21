@@ -27,7 +27,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
-    private String[] allowUrls = {"/", "/api/v1/users/test/**"};
+    private String[] allowUrls = {"/", "/api/v1/users", "/docs/**", "/v3/**", "/favicon.ico"};
 
     @Bean
     public WebSecurityCustomizer configure() {

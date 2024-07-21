@@ -14,3 +14,17 @@ spring:
       properties:
         hibernate:
           format_sql: true
+
+cloud:
+  aws:
+    s3:
+      bucket: test
+      signature-version: AWS4-HMAC-SHA256ㅌ
+    credentials:
+      access-key: test
+      secret-key: test
+    region:
+      static: test
+      auto: false
+    stack:
+      auto: false

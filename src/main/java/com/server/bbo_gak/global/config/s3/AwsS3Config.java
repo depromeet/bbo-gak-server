@@ -1,4 +1,4 @@
-package com.server.bbo_gak.global.infra.s3;
+package com.server.bbo_gak.global.config.s3;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

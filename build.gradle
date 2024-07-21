@@ -1,8 +1,17 @@
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.17.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
-    id "org.asciidoctor.jvm.convert" version "3.3.2" //(1)
+    //restdocs-api-spec → restdocs extension  포함함
+    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+    //swagger generator 플러그인 추가
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.server'
@@ -15,7 +24,7 @@ java {
 }
 
 configurations {
-    asciidoctorExt //(2)
+    asciidoctorExt
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -32,14 +41,16 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'com.h2database:h2'
+    testImplementation 'com.h2database:h2'
 
     // Test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor' //(3)
-    testImplementation('org.springframework.restdocs:spring-restdocs-mockmvc') //(4)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
@@ -47,30 +58,52 @@ dependencies {
 
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-}
 
+    //swagger UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-ext { //(5)
-    snippetsDir = file('build/generated-snippets')
-}
+    //spring rest docs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-test { //(6)
-    outputs.dir snippetsDir
-}
-
-asciidoctor {
-    inputs.dir snippetsDir //(7)
-    configurations 'asciidoctorExt' //(8)
-    dependsOn test //(9)
+    //restdocs-api-spec 의존성 추가
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:' + restdocsApiSpecVersion
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-bootJar {
-    dependsOn asciidoctor
-    from("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
+// Task 및 설정 추가
+// GenerateSwaggerUI 태스크가, openapi3 task 를 의존하도록 설정
+tasks.withType(GenerateSwaggerUI) {
+    dependsOn 'openapi3'
+
+    //기존 파일 삭제했다가, build 에 출력한 json 정적파일 복사 (안해도 됨 → local 확인용)
+    delete file('src/main/resources/static/docs/')
+    copy {
+        from "build/resources/main/static/docs"
+        into "src/main/resources/static/docs/"
     }
 }
+
+build {
+    dependsOn(':openapi3')
+}
+
+//openAPI 작성 자동화를 위해 패키징 전에 openapi3 테스크 선실행을 유발
+bootJar {
+    dependsOn(':openapi3')
+}
+
+openapi3 {
+    server = "http://localhost:8080"
+    title = "뽀각 API 문서"
+    description = "뽀각 API 문서입니다."
+    version = "0.0.1"
+    outputFileNamePrefix = 'open-api-3.0.1'
+    format = 'json'
+
+    // /static/docs/open-api-3.0.1.json 생성 → jar 파일만 배포할 예정이기에 build 에 출력
+    outputDirectory = 'build/resources/main/static/docs'
+}
+

@@ -28,6 +28,9 @@ public enum ErrorCode {
     //User
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 유저를 찾을 수 없습니다."),
 
+    //Image
+    IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
+
     ;
     private final HttpStatus status;
     private final String message;

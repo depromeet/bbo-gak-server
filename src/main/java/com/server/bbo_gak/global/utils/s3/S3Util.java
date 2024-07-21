@@ -1,4 +1,4 @@
-package com.server.bbo_gak.global.infra.s3;
+package com.server.bbo_gak.global.utils.s3;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class S3Utils {
+public class S3Util {
 
     private final AmazonS3 amazonS3;
 
@@ -29,7 +29,7 @@ public class S3Utils {
     }
 
     private Date getPreSignedUrlExpiration() {
-        int PRESIGNED_EXPIRATION = 1000 * 60 * 30; //30분
+        final int PRESIGNED_EXPIRATION = 1000 * 60 * 30; //30분
 
         Date expiration = new Date();
         var expTimeMillis = expiration.getTime();
