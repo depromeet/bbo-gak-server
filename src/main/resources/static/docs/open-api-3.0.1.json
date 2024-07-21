@@ -1,0 +1,123 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "뽀각 API 문서",
+    "description" : "뽀각 API 문서입니다.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8080"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/users/test/login" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "로그인 테스트 - jwt 생성",
+        "description" : "로그인 테스트 - jwt 생성",
+        "operationId" : "비밀번호_실패성공아이디_없음",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginRequest.Post"
+              },
+              "examples" : {
+                "비밀번호_실패" : {
+                  "value" : "{\n  \"loginId\" : \"test\",\n  \"password\" : \"wrong\"\n}"
+                },
+                "아이디_없음" : {
+                  "value" : "{\n  \"loginId\" : \"wrong\",\n  \"password\" : \"test123\"\n}"
+                },
+                "성공" : {
+                  "value" : "{\n  \"loginId\" : \"test\",\n  \"password\" : \"test123\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "비밀번호_실패" : {
+                    "value" : "{\n  \"message\" : \"비밀번호를 잘못 입력하셨습니다.\",\n  \"status\" : \"BAD_REQUEST\"\n}"
+                  },
+                  "아이디_없음" : {
+                    "value" : "{\n  \"message\" : \"해당 유저를 찾을 수 없습니다.\",\n  \"status\" : \"BAD_REQUEST\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenDto.Post"
+                },
+                "examples" : {
+                  "성공" : {
+                    "value" : "{\n  \"accessToken\" : \"accessToken\",\n  \"refreshToken\" : \"refreshToken\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "ErrorResponse" : {
+        "title" : "ErrorResponse",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "에러 메시지"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "HTTP 상태 코드"
+          }
+        }
+      },
+      "LoginRequest.Post" : {
+        "title" : "LoginRequest.Post",
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string",
+            "description" : "비밀번호"
+          },
+          "loginId" : {
+            "type" : "string",
+            "description" : "로그인 id"
+          }
+        }
+      },
+      "TokenDto.Post" : {
+        "title" : "TokenDto.Post",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "access token"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "refresh token"
+          }
+        }
+      }
+    }
+  }
+}

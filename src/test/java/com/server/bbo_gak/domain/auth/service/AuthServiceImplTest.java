@@ -14,6 +14,7 @@ import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
+import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import com.server.bbo_gak.global.security.jwt.entity.RefreshTokenRepository;
@@ -61,7 +62,7 @@ class AuthServiceImplTest {
 
         LoginRequest request = new LoginRequest("testUser", "password");
 
-        assertThrows(IllegalArgumentException.class, () -> authService.login(request));
+        assertThrows(BusinessException.class, () -> authService.login(request));
     }
 
     @Test
