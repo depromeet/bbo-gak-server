@@ -1,6 +1,12 @@
 spring:
   profiles:
-    include: security, datasource
+    group:
+      test: "test"
+      local: "local, datasource"
+    include:
+      - security
+      - swagger
+
 
 logging:
   level:

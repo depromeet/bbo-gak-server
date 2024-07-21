@@ -4,6 +4,7 @@ import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -26,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
             .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         if (!request.password().equals(authTestUser.getPassword())) {
-            throw new IllegalArgumentException(ErrorCode.PASSWORD_NOT_MATCHES.getMessage());
+            throw new BusinessException(ErrorCode.PASSWORD_NOT_MATCHES);
         }
         if (refreshTokenRepository.existsRefreshTokenByMemberId(authTestUser.getId())) {
             refreshTokenRepository.deleteById(authTestUser.getId());
