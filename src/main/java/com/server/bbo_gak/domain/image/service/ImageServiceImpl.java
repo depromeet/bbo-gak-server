@@ -32,9 +32,9 @@ public class ImageServiceImpl implements ImageService {
             .collect(Collectors.toList());
     }
 
-    private ImageUploadResponse getImageUploadResponse(Long memberId, FileExtension extension, String imageKey) {
+    private ImageUploadResponse getImageUploadResponse(Long userId, FileExtension extension, String imageKey) {
         String fileName = createImageFileName(
-            memberId,
+            userId,
             imageKey,
             extension
         );
@@ -45,7 +45,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private String createImageFileName(
-        Long memberId,
+        Long userId,
         String imageKey,
         FileExtension fileExtension
     ) {
@@ -53,7 +53,7 @@ public class ImageServiceImpl implements ImageService {
             +
             "/"
             +
-            memberId
+            userId
             +
             "/"
             +
