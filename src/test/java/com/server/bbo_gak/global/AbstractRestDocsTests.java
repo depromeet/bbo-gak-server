@@ -1,15 +1,26 @@
 package com.server.bbo_gak.global;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.domain.user.entity.UserRepository;
+import com.server.bbo_gak.domain.user.entity.UserRole;
+import com.server.bbo_gak.global.security.PrincipalDetails;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,16 +34,27 @@ public abstract class AbstractRestDocsTests {
 
     @Autowired
     protected WebApplicationContext context;
-
     @Autowired
     protected ObjectMapper objectMapper;
-
     @Autowired
     protected MockMvc mockMvc;
+    @MockBean
+    private UserRepository userRepository;
 
     @BeforeEach
-    void setUp(
-        final RestDocumentationContextProvider restDocumentation) {
+    void setUp(final RestDocumentationContextProvider restDocumentation) {
+        UserDetails userDetails = PrincipalDetails.ofJwt(1L, UserRole.USER);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+            userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        User mockUser = User.builder()
+            .id(1L)
+            .role(UserRole.USER)
+            .build();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(documentationConfiguration(restDocumentation))
             .alwaysDo(MockMvcResultHandlers.print())
