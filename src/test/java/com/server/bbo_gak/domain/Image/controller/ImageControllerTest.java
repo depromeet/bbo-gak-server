@@ -65,7 +65,7 @@ public class ImageControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andDo(
-                    MockMvcRestDocumentationWrapper.document("presigned-urls-성공",
+                    MockMvcRestDocumentationWrapper.document("[presigned-urls] 성공",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
@@ -103,7 +103,7 @@ public class ImageControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
                 .andDo(
-                    MockMvcRestDocumentationWrapper.document("presigned-urls-실패-유효하지않은파일이름",
+                    MockMvcRestDocumentationWrapper.document("[presigned-urls] 실패-유효하지않은파일이름",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(

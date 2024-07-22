@@ -12,6 +12,7 @@ import com.server.bbo_gak.global.security.jwt.entity.RefreshTokenRepository;
 import com.server.bbo_gak.global.security.jwt.service.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenService tokenService;
 
     @Override
+    @Transactional
     public TokenDto login(LoginRequest request) {
         AuthTestUser authTestUser = authTestUserRepository.findByLoginId(request.loginId())
             .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
@@ -36,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void logout(User user) {
         if (refreshTokenRepository.existsRefreshTokenByMemberId(user.getId())) {
             refreshTokenRepository.deleteById(user.getId());

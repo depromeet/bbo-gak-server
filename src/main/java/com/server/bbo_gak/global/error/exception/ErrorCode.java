@@ -26,11 +26,14 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호를 잘못 입력하셨습니다."),
 
     //User
-    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 유저를 찾을 수 없습니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
 
     //Image
     IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
+    IMAGE_FILE_NOT_FOUND_IN_S3(HttpStatus.NOT_FOUND, "해당 파일은 S3내에 존재하지 않습니다"),
 
+    //Card
+    CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다"),
     ;
     private final HttpStatus status;
     private final String message;
