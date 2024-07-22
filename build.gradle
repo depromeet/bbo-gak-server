@@ -96,7 +96,7 @@ bootJar {
 }
 
 openapi3 {
-    server = "http://localhost:8080"
+    server = "http://114.70.23.79:8080"
     title = "뽀각 API 문서"
     description = "뽀각 API 문서입니다."
     version = "0.0.1"
