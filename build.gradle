@@ -71,7 +71,6 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-    systemProperty 'spring.profiles.active', 'test'
 }
 
 // Task 및 설정 추가
