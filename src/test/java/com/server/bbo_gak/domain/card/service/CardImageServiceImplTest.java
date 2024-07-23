@@ -2,6 +2,7 @@ package com.server.bbo_gak.domain.card.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -17,7 +18,6 @@ import com.server.bbo_gak.domain.card.dto.request.CardImageDeleteRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardImageUploadCompleteRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardImageUploadCompleteResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
-import com.server.bbo_gak.domain.card.entity.CardImage;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.utils.s3.S3Util;
 import java.util.Arrays;
@@ -99,7 +99,7 @@ public class CardImageServiceImplTest {
             assertEquals("https://example.com/card/1/file1.png", responses.get(0).staticUrl());
             assertEquals("https://example.com/card/1/file2.png", responses.get(1).staticUrl());
 
-            verify(cardImageRepository, times(2)).save(any(CardImage.class));
+            verify(cardImageRepository).saveAll(anyList());
         }
 
         @Test

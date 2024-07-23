@@ -11,7 +11,6 @@ import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.utils.s3.S3Util;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +29,16 @@ class CardImageServiceImpl implements CardImageService {
         Card card = cardRepository.findById(request.cardId())
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
+        List<CardImage> cardImageList = request.fileNames().stream()
+            .map(fileName -> CardImage.of(card, fileName))
+            .toList();
+
+        cardImageRepository.saveAll(cardImageList);
+
         return request.fileNames().stream()
-            .map(fileName -> {
-                CardImage cardImage = CardImage.of(card, fileName);
-                cardImageRepository.save(cardImage);
-                return new CardImageUploadCompleteResponse(s3Util.getS3ObjectUrl(fileName));
-            })
-            .collect(Collectors.toList());
+            .map(s3Util::getS3ObjectUrl)
+            .map(CardImageUploadCompleteResponse::new)
+            .toList();
     }
 
     @Override
