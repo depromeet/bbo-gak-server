@@ -34,7 +34,11 @@ public enum ErrorCode {
 
     //Card
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다"),
-    ;
+    CARD_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입을 찾을 수 없습니다"),
+
+    //Tag
+    TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다"),
+    TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다.");
     private final HttpStatus status;
     private final String message;
 

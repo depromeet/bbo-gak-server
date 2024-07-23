@@ -1,5 +1,6 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CardTag {
+public class CardTag extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,9 @@ public class CardTag {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    public CardTag(Card card, Tag tag) {
+        this.card = card;
+        this.tag = tag;
+    }
 }

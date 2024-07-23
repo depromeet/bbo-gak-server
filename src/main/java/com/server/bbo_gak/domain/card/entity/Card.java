@@ -1,5 +1,6 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Card {
+public class Card extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,8 @@ public class Card {
 
     private LocalDateTime accessTime;
 
+    private Long userId;
+
     @Enumerated(EnumType.STRING)
     private CardType cardType;
 
@@ -43,10 +46,31 @@ public class Card {
     private List<CardImage> cardImageList = new ArrayList<>();
 
     @Builder
-    public Card(String title, String content, LocalDateTime accessTime, CardType cardType) {
+    public Card(String title, String content, LocalDateTime accessTime, CardType cardType, Long userId) {
         this.title = title;
         this.content = content;
         this.accessTime = accessTime;
         this.cardType = cardType;
+        this.userId = userId;
     }
+
+    public static Card creatEmptyCard(String type, Long userId) {
+        return Card.builder()
+            .title("")
+            .content("")
+            .userId(userId)
+            .cardType(CardType.findByValue(type))
+            .accessTime(LocalDateTime.now())
+            .build();
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+
 }
