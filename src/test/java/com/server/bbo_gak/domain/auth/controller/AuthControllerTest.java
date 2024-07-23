@@ -62,7 +62,7 @@ public class AuthControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isOk())
                 .andDo(
-                    MockMvcRestDocumentationWrapper.document("성공",
+                    MockMvcRestDocumentationWrapper.document("[로그인] 성공",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
@@ -102,7 +102,7 @@ public class AuthControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON)
                 ).andExpect(status().isBadRequest())
                 .andDo(
-                    MockMvcRestDocumentationWrapper.document("비밀번호_실패",
+                    MockMvcRestDocumentationWrapper.document("[로그인] 비밀번호_실패",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(
@@ -139,9 +139,9 @@ public class AuthControllerTest extends AbstractRestDocsTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidLoginRequest)) // 요청 본문 추가
                         .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isBadRequest())
+                ).andExpect(status().isNotFound())
                 .andDo(
-                    MockMvcRestDocumentationWrapper.document("아이디_없음",
+                    MockMvcRestDocumentationWrapper.document("[로그인] 아이디_없음",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(

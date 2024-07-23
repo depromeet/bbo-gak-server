@@ -1,0 +1,13 @@
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET}
+      signature-version: AWS4-HMAC-SHA256
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+      auto: false
+    stack:
+      auto: false

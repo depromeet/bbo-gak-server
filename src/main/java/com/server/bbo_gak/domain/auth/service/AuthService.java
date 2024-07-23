@@ -11,4 +11,5 @@ public interface AuthService {
     TokenDto login(LoginRequest request);
 
     void logout(User user);
+
 }
