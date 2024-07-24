@@ -11,7 +11,6 @@ import lombok.Builder;
 public record CardGetsResponse(
     Long id,
     String title,
-    String content,
     String updateDate,
     List<CardTagResponse> cardTagList
 ) {
