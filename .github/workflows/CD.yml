@@ -1,0 +1,24 @@
+name: deploy-spring-server
+on:
+  push:
+    branches: master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy spring MainServer(master)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            cd ~/Desktop/ChaeDa_spring
+            git fetch origin master
+            git merge origin/master
+            ./gradlew build
+            docker rm desktop_back_1 --force
+            docker rmi desktop_back
+            cd ..
+            docker-compose up -d
