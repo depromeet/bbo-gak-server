@@ -4,6 +4,7 @@ spring:
     group:
       test: "test"
       local: "local, datasource"
+      dev: "dev, datasource"
     include:
       - security
       - swagger
