@@ -1,5 +1,8 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,9 +10,16 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CardType {
 
-    EXPERIENCE("경험 정리"),
+    EXPERIENCE("경험_정리"),
     PERSONAL_STATEMENT("자기소개서"),
-    INTERVIEW_QUESTION("면접 질문");
+    INTERVIEW_QUESTION("면접_질문");
 
     private final String value;
+
+    public static CardType findByValue(String value) {
+        return Arrays.stream(CardType.values())
+            .filter(cardType -> cardType.getValue().equals(value))
+            .findFirst()
+            .orElseThrow((() -> new NotFoundException(ErrorCode.CARD_TYPE_NOT_FOUND)));
+    }
 }

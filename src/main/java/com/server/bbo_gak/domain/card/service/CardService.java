@@ -1,25 +1,31 @@
 package com.server.bbo_gak.domain.card.service;
 
+import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardGetsResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
+import com.server.bbo_gak.domain.user.entity.User;
+import java.util.List;
+
 public interface CardService {
 
-    void getCardTypeCounts();
+    CardTypeCountGetResponse getCardTypeCounts(User user);
 
-    void getCardDetail();
+    CardGetResponse getCardDetail(User user, Long cardId);
 
-    void createCard();
+    List<CardGetsResponse> getCardList(User user, String type);
 
-    void getCardList();
-    
-    // TODO 저장 정책 상의 해봐야함.
-    void updateCardTitle();
+    CardCreateResponse createCard(User user, String type);
 
-    void updateCardBody();
+    void addCardTag(User user, Long cardId, Long tagId);
 
-    void updateCardType();
+    void deleteCardTag(User user, Long cardId, Long tagId);
 
-    void updateTag();
+    void updateCardTitle(User user, Long cardId, CardTitleUpdateRequest request);
 
-    void deleteCard();
+    void updateCardContent(User user, Long cardId, CardContentUpdateRequest request);
 
-
+    void deleteCard(User user, Long cardId);
 }

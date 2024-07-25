@@ -1,8 +1,9 @@
 package com.server.bbo_gak.domain.card.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,6 +24,11 @@ public class Tag {
     @Column(name = "tag_id")
     private Long id;
 
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tag")
     private List<CardTag> cardTagList = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private TagType tagType;
+
+    private String name;
 }
