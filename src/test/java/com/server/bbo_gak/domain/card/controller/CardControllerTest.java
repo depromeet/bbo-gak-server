@@ -319,6 +319,8 @@ public class CardControllerTest extends AbstractRestDocsTests {
                 );
 
             assertFalse(cardRepository.findById(1L).isPresent());
+            assertFalse(cardTagRepository.findById(1L).isPresent());
+            assertFalse(cardTagRepository.findById(2L).isPresent());
         }
     }
 

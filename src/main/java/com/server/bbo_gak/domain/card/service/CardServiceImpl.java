@@ -113,6 +113,7 @@ public class CardServiceImpl implements CardService {
         Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
+        cardTagRepository.deleteAll(card.getCardTagList());
         cardRepository.delete(card);
     }
 
