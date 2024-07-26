@@ -6,44 +6,10 @@
     "version" : "0.0.1"
   },
   "servers" : [ {
-    "url" : "http://114.70.23.79:8080"
+    "url" : "http://localhost:8080"
   } ],
   "tags" : [ ],
   "paths" : {
-    "/api/v1/card" : {
-      "post" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 신규 생성",
-        "description" : "카드 신규 생성",
-        "operationId" : "[create] 카드_신규_생성",
-        "parameters" : [ {
-          "name" : "type",
-          "in" : "query",
-          "description" : "타입",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CardCreateResponse"
-                },
-                "examples" : {
-                  "[create] 카드_신규_생성" : {
-                    "value" : "{\n  \"cardId\" : 4,\n  \"type\" : \"경험_정리\"\n}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/card-images" : {
       "delete" : {
         "tags" : [ "CardImage" ],
@@ -91,40 +57,6 @@
           },
           "204" : {
             "description" : "204"
-          }
-        }
-      }
-    },
-    "/api/v1/cards" : {
-      "get" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 리스트 조회",
-        "description" : "카드 리스트 조회",
-        "operationId" : "[select] 카드_리스트_조회",
-        "parameters" : [ {
-          "name" : "type",
-          "in" : "query",
-          "description" : "타입",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CardGetsResponse"
-                },
-                "examples" : {
-                  "[select] 카드_리스트_조회" : {
-                    "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"test_title\",\n  \"updateDate\" : \"2024-07-24 21:22:08\",\n  \"cardTagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}, {\n  \"id\" : 2,\n  \"title\" : \"testc\",\n  \"updateDate\" : \"1970-01-01 00:00:00\",\n  \"cardTagList\" : [ {\n    \"id\" : 3,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n} ]"
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -192,85 +124,6 @@
         }
       }
     },
-    "/api/v1/cards/type-count" : {
-      "get" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 타입 카운트 조회",
-        "description" : "카드 타입 카운트 조회",
-        "operationId" : "[select] 카드_타입_카운트_조회",
-        "responses" : {
-          "200" : {
-            "description" : "200",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CardTypeCountGetResponse"
-                },
-                "examples" : {
-                  "[select] 카드_타입_카운트_조회" : {
-                    "value" : "{\n  \"경험_정리\" : 2,\n  \"자기소개서\" : 1,\n  \"면접_질문\" : 0\n}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/cards/{card-id}" : {
-      "get" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 단건 조회",
-        "description" : "카드 단건 조회",
-        "operationId" : "[select] 카드_단건_조회",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "card-id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/CardGetResponse"
-                },
-                "examples" : {
-                  "[select] 카드_단건_조회" : {
-                    "value" : "{\n  \"title\" : \"test_title\",\n  \"content\" : \"test_contents\",\n  \"updateDate\" : \"2024-07-24 21:22:08\",\n  \"type\" : \"경험_정리\",\n  \"cardTagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 삭제",
-        "description" : "카드 삭제",
-        "operationId" : "[delete] 카드_삭제",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "Card id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200"
-          }
-        }
-      }
-    },
     "/api/v1/images/presigned-urls" : {
       "post" : {
         "tags" : [ "image" ],
@@ -324,78 +177,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/v1/cards/{card-id}/content" : {
-      "put" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 본문 수정",
-        "description" : "카드 본문 수정",
-        "operationId" : "[update] 카드_본문_수정",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "Card id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json;charset=UTF-8" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CardContentUpdateRequest"
-              },
-              "examples" : {
-                "[update] 카드_본문_수정" : {
-                  "value" : "{\n  \"content\" : \"test content\"\n}"
-                }
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "200"
-          }
-        }
-      }
-    },
-    "/api/v1/cards/{card-id}/title" : {
-      "put" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 제목 수정",
-        "description" : "카드 제목 수정",
-        "operationId" : "[update] 카드_제목_수정",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "Card id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json;charset=UTF-8" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CardTitleUpdateRequest"
-              },
-              "examples" : {
-                "[update] 카드_제목_수정" : {
-                  "value" : "{\n  \"title\" : \"test title\"\n}"
-                }
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "200"
           }
         }
       }
@@ -474,68 +255,23 @@
           }
         }
       }
-    },
-    "/api/v1/cards/{card-id}/tag/{tag-id}" : {
-      "post" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 태그 추가",
-        "description" : "카드 태그 추가",
-        "operationId" : "[create] 카드_태그_생성",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "Card id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "tag-id",
-          "in" : "path",
-          "description" : "Tag id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200"
-          }
-        }
-      },
-      "delete" : {
-        "tags" : [ "Card" ],
-        "summary" : "카드 태그 삭제",
-        "description" : "카드 태그 삭제",
-        "operationId" : "[delete] 카드_태그_삭제",
-        "parameters" : [ {
-          "name" : "card-id",
-          "in" : "path",
-          "description" : "Card id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "name" : "tag-id",
-          "in" : "path",
-          "description" : "Tag id",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "200"
-          }
-        }
-      }
     }
   },
   "components" : {
     "schemas" : {
+      "ImageUploadRequest" : {
+        "title" : "ImageUploadRequest",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "fileExtension" : {
+              "type" : "string",
+              "description" : "이미지 확장자"
+            }
+          }
+        }
+      },
       "ErrorResponse" : {
         "title" : "ErrorResponse",
         "type" : "object",
@@ -559,113 +295,6 @@
             "staticUrl" : {
               "type" : "string",
               "description" : "S3에 업로드된 이미지 Url"
-            }
-          }
-        }
-      },
-      "CardTitleUpdateRequest" : {
-        "title" : "CardTitleUpdateRequest",
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string",
-            "description" : "카드 제목"
-          }
-        }
-      },
-      "CardImageUploadCompleteRequest" : {
-        "title" : "CardImageUploadCompleteRequest",
-        "type" : "object",
-        "properties" : {
-          "cardId" : {
-            "type" : "number",
-            "description" : "카드 id"
-          },
-          "fileNames" : {
-            "type" : "array",
-            "description" : "이미지 파일이름 배열",
-            "items" : {
-              "oneOf" : [ {
-                "type" : "object"
-              }, {
-                "type" : "boolean"
-              }, {
-                "type" : "string"
-              }, {
-                "type" : "number"
-              } ]
-            }
-          }
-        }
-      },
-      "CardTypeCountGetResponse" : {
-        "title" : "CardTypeCountGetResponse",
-        "type" : "object",
-        "properties" : {
-          "면접_질문" : {
-            "type" : "number",
-            "description" : "면접_질문_개수"
-          },
-          "자기소개서" : {
-            "type" : "number",
-            "description" : "자기소개서_개수"
-          },
-          "경험_정리" : {
-            "type" : "number",
-            "description" : "면접_질문_개수"
-          }
-        }
-      },
-      "ImageUploadResponse" : {
-        "title" : "ImageUploadResponse",
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "filename" : {
-              "type" : "string",
-              "description" : "파일 이름"
-            },
-            "presignedUrl" : {
-              "type" : "string",
-              "description" : "프리사인드 URL"
-            }
-          }
-        }
-      },
-      "CardCreateResponse" : {
-        "title" : "CardCreateResponse",
-        "type" : "object",
-        "properties" : {
-          "cardId" : {
-            "type" : "number",
-            "description" : "Card ID"
-          },
-          "type" : {
-            "type" : "string",
-            "description" : "Card 타입"
-          }
-        }
-      },
-      "CardContentUpdateRequest" : {
-        "title" : "CardContentUpdateRequest",
-        "type" : "object",
-        "properties" : {
-          "content" : {
-            "type" : "string",
-            "description" : "카드 본문"
-          }
-        }
-      },
-      "ImageUploadRequest" : {
-        "title" : "ImageUploadRequest",
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "fileExtension" : {
-              "type" : "string",
-              "description" : "이미지 확장자"
             }
           }
         }
@@ -698,45 +327,28 @@
           }
         }
       },
-      "CardGetResponse" : {
-        "title" : "CardGetResponse",
+      "CardImageUploadCompleteRequest" : {
+        "title" : "CardImageUploadCompleteRequest",
         "type" : "object",
         "properties" : {
-          "updateDate" : {
-            "type" : "string",
-            "description" : "Card 수정일시"
+          "cardId" : {
+            "type" : "number",
+            "description" : "카드 id"
           },
-          "type" : {
-            "type" : "string",
-            "description" : "Card 타입"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "Card 제목"
-          },
-          "cardTagList" : {
+          "fileNames" : {
             "type" : "array",
+            "description" : "이미지 파일이름 배열",
             "items" : {
-              "type" : "object",
-              "properties" : {
-                "name" : {
-                  "type" : "string",
-                  "description" : "Card 태그 이름"
-                },
-                "id" : {
-                  "type" : "number",
-                  "description" : "Card 태그 id"
-                },
-                "type" : {
-                  "type" : "string",
-                  "description" : "Card 태그 타입"
-                }
-              }
+              "oneOf" : [ {
+                "type" : "object"
+              }, {
+                "type" : "boolean"
+              }, {
+                "type" : "string"
+              }, {
+                "type" : "number"
+              } ]
             }
-          },
-          "content" : {
-            "type" : "string",
-            "description" : "Card 내용"
           }
         }
       },
@@ -754,43 +366,19 @@
           }
         }
       },
-      "CardGetsResponse" : {
-        "title" : "CardGetsResponse",
+      "ImageUploadResponse" : {
+        "title" : "ImageUploadResponse",
         "type" : "array",
         "items" : {
           "type" : "object",
           "properties" : {
-            "updateDate" : {
+            "filename" : {
               "type" : "string",
-              "description" : "Card 수정일시"
+              "description" : "파일 이름"
             },
-            "id" : {
-              "type" : "number",
-              "description" : "Card ID"
-            },
-            "title" : {
+            "presignedUrl" : {
               "type" : "string",
-              "description" : "Card 제목"
-            },
-            "cardTagList" : {
-              "type" : "array",
-              "items" : {
-                "type" : "object",
-                "properties" : {
-                  "name" : {
-                    "type" : "string",
-                    "description" : "Card 태그 이름"
-                  },
-                  "id" : {
-                    "type" : "number",
-                    "description" : "Card 태그 id"
-                  },
-                  "type" : {
-                    "type" : "string",
-                    "description" : "Card 태그 타입"
-                  }
-                }
-              }
+              "description" : "프리사인드 URL"
             }
           }
         }
