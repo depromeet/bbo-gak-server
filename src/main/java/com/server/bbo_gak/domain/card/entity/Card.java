@@ -1,15 +1,20 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,8 @@ public class Card extends BaseEntity {
 
     private Long userId;
 
+    private boolean copyFlag = false;
+
     @Enumerated(EnumType.STRING)
     private CardType cardType;
 
@@ -48,6 +55,14 @@ public class Card extends BaseEntity {
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CardImage> cardImageList = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "copy_info_id")
+    private CopyInfo copyInfo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruit_id")
+    private Recruit recruit;
 
     @Builder
     public Card(String title, String content, LocalDateTime accessTime, CardType cardType, Long userId) {
