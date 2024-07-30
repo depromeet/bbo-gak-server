@@ -5,7 +5,7 @@ import com.server.bbo_gak.domain.user.entity.User;
 
 public interface RecruitService {
 
-    void getTotalRecruitList();
+    void getTotalRecruitList(); //생성순 정렬
 
     void getProgressRecruitList();
 
