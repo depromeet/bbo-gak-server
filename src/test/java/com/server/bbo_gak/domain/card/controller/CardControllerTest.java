@@ -3,6 +3,8 @@ package com.server.bbo_gak.domain.card.controller;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -56,14 +58,12 @@ public class CardControllerTest extends AbstractRestDocsTests {
 
         @Test
         public void 성공() throws Exception {
-
             mockMvc.perform(
                     get(DEFAULT_URL + "/cards/{card-id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andDo(
-                    document("[select] 카드_단건_조회",
+                .andDo(document("[select] 카드 단건 조회",
                         preprocessResponse(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -88,6 +88,33 @@ public class CardControllerTest extends AbstractRestDocsTests {
                     )
                 );
         }
+
+        @Test
+        public void 카드_찾기_실패() throws Exception {
+            mockMvc.perform(
+                    get(DEFAULT_URL + "/cards/{card-id}", 9999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(document("[select] 카드 찾기 실패",
+                        preprocessResponse(prettyPrint()),
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 단건 조회").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("card-id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                                )
+                                .build()
+                        )
+                    )
+                );
+
+        }
     }
 
     @Nested
@@ -103,7 +130,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[select] 카드_리스트_조회",
+                    document("[select] 카드 리스트 조회",
                         preprocessResponse(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -141,7 +168,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[select] 카드_타입_카운트_조회",
+                    document("[select] 카드 타입 카운트 조회",
                         preprocessResponse(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -171,7 +198,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(
-                    document("[create] 카드_신규_생성",
+                    document("[create] 카드 신규 생성",
                         preprocessResponse(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -202,13 +229,69 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(
-                    document("[create] 카드_태그_생성",
+                    document("[create] 카드 태그 생성",
                         resource(
                             ResourceSnippetParameters.builder()
                                 .description("카드 태그 추가").tags("Card")
                                 .pathParameters(
                                     parameterWithName("card-id").description("Card id"),
                                     parameterWithName("tag-id").description("Tag id")
+                                )
+                                .build()
+                        )
+                    )
+                );
+        }
+
+        @Test
+        @Transactional
+        public void 태그_찾기_실패() throws Exception {
+
+            mockMvc.perform(
+                    post(DEFAULT_URL + "/cards/{card-id}/tag/{tag-id}", 999, 99999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound()).andDo(
+                    document("[create] 태그 찾기 실패",
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 태그 추가").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("Card id"),
+                                    parameterWithName("tag-id").description("Tag id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                                )
+                                .build()
+                        )
+                    )
+                );
+        }
+
+        @Test
+        @Transactional
+        public void 카드_찾기_실패() throws Exception {
+
+            mockMvc.perform(
+                    post(DEFAULT_URL + "/cards/{card-id}/tag/{tag-id}", 9999, 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound()).andDo(
+                    document("[create] 카드 찾기 실패",
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 태그 추가").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("Card id"),
+                                    parameterWithName("tag-id").description("Tag id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
                                 )
                                 .build()
                         )
@@ -234,7 +317,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[update] 카드_제목_수정",
+                    document("[update] 카드 제목 수정",
                         preprocessRequest(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -252,6 +335,41 @@ public class CardControllerTest extends AbstractRestDocsTests {
                 );
 
             assertEquals(cardRepository.findById(1L).get().getTitle(), newTitle);
+        }
+
+        @Test
+        @Transactional
+        public void 카드_찾기_실패() throws Exception {
+
+            String newTitle = "test title";
+            CardTitleUpdateRequest request = new CardTitleUpdateRequest(newTitle);
+
+            mockMvc.perform(
+                    put(DEFAULT_URL + "/cards/{card-id}/title", 999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(
+                    document("[update] 카드 찾기 실패",
+                        preprocessRequest(prettyPrint()),
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 제목 수정").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("Card id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                                )
+                                .build()
+                        )
+                    )
+                );
+
+            assertNotEquals(cardRepository.findById(1L).get().getTitle(), newTitle);
         }
     }
 
@@ -272,7 +390,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[update] 카드_본문_수정",
+                    document("[카드 본문 수정] 성공",
                         preprocessRequest(prettyPrint()),
                         resource(
                             ResourceSnippetParameters.builder()
@@ -291,6 +409,41 @@ public class CardControllerTest extends AbstractRestDocsTests {
 
             assertEquals(cardRepository.findById(1L).get().getContent(), newContent);
         }
+
+        @Test
+        @Transactional
+        public void 카드_찾기_실패() throws Exception {
+
+            String newContent = "test content";
+            CardContentUpdateRequest request = new CardContentUpdateRequest(newContent);
+
+            mockMvc.perform(
+                    put(DEFAULT_URL + "/cards/{card-id}/content", 999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(
+                    document("[카드 본문 수정] 카드 찾기 실패",
+                        preprocessRequest(prettyPrint()),
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 본문 수정").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("Card id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                                )
+                                .build()
+                        )
+                    )
+                );
+
+            assertNotEquals(cardRepository.findById(1L).get().getContent(), newContent);
+        }
     }
 
     @Nested
@@ -306,7 +459,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[delete] 카드_삭제",
+                    document("[카드_삭제] 성공",
                         resource(
                             ResourceSnippetParameters.builder()
                                 .description("카드 삭제").tags("Card")
@@ -321,6 +474,38 @@ public class CardControllerTest extends AbstractRestDocsTests {
             assertFalse(cardRepository.findById(1L).isPresent());
             assertFalse(cardTagRepository.findById(1L).isPresent());
             assertFalse(cardTagRepository.findById(2L).isPresent());
+        }
+
+        @Test
+        @Transactional
+        public void 카드_찾기_실패() throws Exception {
+
+            mockMvc.perform(
+                    delete(DEFAULT_URL + "/cards/{card-id}", 999)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(
+                    document("[카드_삭제] 카드 찾기 실패",
+                        resource(
+                            ResourceSnippetParameters.builder()
+                                .description("카드 삭제").tags("Card")
+                                .pathParameters(
+                                    parameterWithName("card-id").description("Card id")
+                                )
+                                .responseSchema(Schema.schema("ErrorResponse"))
+                                .responseFields(
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                                )
+                                .build()
+                        )
+                    )
+                );
+
+            assertTrue(cardRepository.findById(1L).isPresent());
+            assertTrue(cardTagRepository.findById(1L).isPresent());
+            assertTrue(cardTagRepository.findById(2L).isPresent());
         }
     }
 
@@ -337,7 +522,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                    document("[delete] 카드_태그_삭제",
+                    document("[카드_태그_삭제] 성공",
                         resource(
                             ResourceSnippetParameters.builder()
                                 .description("카드 태그 삭제").tags("Card")
@@ -353,5 +538,69 @@ public class CardControllerTest extends AbstractRestDocsTests {
             assertFalse(cardTagRepository.findById(1L).isPresent());
 
         }
+    }
+
+    @Test
+    @Transactional
+    public void 카드_찾기_실패() throws Exception {
+
+        mockMvc.perform(
+                delete(DEFAULT_URL + "/cards/{card-id}/tag/{tag-id}", 999, 1)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andDo(
+                document("[카드_태그_삭제] 카드 찾기 실패",
+                    resource(
+                        ResourceSnippetParameters.builder()
+                            .description("카드 태그 삭제").tags("Card")
+                            .pathParameters(
+                                parameterWithName("card-id").description("Card id"),
+                                parameterWithName("tag-id").description("Tag id")
+                            )
+                            .responseSchema(Schema.schema("ErrorResponse"))
+                            .responseFields(
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                            )
+                            .build()
+                    )
+                )
+            );
+
+        assertTrue(cardTagRepository.findById(1L).isPresent());
+
+    }
+
+    @Test
+    @Transactional
+    public void 태그_찾기_실패() throws Exception {
+
+        mockMvc.perform(
+                delete(DEFAULT_URL + "/cards/{card-id}/tag/{tag-id}", 1, 999)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andDo(
+                document("[카드_태그_삭제] 태그 찾기 실패",
+                    resource(
+                        ResourceSnippetParameters.builder()
+                            .description("카드 태그 삭제").tags("Card")
+                            .pathParameters(
+                                parameterWithName("card-id").description("Card id"),
+                                parameterWithName("tag-id").description("Tag id")
+                            )
+                            .responseSchema(Schema.schema("ErrorResponse"))
+                            .responseFields(
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")
+                            )
+                            .build()
+                    )
+                )
+            );
+
+        assertTrue(cardTagRepository.findById(1L).isPresent());
+
     }
 }
