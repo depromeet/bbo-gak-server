@@ -56,6 +56,9 @@ public class Card extends BaseEntity {
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CardImage> cardImageList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cardMemo")
+    private List<CardMemo> cardMomoList = new ArrayList<>();
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "copy_info_id")
     private CopyInfo copyInfo;

@@ -8,18 +8,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record CardGetsResponse(
+public record CardListGetResponse(
     Long id,
     String title,
-    String updateDate,
+    String updatedDate,
     List<CardTagResponse> cardTagList
 ) {
 
-    public static CardGetsResponse of(Card card, List<CardTag> cardTagList) {
-        return CardGetsResponse.builder()
+    public static CardListGetResponse of(Card card, List<CardTag> cardTagList) {
+        return CardListGetResponse.builder()
             .id(card.getId())
             .title(card.getTitle())
-            .updateDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
+            .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
             .cardTagList(cardTagList.stream().map(CardTagResponse::of).toList())
             .build();
     }

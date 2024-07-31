@@ -76,7 +76,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                                     fieldWithPath("title").type(JsonFieldType.STRING).description("Card 제목"),
                                     fieldWithPath("content").type(JsonFieldType.STRING).description("Card 내용"),
                                     fieldWithPath("type").type(JsonFieldType.STRING).description("Card 타입"),
-                                    fieldWithPath("updateDate").type(JsonFieldType.STRING).description("Card 수정일시"),
+                                    fieldWithPath("updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
                                     fieldWithPath("cardTagList.[].id").type(JsonFieldType.NUMBER)
                                         .description("Card 태그 id"),
                                     fieldWithPath("cardTagList.[].name").type(JsonFieldType.STRING)
@@ -142,7 +142,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                                 .responseFields(
                                     fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("Card ID"),
                                     fieldWithPath("[].title").type(JsonFieldType.STRING).description("Card 제목"),
-                                    fieldWithPath("[].updateDate").type(JsonFieldType.STRING).description("Card 수정일시"),
+                                    fieldWithPath("[].updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
                                     fieldWithPath("[].cardTagList.[].id").type(JsonFieldType.NUMBER)
                                         .description("Card 태그 id"),
                                     fieldWithPath("[].cardTagList.[].name").type(JsonFieldType.STRING)
