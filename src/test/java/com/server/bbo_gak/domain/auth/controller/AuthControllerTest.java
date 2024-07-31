@@ -15,6 +15,7 @@ import com.epages.restdocs.apispec.Schema;
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
+import com.server.bbo_gak.global.RestDocsFactory;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
@@ -22,14 +23,15 @@ import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -39,6 +41,9 @@ public class AuthControllerTest extends AbstractRestDocsTests {
     private static final String DEFAULT_URL = "/api/v1/users/test";
     @MockBean
     private AuthService authService;
+
+    @Autowired
+    private RestDocsFactory restDocsFactory;
 
     @Nested
     class 로그인 {
@@ -55,36 +60,10 @@ public class AuthControllerTest extends AbstractRestDocsTests {
             when(authService.login(any(LoginRequest.class))).thenReturn(tokenDto);
 
             //then
-            ResultActions resultActions = mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(DEFAULT_URL + "/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)) // 요청 본문 추가
-                        .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isOk())
-                .andDo(
-                    MockMvcRestDocumentationWrapper.document("[로그인] 성공",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(
-                            ResourceSnippetParameters.builder()
-                                .description("로그인 테스트 - jwt 생성")
-                                .tags("auth")
-                                .requestSchema(Schema.schema("LoginRequest.Post"))
-                                .responseSchema(Schema.schema("TokenDto.Post"))
-                                .requestFields(
-                                    fieldWithPath("loginId").type(JsonFieldType.STRING).description("로그인 id"),
-                                    fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
-                                )
-                                .responseFields(
-                                    fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
-                                    fieldWithPath("refreshToken").type(JsonFieldType.STRING)
-                                        .description("refresh token")
-                                )
-                                .build()
-                        )
-                    )
-                );
-
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/login", loginRequest, HttpMethod.POST,
+                    objectMapper))
+                .andExpect(status().isOk())
+                .andDo(restDocsFactory.getSuccessResource("[로그인] 성공", "auth", loginRequest, tokenDto));
         }
 
         @Test

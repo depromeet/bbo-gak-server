@@ -447,7 +447,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TokenDto.Post"
+                  "$ref" : "#/components/schemas/TokenDto"
                 },
                 "examples" : {
                   "[로그인] 성공" : {
@@ -570,6 +570,20 @@
           "title" : {
             "type" : "string",
             "description" : "카드 제목"
+          }
+        }
+      },
+      "TokenDto" : {
+        "title" : "TokenDto",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "accessToken field"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "refreshToken field"
           }
         }
       },
@@ -737,20 +751,6 @@
           "content" : {
             "type" : "string",
             "description" : "Card 내용"
-          }
-        }
-      },
-      "TokenDto.Post" : {
-        "title" : "TokenDto.Post",
-        "type" : "object",
-        "properties" : {
-          "accessToken" : {
-            "type" : "string",
-            "description" : "access token"
-          },
-          "refreshToken" : {
-            "type" : "string",
-            "description" : "refresh token"
           }
         }
       },
