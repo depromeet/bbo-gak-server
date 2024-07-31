@@ -15,7 +15,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 신규 생성",
         "description" : "카드 신규 생성",
-        "operationId" : "[create] 카드_신규_생성",
+        "operationId" : "[create] 카드 신규 생성",
         "parameters" : [ {
           "name" : "type",
           "in" : "query",
@@ -34,7 +34,7 @@
                   "$ref" : "#/components/schemas/CardCreateResponse"
                 },
                 "examples" : {
-                  "[create] 카드_신규_생성" : {
+                  "[create] 카드 신규 생성" : {
                     "value" : "{\n  \"cardId\" : 4,\n  \"type\" : \"경험_정리\"\n}"
                   }
                 }
@@ -100,7 +100,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 리스트 조회",
         "description" : "카드 리스트 조회",
-        "operationId" : "[select] 카드_리스트_조회",
+        "operationId" : "[select] 카드 리스트 조회",
         "parameters" : [ {
           "name" : "type",
           "in" : "query",
@@ -119,7 +119,7 @@
                   "$ref" : "#/components/schemas/CardGetsResponse"
                 },
                 "examples" : {
-                  "[select] 카드_리스트_조회" : {
+                  "[select] 카드 리스트 조회" : {
                     "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"test_title\",\n  \"updateDate\" : \"2024-07-24 21:22:08\",\n  \"cardTagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}, {\n  \"id\" : 2,\n  \"title\" : \"testc\",\n  \"updateDate\" : \"1970-01-01 00:00:00\",\n  \"cardTagList\" : [ {\n    \"id\" : 3,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n} ]"
                   }
                 }
@@ -197,7 +197,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 타입 카운트 조회",
         "description" : "카드 타입 카운트 조회",
-        "operationId" : "[select] 카드_타입_카운트_조회",
+        "operationId" : "[select] 카드 타입 카운트 조회",
         "responses" : {
           "200" : {
             "description" : "200",
@@ -207,7 +207,7 @@
                   "$ref" : "#/components/schemas/CardTypeCountGetResponse"
                 },
                 "examples" : {
-                  "[select] 카드_타입_카운트_조회" : {
+                  "[select] 카드 타입 카운트 조회" : {
                     "value" : "{\n  \"경험_정리\" : 2,\n  \"자기소개서\" : 1,\n  \"면접_질문\" : 0\n}"
                   }
                 }
@@ -222,7 +222,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 단건 조회",
         "description" : "카드 단건 조회",
-        "operationId" : "[select] 카드_단건_조회",
+        "operationId" : "[select] 카드 ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -233,6 +233,21 @@
           }
         } ],
         "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[select] 카드 찾기 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "200",
             "content" : {
@@ -241,7 +256,7 @@
                   "$ref" : "#/components/schemas/CardGetResponse"
                 },
                 "examples" : {
-                  "[select] 카드_단건_조회" : {
+                  "[select] 카드 단건 조회" : {
                     "value" : "{\n  \"title\" : \"test_title\",\n  \"content\" : \"test_contents\",\n  \"updateDate\" : \"2024-07-24 21:22:08\",\n  \"type\" : \"경험_정리\",\n  \"cardTagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}"
                   }
                 }
@@ -254,7 +269,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 삭제",
         "description" : "카드 삭제",
-        "operationId" : "[delete] 카드_삭제",
+        "operationId" : "[카드_삭제] ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -265,6 +280,21 @@
           }
         } ],
         "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_삭제] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "200"
           }
@@ -333,7 +363,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 본문 수정",
         "description" : "카드 본문 수정",
-        "operationId" : "[update] 카드_본문_수정",
+        "operationId" : "[카드 본문 수정] ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -350,7 +380,10 @@
                 "$ref" : "#/components/schemas/CardContentUpdateRequest"
               },
               "examples" : {
-                "[update] 카드_본문_수정" : {
+                "[카드 본문 수정] 성공" : {
+                  "value" : "{\n  \"content\" : \"test content\"\n}"
+                },
+                "[카드 본문 수정] 카드 찾기 실패" : {
                   "value" : "{\n  \"content\" : \"test content\"\n}"
                 }
               }
@@ -360,6 +393,21 @@
         "responses" : {
           "200" : {
             "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드 본문 수정] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -369,7 +417,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 제목 수정",
         "description" : "카드 제목 수정",
-        "operationId" : "[update] 카드_제목_수정",
+        "operationId" : "[update] 카드 ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -386,7 +434,10 @@
                 "$ref" : "#/components/schemas/CardTitleUpdateRequest"
               },
               "examples" : {
-                "[update] 카드_제목_수정" : {
+                "[update] 카드 제목 수정" : {
+                  "value" : "{\n  \"title\" : \"test title\"\n}"
+                },
+                "[update] 카드 찾기 실패" : {
                   "value" : "{\n  \"title\" : \"test title\"\n}"
                 }
               }
@@ -396,6 +447,21 @@
         "responses" : {
           "200" : {
             "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[update] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -480,7 +546,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 태그 추가",
         "description" : "카드 태그 추가",
-        "operationId" : "[create] 카드_태그_생성",
+        "operationId" : "[create] ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -499,6 +565,24 @@
           }
         } ],
         "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[create] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  },
+                  "[create] 태그 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 태그를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          },
           "200" : {
             "description" : "200"
           }
@@ -508,7 +592,7 @@
         "tags" : [ "Card" ],
         "summary" : "카드 태그 삭제",
         "description" : "카드 태그 삭제",
-        "operationId" : "[delete] 카드_태그_삭제",
+        "operationId" : "[카드_태그_삭제] ",
         "parameters" : [ {
           "name" : "card-id",
           "in" : "path",
@@ -529,6 +613,24 @@
         "responses" : {
           "200" : {
             "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_태그_삭제] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  },
+                  "[카드_태그_삭제] 태그 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 태그를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
           }
         }
       }

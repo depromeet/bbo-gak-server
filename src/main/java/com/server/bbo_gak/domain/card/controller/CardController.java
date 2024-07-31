@@ -4,7 +4,7 @@ import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
-import com.server.bbo_gak.domain.card.dto.response.CardGetsResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
 import com.server.bbo_gak.domain.card.service.CardService;
 import com.server.bbo_gak.domain.user.entity.User;
@@ -43,7 +43,7 @@ public class CardController {
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<List<CardGetsResponse>> getCardList(
+    public ResponseEntity<List<CardListGetResponse>> getCardList(
         @AuthUser User user,
         @RequestParam("type") String type) {
 
@@ -56,15 +56,6 @@ public class CardController {
         @RequestParam("type") String type) {
 
         return ResponseEntity.ok(cardService.createCard(user, type));
-    }
-
-    @PostMapping("/cards/{card-id}/tag/{tag-id}")
-    public ResponseEntity<Void> addCardTag(
-        @AuthUser User user,
-        @PathVariable("card-id") Long cardId, @PathVariable("tag-id") Long tagId) {
-
-        cardService.addCardTag(user, cardId, tagId);
-        return ResponseEntity.ok().body(null);
     }
 
     @PutMapping("/cards/{card-id}/title")
@@ -98,16 +89,4 @@ public class CardController {
         cardService.deleteCard(user, cardId);
         return ResponseEntity.ok().body(null);
     }
-
-    @DeleteMapping("/cards/{card-id}/tag/{tag-id}")
-    public ResponseEntity<Void> deleteCardTag(
-        @AuthUser User user,
-        @PathVariable("card-id") Long cardId, @PathVariable("tag-id") Long tagId
-    ) {
-
-        cardService.deleteCardTag(user, cardId, tagId);
-        return ResponseEntity.ok().body(null);
-    }
-
-
 }
