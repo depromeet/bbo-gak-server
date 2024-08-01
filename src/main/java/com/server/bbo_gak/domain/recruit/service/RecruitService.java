@@ -1,25 +1,50 @@
 package com.server.bbo_gak.domain.recruit.service;
 
 import com.server.bbo_gak.domain.card.entity.CardType;
+import com.server.bbo_gak.domain.recruit.entity.RecruitRepository;
 import com.server.bbo_gak.domain.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-public interface RecruitService {
+@Service
+@RequiredArgsConstructor
+public class RecruitService {
 
-    void getTotalRecruitList(); //생성순 정렬
+    private final RecruitRepository recruitRepository;
 
-    void getProgressRecruitList();
+    void getTotalRecruitList(User user) {
+        recruitRepository.
+    }; //생성순 정렬
 
-    void createRecruit();
+    void getProgressRecruitList(){
 
-    void deleteRecruit();
+    };
 
-    void updateRecruit();
+    void createRecruit(){
 
-    void getRecruitDetail();
+    };
 
-    void getCardListInRecruit(User user, Long recruitId, CardType type);
+    void deleteRecruit(){
 
-    void getCardTypeCountsInRecruit(User user, Long recruitId);
+    };
 
-    void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId);
+    void updateRecruit(){
+
+    };
+
+    void getRecruitDetail(){
+
+    };
+
+    void getCardListInRecruit(User user, Long recruitId, CardType type){
+
+    };
+
+    void getCardTypeCountsInRecruit(User user, Long recruitId){
+
+    };
+
+    void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId){
+
+    };
 }

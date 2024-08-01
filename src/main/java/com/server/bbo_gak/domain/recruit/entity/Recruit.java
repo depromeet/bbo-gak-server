@@ -1,14 +1,18 @@
 package com.server.bbo_gak.domain.recruit.entity;
 
 import com.server.bbo_gak.domain.card.entity.Card;
+import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,4 +42,7 @@ public class Recruit extends BaseEntity {
     @OneToMany(mappedBy = "recruit")
     private List<Card> cardList = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
