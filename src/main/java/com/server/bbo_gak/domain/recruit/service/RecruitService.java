@@ -13,38 +13,56 @@ public class RecruitService {
     private final RecruitRepository recruitRepository;
 
     void getTotalRecruitList(User user) {
-        recruitRepository.
-    }; //생성순 정렬
+        recruitRepository.findByUserId(user.getId());
+    }
 
-    void getProgressRecruitList(){
+    ; //생성순 정렬
 
-    };
+    void getProgressRecruitList() {
 
-    void createRecruit(){
+    }
 
-    };
+    ;
 
-    void deleteRecruit(){
+    void createRecruit() {
 
-    };
+    }
 
-    void updateRecruit(){
+    ;
 
-    };
+    void deleteRecruit() {
 
-    void getRecruitDetail(){
+    }
 
-    };
+    ;
 
-    void getCardListInRecruit(User user, Long recruitId, CardType type){
+    void updateRecruit() {
 
-    };
+    }
 
-    void getCardTypeCountsInRecruit(User user, Long recruitId){
+    ;
 
-    };
+    void getRecruitDetail() {
 
-    void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId){
+    }
 
-    };
+    ;
+
+    void getCardListInRecruit(User user, Long recruitId, CardType type) {
+
+    }
+
+    ;
+
+    void getCardTypeCountsInRecruit(User user, Long recruitId) {
+
+    }
+
+    ;
+
+    void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId) {
+
+    }
+
+    ;
 }
