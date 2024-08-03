@@ -47,8 +47,6 @@
     "/api/v1/card-images" : {
       "delete" : {
         "tags" : [ "CardImage" ],
-        "summary" : "카드 이미지 삭제",
-        "description" : "카드 이미지 삭제",
         "operationId" : "[delete] ",
         "requestBody" : {
           "content" : {
@@ -62,9 +60,6 @@
                 },
                 "[delete] 카드 찾기 실패" : {
                   "value" : "{\n  \"cardId\" : 0,\n  \"staticUrl\" : \"invalid-staticUrl\"\n}"
-                },
-                "[delete] 성공" : {
-                  "value" : "{\n  \"cardId\" : 1,\n  \"staticUrl\" : \"https://example.com/file2.png\"\n}"
                 }
               }
             }
@@ -76,7 +71,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ErrorResponse"
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
                 },
                 "examples" : {
                   "[delete] s3에서_삭제할_이미지_찾기_실패" : {
@@ -88,9 +83,6 @@
                 }
               }
             }
-          },
-          "204" : {
-            "description" : "204"
           }
         }
       }
@@ -121,69 +113,6 @@
                 "examples" : {
                   "[select] 카드_리스트_조회" : {
                     "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"test_title\",\n  \"updateDate\" : \"2024-07-24 21:22:08\",\n  \"cardTagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}, {\n  \"id\" : 2,\n  \"title\" : \"testc\",\n  \"updateDate\" : \"1970-01-01 00:00:00\",\n  \"cardTagList\" : [ {\n    \"id\" : 3,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n} ]"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/card-images/static-urls" : {
-      "post" : {
-        "tags" : [ "CardImage" ],
-        "summary" : "카드 이미지 압로드 완료",
-        "description" : "카드 이미지 압로드 완료",
-        "operationId" : "[upload] ",
-        "requestBody" : {
-          "content" : {
-            "application/json;charset=UTF-8" : {
-              "schema" : {
-                "$ref" : "#/components/schemas/CardImageUploadCompleteRequest"
-              },
-              "examples" : {
-                "[upload] S3에서_업로드된_이미지_찾기_실패" : {
-                  "value" : "{\n  \"cardId\" : 2,\n  \"fileNames\" : [ \"invalid-filename\", \"invalid-filename\" ]\n}"
-                },
-                "[upload] 성공" : {
-                  "value" : "{\n  \"cardId\" : 1,\n  \"fileNames\" : [ \"file1.png\", \"file2.png\" ]\n}"
-                },
-                "[upload] 카드 찾기 실패" : {
-                  "value" : "{\n  \"cardId\" : 0,\n  \"fileNames\" : [ \"fileName1\", \"fileName2\" ]\n}"
-                }
-              }
-            }
-          }
-        },
-        "responses" : {
-          "404" : {
-            "description" : "404",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/ErrorResponse"
-                },
-                "examples" : {
-                  "[upload] S3에서_업로드된_이미지_찾기_실패" : {
-                    "value" : "{\n  \"message\" : \"해당 파일은 S3내에 존재하지 않습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
-                  },
-                  "[upload] 카드 찾기 실패" : {
-                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
-                  }
-                }
-              }
-            }
-          },
-          "200" : {
-            "description" : "200",
-            "content" : {
-              "application/json;charset=UTF-8" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/Void"
-                },
-                "examples" : {
-                  "[upload] 성공" : {
-                    "value" : "[ {\n  \"staticUrl\" : \"https://example.com/file1.png\"\n}, {\n  \"staticUrl\" : \"https://example.com/file2.png\"\n} ]"
                   }
                 }
               }
@@ -274,8 +203,8 @@
     "/api/v1/images/presigned-urls" : {
       "post" : {
         "tags" : [ "image" ],
-        "summary" : "presigned urls 생성",
-        "description" : "presigned urls 생성",
+        "summary" : "presigend url 생성",
+        "description" : "presigend url 생성",
         "operationId" : "[presigned-urls] ",
         "requestBody" : {
           "content" : {
@@ -315,11 +244,83 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ErrorResponse"
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
                 },
                 "examples" : {
                   "[presigned-urls] 실패-유효하지않은파일이름" : {
                     "value" : "{\n  \"message\" : \"지원하지 않는 파일 확장자입니다.\",\n  \"status\" : \"BAD_REQUEST\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/card-images/static-urls/{cardId}" : {
+      "post" : {
+        "tags" : [ "CardImage" ],
+        "summary" : "카드 이미지 압로드 완료",
+        "description" : "카드 이미지 압로드 완료",
+        "operationId" : "[upload] ",
+        "parameters" : [ {
+          "name" : "cardId",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardImageUploadCompleteRequest"
+              },
+              "examples" : {
+                "[upload] S3에서_업로드된_이미지_찾기_실패" : {
+                  "value" : "[ {\n  \"fileName\" : \"invalid-filename\"\n}, {\n  \"fileName\" : \"invalid-filename\"\n} ]"
+                },
+                "[upload] 성공" : {
+                  "value" : "[ {\n  \"fileName\" : \"file1.png\"\n}, {\n  \"fileName\" : \"file2.png\"\n} ]"
+                },
+                "[upload] 카드 찾기 실패" : {
+                  "value" : "[ {\n  \"fileName\" : \"invalid-filename\"\n}, {\n  \"fileName\" : \"invalid-filename\"\n} ]"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[upload] S3에서_업로드된_이미지_찾기_실패" : {
+                    "value" : "{\n  \"message\" : \"해당 파일은 S3내에 존재하지 않습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  },
+                  "[upload] 카드 찾기 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardImageUploadCompleteResponse"
+                },
+                "examples" : {
+                  "[upload] 성공" : {
+                    "value" : "[ {\n  \"staticUrl\" : \"https://example.com/file1.png\"\n}, {\n  \"staticUrl\" : \"https://example.com/file2.png\"\n} ]"
                   }
                 }
               }
@@ -403,14 +404,14 @@
     "/api/v1/users/test/login" : {
       "post" : {
         "tags" : [ "auth" ],
-        "summary" : "로그인 테스트 - jwt 생성",
-        "description" : "로그인 테스트 - jwt 생성",
+        "summary" : "jwt 토큰 생성",
+        "description" : "jwt 토큰 생성",
         "operationId" : "[로그인] ",
         "requestBody" : {
           "content" : {
             "application/json;charset=UTF-8" : {
               "schema" : {
-                "$ref" : "#/components/schemas/LoginRequest.Post"
+                "$ref" : "#/components/schemas/LoginRequest"
               },
               "examples" : {
                 "[로그인] 아이디_없음" : {
@@ -432,7 +433,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ErrorResponse"
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
                 },
                 "examples" : {
                   "[로그인] 아이디_없음" : {
@@ -447,7 +448,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/TokenDto.Post"
+                  "$ref" : "#/components/schemas/TokenDto"
                 },
                 "examples" : {
                   "[로그인] 성공" : {
@@ -462,7 +463,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/ErrorResponse"
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
                 },
                 "examples" : {
                   "[로그인] 비밀번호_실패" : {
@@ -536,29 +537,33 @@
   },
   "components" : {
     "schemas" : {
-      "ErrorResponse" : {
-        "title" : "ErrorResponse",
+      "CardImageDeleteRequest" : {
+        "title" : "CardImageDeleteRequest",
         "type" : "object",
         "properties" : {
-          "message" : {
-            "type" : "string",
-            "description" : "Error message"
+          "cardId" : {
+            "type" : "number",
+            "description" : "cardId"
           },
-          "status" : {
+          "staticUrl" : {
             "type" : "string",
-            "description" : "HTTP status code"
+            "description" : "staticUrl"
           }
         }
       },
-      "Void" : {
-        "title" : "Void",
+      "ImageUploadResponse" : {
+        "title" : "ImageUploadResponse",
         "type" : "array",
         "items" : {
           "type" : "object",
           "properties" : {
-            "staticUrl" : {
+            "filename" : {
               "type" : "string",
-              "description" : "S3에 업로드된 이미지 Url"
+              "description" : "filename"
+            },
+            "presignedUrl" : {
+              "type" : "string",
+              "description" : "presignedUrl"
             }
           }
         }
@@ -573,28 +578,16 @@
           }
         }
       },
-      "CardImageUploadCompleteRequest" : {
-        "title" : "CardImageUploadCompleteRequest",
+      "api-v1-card-images1501512887" : {
         "type" : "object",
         "properties" : {
-          "cardId" : {
-            "type" : "number",
-            "description" : "카드 id"
+          "message" : {
+            "type" : "string",
+            "description" : "에러 메시지"
           },
-          "fileNames" : {
-            "type" : "array",
-            "description" : "이미지 파일이름 배열",
-            "items" : {
-              "oneOf" : [ {
-                "type" : "object"
-              }, {
-                "type" : "boolean"
-              }, {
-                "type" : "string"
-              }, {
-                "type" : "number"
-              } ]
-            }
+          "status" : {
+            "type" : "string",
+            "description" : "HTTP 상태 코드"
           }
         }
       },
@@ -616,23 +609,6 @@
           }
         }
       },
-      "ImageUploadResponse" : {
-        "title" : "ImageUploadResponse",
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "filename" : {
-              "type" : "string",
-              "description" : "파일 이름"
-            },
-            "presignedUrl" : {
-              "type" : "string",
-              "description" : "프리사인드 URL"
-            }
-          }
-        }
-      },
       "CardCreateResponse" : {
         "title" : "CardCreateResponse",
         "type" : "object",
@@ -644,6 +620,20 @@
           "type" : {
             "type" : "string",
             "description" : "Card 타입"
+          }
+        }
+      },
+      "LoginRequest" : {
+        "title" : "LoginRequest",
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string",
+            "description" : "password"
+          },
+          "loginId" : {
+            "type" : "string",
+            "description" : "loginId"
           }
         }
       },
@@ -665,36 +655,34 @@
           "properties" : {
             "fileExtension" : {
               "type" : "string",
-              "description" : "이미지 확장자"
+              "description" : "fileExtension"
             }
           }
         }
       },
-      "CardImageDeleteRequest" : {
-        "title" : "CardImageDeleteRequest",
-        "type" : "object",
-        "properties" : {
-          "cardId" : {
-            "type" : "number",
-            "description" : "카드 id"
-          },
-          "staticUrl" : {
-            "type" : "string",
-            "description" : "삭제할 카드 이미지의 staticUrl"
+      "CardImageUploadCompleteRequest" : {
+        "title" : "CardImageUploadCompleteRequest",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "fileName" : {
+              "type" : "string",
+              "description" : "fileName"
+            }
           }
         }
       },
-      "LoginRequest.Post" : {
-        "title" : "LoginRequest.Post",
-        "type" : "object",
-        "properties" : {
-          "password" : {
-            "type" : "string",
-            "description" : "비밀번호"
-          },
-          "loginId" : {
-            "type" : "string",
-            "description" : "로그인 id"
+      "CardImageUploadCompleteResponse" : {
+        "title" : "CardImageUploadCompleteResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "staticUrl" : {
+              "type" : "string",
+              "description" : "staticUrl"
+            }
           }
         }
       },
@@ -740,17 +728,17 @@
           }
         }
       },
-      "TokenDto.Post" : {
-        "title" : "TokenDto.Post",
+      "TokenDto" : {
+        "title" : "TokenDto",
         "type" : "object",
         "properties" : {
           "accessToken" : {
             "type" : "string",
-            "description" : "access token"
+            "description" : "accessToken"
           },
           "refreshToken" : {
             "type" : "string",
-            "description" : "refresh token"
+            "description" : "refreshToken"
           }
         }
       },
