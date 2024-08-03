@@ -23,6 +23,10 @@ public enum ErrorCode {
     TOKEN_SUBJECT_FORMAT_ERROR(HttpStatus.UNAUTHORIZED, "Subject 값에 Long 타입이 아닌 다른 타입이 들어있습니다."),
     AT_EXPIRED_AND_RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AT는 만료되었고 RT는 비어있습니다."),
 
+    //OAuth
+    AUTH_GET_USER_INFO_FAILED(HttpStatus.UNAUTHORIZED, "SocialAccessToken을 통해 사용자 정보를 가져오는 데에 실패했습니다."),
+    INVALID_PROVIDER_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 방식의 로그인입니다."),
+
     PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호를 잘못 입력하셨습니다."),
 
     //User
