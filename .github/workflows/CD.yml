@@ -15,6 +15,8 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd ~/bbo-gak-server
+            git add .
+            git commit -m "temp commit"
             git fetch origin main
             git merge origin/main
             
