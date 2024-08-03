@@ -12,7 +12,10 @@ public enum CardType {
 
     EXPERIENCE("경험_정리"),
     PERSONAL_STATEMENT("자기소개서"),
-    INTERVIEW_QUESTION("면접_질문");
+    INTERVIEW_QUESTION("면접_질문"),
+    DOCUMENT_PREPARING("서류_준비"),
+    ASSIGNMENT_PREPARING("과제_준비"),
+    INTERVIEW_PREPARING("인터뷰_준비");
 
     private final String value;
 
