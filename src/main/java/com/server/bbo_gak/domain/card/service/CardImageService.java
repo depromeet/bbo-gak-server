@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CardImageService {
 
-    List<CardImageUploadCompleteResponse> addImagesToCard(CardImageUploadCompleteRequest requests);
+    List<CardImageUploadCompleteResponse> addImagesToCard(Long cardId, List<CardImageUploadCompleteRequest> requests);
 
     void deleteCardImage(CardImageDeleteRequest request);
 

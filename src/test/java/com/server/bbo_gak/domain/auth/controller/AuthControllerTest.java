@@ -1,17 +1,9 @@
 package com.server.bbo_gak.domain.auth.controller;
 
-import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
-import com.epages.restdocs.apispec.Schema;
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
@@ -27,9 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -63,7 +52,7 @@ public class AuthControllerTest extends AbstractRestDocsTests {
             mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/login", loginRequest, HttpMethod.POST,
                     objectMapper))
                 .andExpect(status().isOk())
-                .andDo(restDocsFactory.getSuccessResource("[로그인] 성공", "auth", loginRequest, tokenDto));
+                .andDo(restDocsFactory.getSuccessResource("[로그인] 성공", "jwt 토큰 생성", "auth", loginRequest, tokenDto));
         }
 
         @Test
@@ -74,35 +63,10 @@ public class AuthControllerTest extends AbstractRestDocsTests {
             when(authService.login(any(LoginRequest.class))).thenThrow(
                 new BusinessException(ErrorCode.PASSWORD_NOT_MATCHES));
 
-            mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(DEFAULT_URL + "/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidLoginRequest)) // 요청 본문 추가
-                        .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isBadRequest())
-                .andDo(
-                    MockMvcRestDocumentationWrapper.document("[로그인] 비밀번호_실패",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(
-                            ResourceSnippetParameters.builder()
-                                .description("로그인 테스트 - jwt 생성")
-                                .tags("auth")
-                                .requestSchema(Schema.schema("LoginRequest.Post"))
-                                .responseSchema(Schema.schema("ErrorResponse"))
-                                .requestFields(
-                                    fieldWithPath("loginId").type(JsonFieldType.STRING).optional()
-                                        .description("로그인 id"),
-                                    fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
-                                )
-                                .responseFields(
-                                    fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
-                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP 상태 코드")
-                                )
-                                .build()
-                        )
-                    )
-                );
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/login", invalidLoginRequest, HttpMethod.POST,
+                    objectMapper))
+                .andExpect(status().isBadRequest())
+                .andDo(restDocsFactory.getFailureResource("[로그인] 비밀번호_실패", "auth", invalidLoginRequest));
         }
 
         @Test
@@ -113,35 +77,11 @@ public class AuthControllerTest extends AbstractRestDocsTests {
             when(authService.login(any(LoginRequest.class))).thenThrow(
                 new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
-            mockMvc.perform(
-                    RestDocumentationRequestBuilders.post(DEFAULT_URL + "/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalidLoginRequest)) // 요청 본문 추가
-                        .accept(MediaType.APPLICATION_JSON)
-                ).andExpect(status().isNotFound())
-                .andDo(
-                    MockMvcRestDocumentationWrapper.document("[로그인] 아이디_없음",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(
-                            ResourceSnippetParameters.builder()
-                                .description("로그인 테스트 - jwt 생성")
-                                .tags("auth")
-                                .requestSchema(Schema.schema("LoginRequest.Post"))
-                                .responseSchema(Schema.schema("ErrorResponse"))
-                                .requestFields(
-                                    fieldWithPath("loginId").type(JsonFieldType.STRING).optional()
-                                        .description("로그인 id"),
-                                    fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호")
-                                )
-                                .responseFields(
-                                    fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지"),
-                                    fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP 상태 코드")
-                                )
-                                .build()
-                        )
-                    )
-                );
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/login", invalidLoginRequest, HttpMethod.POST,
+                    objectMapper))
+                .andExpect(status().isNotFound())
+                .andDo(restDocsFactory.getFailureResource("[로그인] 아이디_없음", "auth", invalidLoginRequest));
+
         }
     }
 

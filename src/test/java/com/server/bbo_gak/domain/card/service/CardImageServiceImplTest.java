@@ -47,7 +47,7 @@ public class CardImageServiceImplTest {
     private CardImageServiceImpl cardImageService;
 
     private Card card;
-    private CardImageUploadCompleteRequest uploadValidRequest;
+    private List<CardImageUploadCompleteRequest> uploadValidRequest;
     private CardImageDeleteRequest deleteRequest;
 
 
@@ -56,8 +56,9 @@ public class CardImageServiceImplTest {
         card = Card.builder().build();
         setField(card, "id", 1L);
 
-        uploadValidRequest = new CardImageUploadCompleteRequest(1L,
-            Arrays.asList("card/1/file1.png", "card/1/file2.png"));
+        uploadValidRequest = Arrays.asList(
+            new CardImageUploadCompleteRequest("card/1/file1.png"),
+            new CardImageUploadCompleteRequest("card/1/file2.png"));
         deleteRequest = new CardImageDeleteRequest(1L, "file1.png");
     }
 
@@ -93,7 +94,7 @@ public class CardImageServiceImplTest {
             when(s3Util.getS3ObjectUrl(anyString())).thenAnswer(
                 invocation -> "https://example.com/" + invocation.getArgument(0));
 
-            List<CardImageUploadCompleteResponse> responses = cardImageService.addImagesToCard(uploadValidRequest);
+            List<CardImageUploadCompleteResponse> responses = cardImageService.addImagesToCard(1L, uploadValidRequest);
 
             assertEquals(2, responses.size());
             assertEquals("https://example.com/card/1/file1.png", responses.get(0).staticUrl());
@@ -106,7 +107,7 @@ public class CardImageServiceImplTest {
         void 카드에_이미지_추가_카드없음_실패() {
             when(cardRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            assertThrows(NotFoundException.class, () -> cardImageService.addImagesToCard(uploadValidRequest));
+            assertThrows(NotFoundException.class, () -> cardImageService.addImagesToCard(1L, uploadValidRequest));
         }
     }
 }
