@@ -68,6 +68,4 @@ public class CardMemoService {
         return cardMemoRepository.findByIdAndCard(cardMemoId, card)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_MEMO_NOT_FOUND));
     }
-
-
 }

@@ -37,4 +37,9 @@ public class CardMemo extends BaseEntity {
     public void updateContent(String content) {
         this.content = content;
     }
+  
+    public CardMemo(String content, Card card) {
+        this.content = content;
+        this.card = card;
+    }
 }

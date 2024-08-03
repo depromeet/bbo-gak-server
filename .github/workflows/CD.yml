@@ -15,10 +15,13 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd ~/bbo-gak-server
+            git add .
+            git commit -m "temp commit"
             git fetch origin main
             git merge origin/main
-            ./gradlew openapi3
+            
             ./gradlew clean build
+            ./gradlew openapi3
             docker rm bbo-gak-server_back_1 --force
             docker rmi bbo-gak-server_back
             docker-compose -f docker-compose-dev.yml up --build -d
