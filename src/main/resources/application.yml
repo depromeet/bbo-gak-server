@@ -1,10 +1,11 @@
 spring:
   profiles:
-    active: local
+    active: prod
     group:
       test: "test"
       local: "local, datasource"
       dev: "dev, datasource"
+      prod: "prod, datasource"
     include:
       - security
       - swagger
