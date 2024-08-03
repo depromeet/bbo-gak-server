@@ -49,9 +49,7 @@ public class Card extends BaseEntity {
     private User user;
 
     private boolean copyFlag = false;
-
-    private boolean copyFlag = false;
-
+    
     @Enumerated(EnumType.STRING)
     private CardType cardType;
 
