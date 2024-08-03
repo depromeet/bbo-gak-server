@@ -53,9 +53,10 @@ public class CardController {
     @PostMapping("/card")
     public ResponseEntity<CardCreateResponse> createCard(
         @AuthUser User user,
-        @RequestParam("type") String type) {
+        @RequestParam("type") String type,
+        @RequestParam("tag-id") Long tagId) {
 
-        return ResponseEntity.ok(cardService.createCard(user, type));
+        return ResponseEntity.ok(cardService.createCard(user, type, tagId));
     }
 
     @PutMapping("/cards/{card-id}/title")

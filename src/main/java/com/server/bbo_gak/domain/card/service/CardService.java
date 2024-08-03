@@ -12,6 +12,7 @@ import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.CardType;
+import com.server.bbo_gak.domain.card.entity.Tag;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
@@ -59,9 +60,13 @@ public class CardService {
     }
 
     @Transactional
-    public CardCreateResponse createCard(User user, String type) {
+    public CardCreateResponse createCard(User user, String type, Long tagId) {
+
+        Tag tag = tagRepository.findById(tagId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
 
         Card card = cardRepository.save(Card.creatEmptyCard(type, user));
+        cardTagRepository.save(new CardTag(card, tag));
 
         return CardCreateResponse.of(card.getId(), card.getCardType().getValue());
     }

@@ -12,31 +12,20 @@ public record CardListGetResponse(
     Long id,
     String title,
     String updatedDate,
-    List<CardTagResponse> cardTagList
+    List<TagGetResponse> tagList
 ) {
 
     public static CardListGetResponse of(Card card, List<CardTag> cardTagList) {
+
+        List<TagGetResponse> tagGetResponseList = cardTagList.stream()
+            .map(cardTag -> TagGetResponse.of(cardTag.getTag()))
+            .toList();
+
         return CardListGetResponse.builder()
             .id(card.getId())
             .title(card.getTitle())
             .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
-            .cardTagList(cardTagList.stream().map(CardTagResponse::of).toList())
+            .tagList(tagGetResponseList)
             .build();
-    }
-
-    @Builder(access = AccessLevel.PRIVATE)
-    public record CardTagResponse(
-        Long id,
-        String name,
-        String type
-    ) {
-
-        public static CardTagResponse of(CardTag cardTag) {
-            return CardTagResponse.builder()
-                .id(cardTag.getId())
-                .name(cardTag.getTag().getName())
-                .type(cardTag.getTag().getTagType().getValue())
-                .build();
-        }
     }
 }

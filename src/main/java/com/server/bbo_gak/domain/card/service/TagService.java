@@ -24,7 +24,13 @@ public class TagService {
     private final TagRepository tagRepository;
     private final CardTagRepository cardTagRepository;
 
-    public List<TagGetResponse> getAllTagList(User user, Long cardId) {
+    public List<TagGetResponse> getAllTagList() {
+        return tagRepository.findAll().stream()
+            .map(TagGetResponse::of)
+            .toList();
+    }
+
+    public List<TagGetResponse> getCardTagList(User user, Long cardId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));

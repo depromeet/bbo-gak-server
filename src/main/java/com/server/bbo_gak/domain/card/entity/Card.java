@@ -1,6 +1,7 @@
 package com.server.bbo_gak.domain.card.entity;
 
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
+import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,7 +44,9 @@ public class Card extends BaseEntity {
 
     private LocalDateTime accessTime;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private boolean copyFlag = false;
 
@@ -56,8 +59,8 @@ public class Card extends BaseEntity {
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CardImage> cardImageList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cardMemo")
-    private List<CardMemo> cardMomoList = new ArrayList<>();
+    @OneToMany(mappedBy = "card")
+    private List<CardMemo> cardMemoList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "copy_info_id")
@@ -68,19 +71,19 @@ public class Card extends BaseEntity {
     private Recruit recruit;
 
     @Builder
-    public Card(String title, String content, LocalDateTime accessTime, CardType cardType, Long userId) {
+    public Card(String title, String content, LocalDateTime accessTime, CardType cardType, User user) {
         this.title = title;
         this.content = content;
         this.accessTime = accessTime;
         this.cardType = cardType;
-        this.userId = userId;
+        this.user = user;
     }
 
-    public static Card creatEmptyCard(String type, Long userId) {
+    public static Card creatEmptyCard(String type, User user) {
         return Card.builder()
             .title("")
             .content("")
-            .userId(userId)
+            .user(user)
             .cardType(CardType.findByValue(type))
             .accessTime(LocalDateTime.now())
             .build();
