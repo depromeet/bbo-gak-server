@@ -17,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,12 +33,14 @@ public class Recruit extends BaseEntity {
 
     private String title;
 
-    private String season;
-
     private String siteUrl;
 
     @Enumerated(EnumType.STRING)
     private RecruitStatus recruitStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recruit_season_id")
+    private Season season;
 
     @OneToMany(mappedBy = "recruit")
     private List<Card> cardList = new ArrayList<>();
@@ -45,4 +48,15 @@ public class Recruit extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public Recruit(String title, Season season, String siteUrl, RecruitStatus recruitStatus, List<Card> cardList,
+        User user) {
+        this.title = title;
+        this.season = season;
+        this.siteUrl = siteUrl;
+        this.recruitStatus = recruitStatus;
+        this.cardList = cardList;
+        this.user = user;
+    }
 }

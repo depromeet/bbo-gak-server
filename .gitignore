@@ -11,7 +11,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-!**/src/main/resources/static/**
+/src/main/resources/static/
 
 ### STS ###
 .apt_generated

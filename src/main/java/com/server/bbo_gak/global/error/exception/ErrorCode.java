@@ -38,7 +38,12 @@ public enum ErrorCode {
 
     //Tag
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다"),
-    TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다.");
+    TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다."),
+
+    //Season
+    SEASON_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 분기를 찾을 수 없습니다"),
+
+    ;
     private final HttpStatus status;
     private final String message;
 
