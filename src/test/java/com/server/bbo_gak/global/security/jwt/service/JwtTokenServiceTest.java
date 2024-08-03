@@ -61,7 +61,7 @@ public class JwtTokenServiceTest {
         when(jwtUtil.generateAccessToken(anyLong(), any(UserRole.class))).thenReturn("newAccessToken");
         when(jwtUtil.generateRefreshToken(anyLong(), any(UserRole.class))).thenReturn("newRefreshToken");
 
-        TokenDto result = jwtTokenService.recreateTokenDtoAtInValidate(user);
+        TokenDto result = jwtTokenService.recreateTokenDtoAtInvalidate(user);
 
         verify(refreshTokenRepository, times(1)).deleteById(user.getId());
         verify(refreshTokenRepository, times(1)).save(any(RefreshToken.class));
