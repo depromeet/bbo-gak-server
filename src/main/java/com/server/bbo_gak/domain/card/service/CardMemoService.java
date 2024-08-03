@@ -26,17 +26,17 @@ public class CardMemoService {
 
     public List<CardMemoGetResponse> getCardMemoList(User user, Long cardId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
-        return card.getCardMomoList().stream()
+        return card.getCardMemoList().stream()
             .map(CardMemoGetResponse::of)
             .toList();
     }
 
     public CardMemoCreateResponse createCardMemo(User user, CardMemoCreateRequest request, Long cardId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         CardMemo cardMemo = cardMemoRepository.save(new CardMemo(card, request.content()));
@@ -62,7 +62,7 @@ public class CardMemoService {
 
     private CardMemo findCardMemo(User user, Long cardId, Long cardMemoId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         return cardMemoRepository.findByIdAndCard(cardMemoId, card)

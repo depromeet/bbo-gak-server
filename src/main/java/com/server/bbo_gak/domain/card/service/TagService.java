@@ -26,7 +26,7 @@ public class TagService {
 
     public List<TagGetResponse> getAllTagList(User user, Long cardId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         // 이미 할당된 태그 제외하기 위해 할당된 태그 id 리스트 get
@@ -44,7 +44,7 @@ public class TagService {
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         validateTagDuplicated(tag.getId(), card);
@@ -57,11 +57,11 @@ public class TagService {
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         CardTag cardTag = cardTagRepository.findByCardAndTag(card, tag)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
+            .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_TAG_NOT_FOUND));
 
         cardTagRepository.delete(cardTag);
     }

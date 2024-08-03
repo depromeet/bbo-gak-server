@@ -32,7 +32,7 @@ public class CardService {
     @Transactional(readOnly = true)
     public CardTypeCountGetResponse getCardTypeCounts(User user) {
 
-        List<Card> cards = cardRepository.findAllByUserId(user.getId());
+        List<Card> cards = cardRepository.findAllByUser(user);
 
         return CardTypeCountGetResponse.of(cards);
     }
@@ -40,7 +40,7 @@ public class CardService {
     @Transactional(readOnly = true)
     public CardGetResponse getCardDetail(User user, Long cardId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         List<CardTag> cardTags = cardTagRepository.findAllByCard(card);
@@ -51,7 +51,7 @@ public class CardService {
     @Transactional(readOnly = true)
     public List<CardListGetResponse> getCardList(User user, String type) {
 
-        List<Card> cards = cardRepository.findAllByUserIdAndCardType(user.getId(), CardType.findByValue(type));
+        List<Card> cards = cardRepository.findAllByUserAndCardType(user, CardType.findByValue(type));
 
         return cards.stream()
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
@@ -61,7 +61,7 @@ public class CardService {
     @Transactional
     public CardCreateResponse createCard(User user, String type) {
 
-        Card card = cardRepository.save(Card.creatEmptyCard(type, user.getId()));
+        Card card = cardRepository.save(Card.creatEmptyCard(type, user));
 
         return CardCreateResponse.of(card.getId(), card.getCardType().getValue());
     }
@@ -69,7 +69,7 @@ public class CardService {
     @Transactional
     public void updateCardTitle(User user, Long cardId, CardTitleUpdateRequest request) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         card.updateTitle(request.title());
@@ -78,7 +78,7 @@ public class CardService {
     @Transactional
     public void updateCardContent(User user, Long cardId, CardContentUpdateRequest request) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         card.updateContent(request.content());
@@ -87,7 +87,7 @@ public class CardService {
     @Transactional
     public void deleteCard(User user, Long cardId) {
 
-        Card card = cardRepository.findByIdAndUserId(cardId, user.getId())
+        Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         cardTagRepository.deleteAll(card.getCardTagList());
