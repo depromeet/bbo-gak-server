@@ -28,7 +28,7 @@ public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
     private String[] allowUrls = {"/", "/api/v1/users/test/login", "/docs/**", "/v3/**", "/favicon.ico",
-        "/api/docs/swagger", "/api/docs/**"};
+        "/api/docs/**", "/api/v3/**"};
 
     @Bean
     public WebSecurityCustomizer configure() {
