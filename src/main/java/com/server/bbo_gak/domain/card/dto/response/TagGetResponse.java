@@ -11,7 +11,7 @@ public record TagGetResponse(
     String type
 ) {
 
-    public static TagGetResponse of(Tag tag) {
+    public static TagGetResponse from(Tag tag) {
         return TagGetResponse.builder()
             .id(tag.getId())
             .name(tag.getName())

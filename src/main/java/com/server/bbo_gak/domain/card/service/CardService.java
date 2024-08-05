@@ -43,7 +43,7 @@ public class CardService {
 
         List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList);
 
-        return CardTypeCountGetResponse.of(cards);
+        return CardTypeCountGetResponse.from(cards);
     }
 
     @Transactional(readOnly = true)

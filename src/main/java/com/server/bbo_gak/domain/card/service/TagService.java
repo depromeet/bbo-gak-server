@@ -24,12 +24,14 @@ public class TagService {
     private final TagRepository tagRepository;
     private final CardTagRepository cardTagRepository;
 
+    @Transactional(readOnly = true)
     public List<TagGetResponse> getAllTagList() {
         return tagRepository.findAll().stream()
-            .map(TagGetResponse::of)
+            .map(TagGetResponse::from)
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<TagGetResponse> getTagListInCard(User user, Long cardId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
@@ -41,7 +43,7 @@ public class TagService {
             .toList();
 
         return tagRepository.findAllByIdIsNotIn(assignedTagIdList).stream()
-            .map(TagGetResponse::of)
+            .map(TagGetResponse::from)
             .toList();
     }
 
@@ -59,7 +61,7 @@ public class TagService {
     }
 
     @Transactional
-    public void deleteCardTag(User user, Long cardId, Long tagId) {
+    public void deleteTagFromCard(User user, Long cardId, Long tagId) {
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
 

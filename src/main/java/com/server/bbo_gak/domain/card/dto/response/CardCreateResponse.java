@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.card.dto.response;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -9,7 +8,7 @@ public record CardCreateResponse(
     Long cardId
 ) {
 
-    public static CardCreateResponse of(Long cardId, List<String> cardTypeValueList, List<Long> tagIdList) {
+    public static CardCreateResponse of(Long cardId) {
         return CardCreateResponse.builder()
             .cardId(cardId)
             .build();

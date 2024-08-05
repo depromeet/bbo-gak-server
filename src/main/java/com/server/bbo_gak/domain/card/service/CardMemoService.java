@@ -14,6 +14,7 @@ import com.server.bbo_gak.global.error.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +25,18 @@ public class CardMemoService {
     private final CardMemoRepository cardMemoRepository;
 
 
+    @Transactional(readOnly = true)
     public List<CardMemoGetResponse> getCardMemoList(User user, Long cardId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         return card.getCardMemoList().stream()
-            .map(CardMemoGetResponse::of)
+            .map(CardMemoGetResponse::from)
             .toList();
     }
 
+    @Transactional
     public CardMemoCreateResponse createCardMemo(User user, CardMemoCreateRequest request, Long cardId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
@@ -44,6 +47,7 @@ public class CardMemoService {
         return new CardMemoCreateResponse(cardMemo.getId(), cardMemo.getContent());
     }
 
+    @Transactional
     public void updateCardMemo(User user, CardMemoContentUpdateRequest request, Long cardId, Long cardMemoId) {
 
         CardMemo cardMemo = findCardMemo(user, cardId, cardMemoId);
@@ -53,6 +57,7 @@ public class CardMemoService {
         cardMemoRepository.save(cardMemo);
     }
 
+    @Transactional
     public void deleteCardMemo(User user, Long cardId, Long cardMemoId) {
 
         CardMemo cardMemo = findCardMemo(user, cardId, cardMemoId);

@@ -54,7 +54,7 @@ public class CardMemoController {
         return ResponseEntity.ok().body(null);
     }
 
-    @DeleteMapping("/{card-id}/card-momo/{card-memo-id}")
+    @DeleteMapping("/{card-id}/card-memo/{card-memo-id}")
     public ResponseEntity<Void> deleteCardMemo(
         @AuthUser User user,
         @PathVariable("card-id") Long cardId,

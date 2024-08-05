@@ -16,7 +16,7 @@ public record CardTypeCountGetResponse(
     Long 면접_질문
 ) {
 
-    public static CardTypeCountGetResponse of(List<Card> cards) {
+    public static CardTypeCountGetResponse from(List<Card> cards) {
 
         Map<CardTypeValue, Long> cardTypeValueCountMap = cards.stream()
             .flatMap(card -> card.getCardTypeList().stream())

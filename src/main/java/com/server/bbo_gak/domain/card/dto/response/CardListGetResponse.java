@@ -18,7 +18,7 @@ public record CardListGetResponse(
     public static CardListGetResponse of(Card card, List<CardTag> cardTagList) {
 
         List<TagGetResponse> tagGetResponseList = cardTagList.stream()
-            .map(cardTag -> TagGetResponse.of(cardTag.getTag()))
+            .map(cardTag -> TagGetResponse.from(cardTag.getTag()))
             .toList();
 
         return CardListGetResponse.builder()

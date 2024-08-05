@@ -49,7 +49,7 @@ public class TagController {
         @PathVariable("card-id") Long cardId, @PathVariable("tag-id") Long tagId
     ) {
 
-        tagService.deleteCardTag(user, cardId, tagId);
+        tagService.deleteTagFromCard(user, cardId, tagId);
         return ResponseEntity.ok(null);
     }
 

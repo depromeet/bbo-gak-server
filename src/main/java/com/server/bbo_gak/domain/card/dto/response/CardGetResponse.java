@@ -19,7 +19,7 @@ public record CardGetResponse(
     public static CardGetResponse of(Card card, List<CardTag> cardTagList) {
 
         List<TagGetResponse> tagGetResponseList = cardTagList.stream()
-            .map(cardTag -> TagGetResponse.of(cardTag.getTag()))
+            .map(cardTag -> TagGetResponse.from(cardTag.getTag()))
             .toList();
 
         List<String> cardTypeValueList = card.getCardTypeList().stream()

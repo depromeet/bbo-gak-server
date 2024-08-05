@@ -12,7 +12,7 @@ public record CardMemoGetResponse(
     String updatedDate
 ) {
 
-    public static CardMemoGetResponse of(CardMemo cardMemo) {
+    public static CardMemoGetResponse from(CardMemo cardMemo) {
         return CardMemoGetResponse.builder()
             .id(cardMemo.getId())
             .content(cardMemo.getContent())
