@@ -31,7 +31,7 @@ public class TagController {
         @AuthUser User user,
         @PathVariable("card-id") Long cardId) {
 
-        return ResponseEntity.ok(tagService.getCardTagList(user, cardId));
+        return ResponseEntity.ok(tagService.getTagListInCard(user, cardId));
     }
 
     @PostMapping("/cards/{card-id}/tag/{tag-id}")
@@ -39,7 +39,7 @@ public class TagController {
         @AuthUser User user,
         @PathVariable("card-id") Long cardId, @PathVariable("tag-id") Long tagId) {
 
-        tagService.addCardTag(user, cardId, tagId);
+        tagService.addTagToCard(user, cardId, tagId);
         return ResponseEntity.ok(null);
     }
 

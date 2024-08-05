@@ -1,6 +1,6 @@
 package com.server.bbo_gak.domain.recruit.service;
 
-import com.server.bbo_gak.domain.card.entity.CardType;
+import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.user.entity.User;
 
 public interface RecruitService {
@@ -17,7 +17,7 @@ public interface RecruitService {
 
     void getRecruitDetail();
 
-    void getCardListInRecruit(User user, Long recruitId, CardType type);
+    void getCardListInRecruit(User user, Long recruitId, CardTypeValue type);
 
     void getCardTypeCountsInRecruit(User user, Long recruitId);
 

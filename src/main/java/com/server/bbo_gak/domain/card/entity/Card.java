@@ -6,8 +6,6 @@ import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -49,18 +47,18 @@ public class Card extends BaseEntity {
     private User user;
 
     private boolean copyFlag = false;
-    
-    @Enumerated(EnumType.STRING)
-    private CardType cardType;
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<CardTag> cardTagList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CardImage> cardImageList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<CardMemo> cardMemoList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
+    private List<CardType> cardTypeList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "copy_info_id")
@@ -71,20 +69,19 @@ public class Card extends BaseEntity {
     private Recruit recruit;
 
     @Builder
-    public Card(String title, String content, LocalDateTime accessTime, CardType cardType, User user) {
+    public Card(String title, String content, LocalDateTime accessTime, List<CardType> cardTypeList, User user) {
         this.title = title;
         this.content = content;
         this.accessTime = accessTime;
-        this.cardType = cardType;
+        this.cardTypeList = cardTypeList;
         this.user = user;
     }
 
-    public static Card creatEmptyCard(String type, User user) {
+    public static Card creatEmptyCard(User user) {
         return Card.builder()
             .title("")
             .content("")
             .user(user)
-            .cardType(CardType.findByValue(type))
             .accessTime(LocalDateTime.now())
             .build();
     }

@@ -1,9 +1,12 @@
 package com.server.bbo_gak.domain.card.service;
 
+import com.server.bbo_gak.domain.card.dao.CardDao;
 import com.server.bbo_gak.domain.card.dao.CardRepository;
 import com.server.bbo_gak.domain.card.dao.CardTagRepository;
+import com.server.bbo_gak.domain.card.dao.CardTypeRepository;
 import com.server.bbo_gak.domain.card.dao.TagRepository;
 import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.request.CardCreateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
@@ -12,7 +15,8 @@ import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.CardType;
-import com.server.bbo_gak.domain.card.entity.Tag;
+import com.server.bbo_gak.domain.card.entity.CardTypeValue;
+import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
@@ -26,14 +30,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CardService {
 
+    private final CardDao cardDao;
     private final CardRepository cardRepository;
     private final CardTagRepository cardTagRepository;
     private final TagRepository tagRepository;
+    private final CardTypeRepository cardTypeRepository;
 
     @Transactional(readOnly = true)
     public CardTypeCountGetResponse getCardTypeCounts(User user) {
 
-        List<Card> cards = cardRepository.findAllByUser(user);
+        CardTypeValue[] cardTypeValueList = CardTypeValueGroup.MY_INFO.getCardTypeValueList();
+
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList);
 
         return CardTypeCountGetResponse.of(cards);
     }
@@ -50,9 +58,9 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardListGetResponse> getCardList(User user, String type) {
+    public List<CardListGetResponse> getCardList(User user, String cardTypeValue) {
 
-        List<Card> cards = cardRepository.findAllByUserAndCardType(user, CardType.findByValue(type));
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue));
 
         return cards.stream()
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
@@ -60,15 +68,25 @@ public class CardService {
     }
 
     @Transactional
-    public CardCreateResponse createCard(User user, String type, Long tagId) {
+    public CardCreateResponse createCard(User user, CardCreateRequest cardCreateRequest) {
 
-        Tag tag = tagRepository.findById(tagId)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
+        Card card = cardRepository.save(Card.creatEmptyCard(user));
 
-        Card card = cardRepository.save(Card.creatEmptyCard(type, user));
-        cardTagRepository.save(new CardTag(card, tag));
+        List<CardType> cardTypeList = cardCreateRequest.cardTypeValueList().stream()
+            .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
+            .toList();
 
-        return CardCreateResponse.of(card.getId(), card.getCardType().getValue());
+        cardTypeRepository.saveAll(cardTypeList);
+
+        List<CardTag> cardTagList = cardCreateRequest.tagIdList().stream()
+            .map(tagId -> tagRepository.findById(tagId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND)))
+            .map(tag -> new CardTag(card, tag))
+            .toList();
+
+        cardTagRepository.saveAll(cardTagList);
+
+        return new CardCreateResponse(card.getId());
     }
 
     @Transactional

@@ -30,7 +30,7 @@ public class TagService {
             .toList();
     }
 
-    public List<TagGetResponse> getCardTagList(User user, Long cardId) {
+    public List<TagGetResponse> getTagListInCard(User user, Long cardId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
@@ -46,7 +46,7 @@ public class TagService {
     }
 
     @Transactional
-    public void addCardTag(User user, Long cardId, Long tagId) {
+    public void addTagToCard(User user, Long cardId, Long tagId) {
 
         Tag tag = tagRepository.findById(tagId).orElseThrow(() -> new NotFoundException(ErrorCode.TAG_NOT_FOUND));
 

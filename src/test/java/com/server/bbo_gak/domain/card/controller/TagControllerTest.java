@@ -65,7 +65,7 @@ public class TagControllerTest extends AbstractRestDocsTests {
 
         private ResourceSnippetParameters getSuccessResponseResource() {
             return ResourceSnippetParameters.builder()
-                .description("카드 태그 목록").tags("Tag")
+                .description("전체 카드 태그 목록").tags("Tag")
                 .responseSchema(Schema.schema("TagGetResponse"))
                 .responseFields(
                     fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("태그 ID"),

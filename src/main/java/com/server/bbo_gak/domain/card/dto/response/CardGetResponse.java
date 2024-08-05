@@ -12,7 +12,7 @@ public record CardGetResponse(
     String title,
     String content,
     String updatedDate,
-    String type,
+    List<String> cardTypeValueList,
     List<TagGetResponse> tagList
 ) {
 
@@ -22,11 +22,15 @@ public record CardGetResponse(
             .map(cardTag -> TagGetResponse.of(cardTag.getTag()))
             .toList();
 
+        List<String> cardTypeValueList = card.getCardTypeList().stream()
+            .map(cardType -> cardType.getCardTypeValue().getValue())
+            .toList();
+
         return CardGetResponse.builder()
             .title(card.getTitle())
             .content(card.getContent())
             .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
-            .type(card.getCardType().getValue())
+            .cardTypeValueList(cardTypeValueList)
             .tagList(tagGetResponseList)
             .build();
     }

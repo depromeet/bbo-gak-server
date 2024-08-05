@@ -26,7 +26,7 @@ public class CardMemoController {
 
     private final CardMemoService cardMemoService;
 
-    @GetMapping("/{card-id}/card-momo")
+    @GetMapping("/{card-id}/card-memo")
     public ResponseEntity<List<CardMemoGetResponse>> getCardMemoList(
         @AuthUser User user,
         @PathVariable("card-id") Long cardId) {
@@ -34,7 +34,7 @@ public class CardMemoController {
         return ResponseEntity.ok(cardMemoService.getCardMemoList(user, cardId));
     }
 
-    @PostMapping("/{card-id}/card-momo")
+    @PostMapping("/{card-id}/card-memo")
     public ResponseEntity<CardMemoCreateResponse> createCardMemo(
         @AuthUser User user,
         @PathVariable("card-id") Long cardId,
