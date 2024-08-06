@@ -43,6 +43,9 @@ public enum ErrorCode {
     //Season
     SEASON_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 분기를 찾을 수 없습니다"),
 
+    //Recruit
+    RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고를 찾을 수 없습니다"),
+
     ;
     private final HttpStatus status;
     private final String message;

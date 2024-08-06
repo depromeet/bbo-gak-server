@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recruit extends BaseEntity {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recruit_id")
@@ -45,18 +46,42 @@ public class Recruit extends BaseEntity {
     @OneToMany(mappedBy = "recruit")
     private List<Card> cardList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "recruit")
+    private List<RecruitSchedule> scheduleList = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Recruit(String title, Season season, String siteUrl, RecruitStatus recruitStatus, List<Card> cardList,
+    public Recruit(Season season, String title, String siteUrl, RecruitStatus recruitStatus,
         User user) {
-        this.title = title;
         this.season = season;
+        this.title = title;
         this.siteUrl = siteUrl;
         this.recruitStatus = recruitStatus;
-        this.cardList = cardList;
         this.user = user;
+    }
+
+    public Recruit addSchedule(RecruitSchedule recruitSchedule) {
+        recruitSchedule.setRecruit(this);
+        this.scheduleList.add(recruitSchedule);
+        return this;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateSiteUrl(String siteUrl) {
+        this.siteUrl = siteUrl;
+    }
+
+    public void updateRecruitStatus(RecruitStatus recruitStatus) {
+        this.recruitStatus = recruitStatus;
+    }
+
+    public void updateSeason(Season season) {
+        this.season = season;
     }
 }
