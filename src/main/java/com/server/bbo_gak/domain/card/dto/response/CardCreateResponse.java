@@ -5,14 +5,12 @@ import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
 public record CardCreateResponse(
-    Long cardId,
-    String type
+    Long cardId
 ) {
 
-    public static CardCreateResponse of(Long cardId, String type) {
+    public static CardCreateResponse of(Long cardId) {
         return CardCreateResponse.builder()
             .cardId(cardId)
-            .type(type)
             .build();
     }
 }
