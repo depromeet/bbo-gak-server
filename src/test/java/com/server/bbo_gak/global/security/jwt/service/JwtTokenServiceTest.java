@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+import com.server.bbo_gak.domain.user.entity.OauthInfo;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -54,7 +55,10 @@ public class JwtTokenServiceTest {
 
     @Test
     void 토큰_재생성() {
-        User user = new User("testUser", "email", UserRole.USER);
+        User user = User.builder()
+            .role(UserRole.USER)
+            .oauthInfo(OauthInfo.builder().email("email").name("testUser").build())
+            .build();
         setField(user, "id", 1L);
         TokenDto tokenDto = new TokenDto("newAccessToken", "newRefreshToken");
 
