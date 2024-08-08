@@ -1,4 +1,6 @@
 delete
+from card_memo;
+delete
 from card_tag;
 delete
 from tag;
@@ -49,3 +51,16 @@ INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_
 VALUES (false, 1, 2, '2024-07-24 21:26:29.000000', 2, '2024-07-24 21:26:41.000000');
 INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
 VALUES (false, 2, 3, '2024-07-24 21:26:31.000000', 2, '2024-07-24 21:26:42.000000');
+
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 1, 1, '2024-07-24 21:26:31.000000', 'test contents 111', '2024-07-24 21:26:42.000000');
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 1, 2, '2024-07-24 21:26:31.000000', 'test contents 222', '2024-07-24 21:26:42.000000');
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 1, 3, '2024-07-24 21:26:31.000000', 'test contents 222', '2024-07-24 21:26:42.000000');
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 2, 4, '2024-07-24 21:26:31.000000', 'test contents 111', '2024-07-24 21:26:42.000000');
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 2, 5, '2024-07-24 21:26:31.000000', 'test contents 222', '2024-07-24 21:26:42.000000');
+INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
+VALUES (false, 3, 6, '2024-07-24 21:26:31.000000', 'test contents 333', '2024-07-24 21:26:42.000000');
