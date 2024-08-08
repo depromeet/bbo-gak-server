@@ -11,5 +11,5 @@ public interface SeasonRepository extends JpaRepository<Season, Long> {
 
     boolean existsByUserIdAndName(Long userId, String name);
 
-    Optional<Season> findByName(String name);
+    Optional<Season> findByUserIdAndName(Long userId, String name);
 }

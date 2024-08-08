@@ -5,7 +5,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSeasonRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSiteUrlRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateStatusRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateTitleRequest;
-import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetDetailResponse;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.service.RecruitService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
@@ -30,7 +30,7 @@ public class RecruitController {
     private final RecruitService recruitService;
 
     @GetMapping("")
-    public ResponseEntity<List<RecruitGetDetailResponse>> getTotalRecruitList(
+    public ResponseEntity<List<RecruitGetResponse>> getTotalRecruitList(
         @AuthUser User user
     ) {
         return ResponseEntity.ok(recruitService.getTotalRecruitList(user));
@@ -38,7 +38,7 @@ public class RecruitController {
 
 
     @GetMapping("/bySeason")
-    public ResponseEntity<List<RecruitGetDetailResponse>> getRecruitListBySeason(
+    public ResponseEntity<List<RecruitGetResponse>> getRecruitListBySeason(
         @AuthUser User user,
         @RequestParam("season") String season
     ) {
@@ -46,14 +46,14 @@ public class RecruitController {
     }
 
     @GetMapping("/progressing")
-    public ResponseEntity<List<RecruitGetDetailResponse>> getProgressingRecruitList(
+    public ResponseEntity<List<RecruitGetResponse>> getProgressingRecruitList(
         @AuthUser User user
     ) {
         return ResponseEntity.ok(recruitService.getProgressingRecruitList(user));
     }
 
     @PostMapping("")
-    public ResponseEntity<Long> createRecruit(
+    public ResponseEntity<RecruitGetResponse> createRecruit(
         @AuthUser User user,
         @RequestBody RecruitCreateRequest request
     ) {
@@ -70,38 +70,38 @@ public class RecruitController {
     }
 
     @PatchMapping("/{id}/title")
-    public ResponseEntity<RecruitGetDetailResponse> updateRecruitTitle(
+    public ResponseEntity<RecruitGetResponse> updateRecruitTitle(
         @AuthUser User user,
         @PathVariable("id") Long id,
         @RequestBody RecruitUpdateTitleRequest request) {
-        RecruitGetDetailResponse response = recruitService.updateRecruitTitle(user, id, request.title());
+        RecruitGetResponse response = recruitService.updateRecruitTitle(user, id, request.title());
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/season")
-    public ResponseEntity<RecruitGetDetailResponse> updateRecruitSeason(
+    public ResponseEntity<RecruitGetResponse> updateRecruitSeason(
         @AuthUser User user,
         @PathVariable("id") Long id,
         @RequestBody RecruitUpdateSeasonRequest request) {
-        RecruitGetDetailResponse response = recruitService.updateRecruitSeason(user, id, request.season());
+        RecruitGetResponse response = recruitService.updateRecruitSeason(user, id, request.season());
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<RecruitGetDetailResponse> updateRecruitStatus(
+    public ResponseEntity<RecruitGetResponse> updateRecruitStatus(
         @AuthUser User user,
         @PathVariable("id") Long id,
         @RequestBody RecruitUpdateStatusRequest request) {
-        RecruitGetDetailResponse response = recruitService.updateRecruitStatus(user, id, request.recruitStatus());
+        RecruitGetResponse response = recruitService.updateRecruitStatus(user, id, request.recruitStatus());
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{id}/siteUrl")
-    public ResponseEntity<RecruitGetDetailResponse> updateRecruitSiteUrl(
+    public ResponseEntity<RecruitGetResponse> updateRecruitSiteUrl(
         @AuthUser User user,
         @PathVariable("id") Long id,
         @RequestBody RecruitUpdateSiteUrlRequest request) {
-        RecruitGetDetailResponse response = recruitService.updateRecruitSiteUrl(user, id, request.siteUrl());
+        RecruitGetResponse response = recruitService.updateRecruitSiteUrl(user, id, request.siteUrl());
         return ResponseEntity.ok(response);
     }
 }

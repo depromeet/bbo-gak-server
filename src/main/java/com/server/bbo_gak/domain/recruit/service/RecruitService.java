@@ -4,7 +4,7 @@ import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
-import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetDetailResponse;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
@@ -30,25 +30,25 @@ public class RecruitService {
     private final SeasonService seasonService;
     private final RecruitScheduleService recruitScheduleService;
 
-    public List<RecruitGetDetailResponse> getTotalRecruitList(User user) {
+    public List<RecruitGetResponse> getTotalRecruitList(User user) {
         List<Recruit> recruits = recruitRepository.findAllByUserId(user.getId());
 
         return recruits.stream()
             .sorted((r1, r2) -> r2.getCreatedDate().compareTo(r1.getCreatedDate()))
-            .map(RecruitGetDetailResponse::from)
+            .map(RecruitGetResponse::from)
             .toList();
     }
 
-    public List<RecruitGetDetailResponse> getRecruitListBySeason(User user, String seasonName) {
-        Season season = seasonService.getSeasonByName(seasonName);
+    public List<RecruitGetResponse> getRecruitListBySeason(User user, String seasonName) {
+        Season season = seasonService.getSeasonByName(user, seasonName);
         return recruitRepository.findAllByUserIdAndSeason(user.getId(), season).stream()
-            .map(RecruitGetDetailResponse::from)
+            .map(RecruitGetResponse::from)
             .toList();
     }
 
 
     // TODO: 진행중인 공고는 일정등록이 안된 것을 우선으로 그 이후에는 RecruitSchedule이 현재와 가까운 순으로 정렬한다.
-    public List<RecruitGetDetailResponse> getProgressingRecruitList(User user) {
+    public List<RecruitGetResponse> getProgressingRecruitList(User user) {
 
         List<Recruit> recruits = recruitRepository.findAllByUserId(user.getId());
 
@@ -80,7 +80,7 @@ public class RecruitService {
         matchingRecruits.addAll(sortedNonMatchingRecruits);
 
         return matchingRecruits.stream()
-            .map(RecruitGetDetailResponse::from)
+            .map(RecruitGetResponse::from)
             .toList();
     }
 
@@ -95,14 +95,14 @@ public class RecruitService {
     }
 
     @Transactional
-    public Long createRecruit(User user, RecruitCreateRequest request) {
+    public RecruitGetResponse createRecruit(User user, RecruitCreateRequest request) {
 
         RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
             RecruitScheduleCreateRequest.of(request.recruitScheduleStage(), request.deadline())
         );
-        Season season = seasonService.getSeasonByName(request.season());
+        Season season = seasonService.getSeasonByName(user, request.season());
         Recruit recruit = request.toEntity(user, season, recruitSchedule);
-        return recruitRepository.save(recruit).getId();
+        return RecruitGetResponse.from(recruitRepository.save(recruit));
     }
 
     @Transactional
@@ -113,45 +113,39 @@ public class RecruitService {
     }
 
     @Transactional
-    public RecruitGetDetailResponse updateRecruitTitle(User user, Long recruitId, String title) {
+    public RecruitGetResponse updateRecruitTitle(User user, Long recruitId, String title) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
         recruit.updateTitle(title);
 
-        return RecruitGetDetailResponse.from(recruitRepository.save(recruit));
+        return RecruitGetResponse.from(recruitRepository.save(recruit));
     }
 
     @Transactional
-    public RecruitGetDetailResponse updateRecruitSeason(User user, Long recruitId, Season season) {
+    public RecruitGetResponse updateRecruitSeason(User user, Long recruitId, String seasonName) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
-
+        Season season = seasonService.getSeasonByName(user, seasonName);
         recruit.updateSeason(season);
 
-        return RecruitGetDetailResponse.from(recruitRepository.save(recruit));
+        return RecruitGetResponse.from(recruitRepository.save(recruit));
     }
 
     @Transactional
-    public RecruitGetDetailResponse updateRecruitStatus(User user, Long recruitId, RecruitStatus recruitStatus) {
+    public RecruitGetResponse updateRecruitStatus(User user, Long recruitId, RecruitStatus recruitStatus) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
         recruit.updateRecruitStatus(recruitStatus);
 
-        return RecruitGetDetailResponse.from(recruitRepository.save(recruit));
+        return RecruitGetResponse.from(recruitRepository.save(recruit));
     }
 
     @Transactional
-    public RecruitGetDetailResponse updateRecruitSiteUrl(User user, Long recruitId, String siteUrl) {
+    public RecruitGetResponse updateRecruitSiteUrl(User user, Long recruitId, String siteUrl) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
         recruit.updateSiteUrl(siteUrl);
 
-        return RecruitGetDetailResponse.from(recruitRepository.save(recruit));
-    }
-
-    public RecruitGetDetailResponse getRecruitDetail(User user, Long recruitId) {
-        Recruit recruit = findRecruitByUserAndId(user, recruitId);
-
-        return RecruitGetDetailResponse.from(recruit);
+        return RecruitGetResponse.from(recruitRepository.save(recruit));
     }
 
     private Recruit findRecruitByUserAndId(User user, Long recruitId) {

@@ -32,8 +32,8 @@ public class SeasonService {
             .toList();
     }
 
-    public Season getSeasonByName(String name) {
-        return seasonRepository.findByName(name)
+    public Season getSeasonByName(User user, String name) {
+        return seasonRepository.findByUserIdAndName(user.getId(), name)
             .orElseThrow(() -> new NotFoundException(ErrorCode.SEASON_NOT_FOUND));
     }
 

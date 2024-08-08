@@ -12,9 +12,7 @@ public record RecruitCreateRequest(
     String title,
     String siteUrl,
     RecruitScheduleStage recruitScheduleStage,
-    String deadline,
-    RecruitStatus recruitStatus,
-    Long userId
+    String deadline
 ) {
 
     public Recruit toEntity(User user, Season season, RecruitSchedule schedule) {
@@ -22,7 +20,7 @@ public record RecruitCreateRequest(
             .season(season)
             .title(title)
             .siteUrl(siteUrl)
-            .recruitStatus(recruitStatus)
+            .recruitStatus(RecruitStatus.APPLICATION_COMPLETED)
             .user(user)
             .build()
             .addSchedule(schedule);
