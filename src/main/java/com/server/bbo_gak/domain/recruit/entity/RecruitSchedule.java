@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,7 +31,18 @@ public class RecruitSchedule {
     private Recruit recruit;
 
     @Enumerated(EnumType.STRING)
-    private RecruitStage recruitStage;
+    private RecruitScheduleStage recruitScheduleStage;
 
     private LocalDate deadLine;
+
+    @Builder
+    public RecruitSchedule(Recruit recruit, RecruitScheduleStage recruitScheduleStage, LocalDate deadLine) {
+        this.recruit = recruit;
+        this.recruitScheduleStage = recruitScheduleStage;
+        this.deadLine = deadLine;
+    }
+
+    public void setRecruit(Recruit recruit) {
+        this.recruit = recruit;
+    }
 }

@@ -1,0 +1,1574 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "뽀각 API 문서",
+    "description" : "뽀각 API 문서입니다.",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://114.70.23.79:8080"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/card" : {
+      "post" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 신규 생성",
+        "description" : "카드 신규 생성",
+        "operationId" : "[create] 카드 신규 생성",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardCreateRequest"
+              },
+              "examples" : {
+                "[create] 카드 신규 생성" : {
+                  "value" : "{\"cardTypeValueList\":[\"경험_정리\",\"자기소개서\"],\"tagIdList\":[1,2]}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardCreateResponse"
+                },
+                "examples" : {
+                  "[create] 카드 신규 생성" : {
+                    "value" : "{\n  \"cardId\" : 4\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/card-images" : {
+      "delete" : {
+        "tags" : [ "CardImage" ],
+        "operationId" : "[delete] ",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardImageDeleteRequest"
+              },
+              "examples" : {
+                "[delete] s3에서_삭제할_이미지_찾기_실패" : {
+                  "value" : "{\n  \"cardId\" : 0,\n  \"staticUrl\" : \"invalid-staticUrl\"\n}"
+                },
+                "[delete] 카드 찾기 실패" : {
+                  "value" : "{\n  \"cardId\" : 0,\n  \"staticUrl\" : \"invalid-staticUrl\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[delete] s3에서_삭제할_이미지_찾기_실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  },
+                  "[delete] 카드 찾기 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards" : {
+      "get" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 리스트 조회",
+        "description" : "카드 리스트 조회",
+        "operationId" : "[select] 카드 리스트 조회",
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "query",
+          "description" : "타입",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardListGetResponse"
+                },
+                "examples" : {
+                  "[select] 카드 리스트 조회" : {
+                    "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"test_title\",\n  \"updatedDate\" : \"2024-07-24 21:22:08\",\n  \"tagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits" : {
+      "get" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "전체 공고 목록 조회",
+        "description" : "전체 공고 목록 조회",
+        "operationId" : "[GET] 전체 공고 목록 조회 성공",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[GET] 전체 공고 목록 조회 성공" : {
+                    "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 생성",
+        "description" : "공고 생성",
+        "operationId" : "[POST] 공고 생성 성공",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecruitCreateRequest"
+              },
+              "examples" : {
+                "[POST] 공고 생성 성공" : {
+                  "value" : "{\n  \"season\" : \"2024 상반기\",\n  \"title\" : \"New Recruit Title\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitScheduleStage\" : \"CLOSING_DOCUMENT\",\n  \"deadline\" : \"2024-12-31\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[POST] 공고 생성 성공" : {
+                    "value" : "{\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tags" : {
+      "get" : {
+        "tags" : [ "Tag" ],
+        "summary" : "전체 카드 태그 목록",
+        "description" : "전체 카드 태그 목록",
+        "operationId" : "[태그_전체_목록_조회] 성공",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagGetResponse"
+                },
+                "examples" : {
+                  "[태그_전체_목록_조회] 성공" : {
+                    "value" : "[{\"id\":1,\"name\":\"스프링\",\"type\":\"역량\"},{\"id\":2,\"name\":\"리액트\",\"type\":\"역량\"},{\"id\":3,\"name\":\"봉사활동\",\"type\":\"인성\"}]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/type-count" : {
+      "get" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 타입 카운트 조회",
+        "description" : "카드 타입 카운트 조회",
+        "operationId" : "[select] 카드 타입 카운트 조회",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardTypeCountGetResponse"
+                },
+                "examples" : {
+                  "[select] 카드 타입 카운트 조회" : {
+                    "value" : "{\n  \"경험_정리\" : 2,\n  \"자기소개서\" : 1,\n  \"면접_질문\" : 0\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}" : {
+      "get" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 단건 조회",
+        "description" : "카드 단건 조회",
+        "operationId" : "[select] 카드 ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "card-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[select] 카드 찾기 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardGetResponse"
+                },
+                "examples" : {
+                  "[select] 카드 단건 조회" : {
+                    "value" : "{\n  \"title\" : \"test_title\",\n  \"content\" : \"test_contents\",\n  \"updatedDate\" : \"2024-07-24 21:22:08\",\n  \"cardTypeValueList\" : [ \"경험_정리\", \"자기소개서\", \"면접_질문\" ],\n  \"tagList\" : [ {\n    \"id\" : 1,\n    \"name\" : \"스프링\",\n    \"type\" : \"역량\"\n  }, {\n    \"id\" : 2,\n    \"name\" : \"리액트\",\n    \"type\" : \"역량\"\n  } ]\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 삭제",
+        "description" : "카드 삭제",
+        "operationId" : "[카드_삭제] ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_삭제] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200"
+          }
+        }
+      }
+    },
+    "/api/v1/images/presigned-urls" : {
+      "post" : {
+        "tags" : [ "image" ],
+        "summary" : "presigend url 생성",
+        "description" : "presigend url 생성",
+        "operationId" : "[presigned-urls] ",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ImageUploadRequest"
+              },
+              "examples" : {
+                "[presigned-urls] 성공" : {
+                  "value" : "[ {\n  \"fileExtension\" : \"PNG\"\n}, {\n  \"fileExtension\" : \"PNG\"\n} ]"
+                },
+                "[presigned-urls] 실패-유효하지않은파일이름" : {
+                  "value" : "[ {\n  \"fileExtension\" : \"PNG\"\n} ]"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ImageUploadResponse"
+                },
+                "examples" : {
+                  "[presigned-urls] 성공" : {
+                    "value" : "[ {\n  \"filename\" : \"image1.jpg\",\n  \"presignedUrl\" : \"https://example.com/image1.jpg\"\n}, {\n  \"filename\" : \"image2.jpg\",\n  \"presignedUrl\" : \"https://example.com/image2.jpg\"\n} ]"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[presigned-urls] 실패-유효하지않은파일이름" : {
+                    "value" : "{\n  \"message\" : \"지원하지 않는 파일 확장자입니다.\",\n  \"status\" : \"BAD_REQUEST\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/bySeason" : {
+      "get" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "분기별 공고 목록 조회",
+        "description" : "분기별 공고 목록 조회",
+        "operationId" : "[GET] 분기별 공고 목록 조회 성공",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[GET] 분기별 공고 목록 조회 성공" : {
+                    "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/progressing" : {
+      "get" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "진행중 공고 목록 조회",
+        "description" : "진행중 공고 목록 조회",
+        "operationId" : "[GET] 진행 중 공고 목록 조회 성공",
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[GET] 진행 중 공고 목록 조회 성공" : {
+                    "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/{id}" : {
+      "delete" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 삭제",
+        "description" : "공고 삭제",
+        "operationId" : "[DELETE] 공고 삭제 ",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[DELETE] 공고 삭제 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 공고를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/card-images/static-urls/{cardId}" : {
+      "post" : {
+        "tags" : [ "CardImage" ],
+        "summary" : "카드 이미지 압로드 완료",
+        "description" : "카드 이미지 압로드 완료",
+        "operationId" : "[upload] ",
+        "parameters" : [ {
+          "name" : "cardId",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardImageUploadCompleteRequest"
+              },
+              "examples" : {
+                "[upload] S3에서_업로드된_이미지_찾기_실패" : {
+                  "value" : "[ {\n  \"fileName\" : \"invalid-filename\"\n}, {\n  \"fileName\" : \"invalid-filename\"\n} ]"
+                },
+                "[upload] 성공" : {
+                  "value" : "[ {\n  \"fileName\" : \"file1.png\"\n}, {\n  \"fileName\" : \"file2.png\"\n} ]"
+                },
+                "[upload] 카드 찾기 실패" : {
+                  "value" : "[ {\n  \"fileName\" : \"invalid-filename\"\n}, {\n  \"fileName\" : \"invalid-filename\"\n} ]"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[upload] S3에서_업로드된_이미지_찾기_실패" : {
+                    "value" : "{\n  \"message\" : \"해당 파일은 S3내에 존재하지 않습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  },
+                  "[upload] 카드 찾기 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardImageUploadCompleteResponse"
+                },
+                "examples" : {
+                  "[upload] 성공" : {
+                    "value" : "[ {\n  \"staticUrl\" : \"https://example.com/file1.png\"\n}, {\n  \"staticUrl\" : \"https://example.com/file2.png\"\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/content" : {
+      "put" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 본문 수정",
+        "description" : "카드 본문 수정",
+        "operationId" : "[카드 본문 수정] ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardContentUpdateRequest"
+              },
+              "examples" : {
+                "[카드 본문 수정] 성공" : {
+                  "value" : "{\n  \"content\" : \"test content\"\n}"
+                },
+                "[카드 본문 수정] 카드 찾기 실패" : {
+                  "value" : "{\n  \"content\" : \"test content\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드 본문 수정] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/tags" : {
+      "get" : {
+        "tags" : [ "Tag" ],
+        "summary" : "카드 태그 목록",
+        "description" : "카드 태그 목록",
+        "operationId" : "[카드_태그_목록_조회] ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_태그_목록_조회] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TagGetResponse"
+                },
+                "examples" : {
+                  "[카드_태그_목록_조회] 성공" : {
+                    "value" : "[{\"id\":3,\"name\":\"봉사활동\",\"type\":\"인성\"}]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/title" : {
+      "put" : {
+        "tags" : [ "Card" ],
+        "summary" : "카드 제목 수정",
+        "description" : "카드 제목 수정",
+        "operationId" : "[update] 카드 ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardTitleUpdateRequest"
+              },
+              "examples" : {
+                "[update] 카드 제목 수정" : {
+                  "value" : "{\n  \"title\" : \"test title\"\n}"
+                },
+                "[update] 카드 찾기 실패" : {
+                  "value" : "{\n  \"title\" : \"test title\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[update] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/{id}/season" : {
+      "patch" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 분기 수정",
+        "description" : "공고 분기 수정",
+        "operationId" : "[PATCH] 분기 수정 ",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecruitUpdateSeasonRequest"
+              },
+              "examples" : {
+                "[PATCH] 분기 수정 성공" : {
+                  "value" : "{\n  \"season\" : \"2024 상반기\"\n}"
+                },
+                "[PATCH] 분기 수정 실패" : {
+                  "value" : "{\n  \"season\" : \"2024 상반기\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[PATCH] 분기 수정 성공" : {
+                    "value" : "{\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[PATCH] 분기 수정 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 공고를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/{id}/siteUrl" : {
+      "patch" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 사이트 URL 수정",
+        "description" : "공고 사이트 URL 수정",
+        "operationId" : "[PATCH] 사이트 URL 수정 ",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecruitUpdateSiteUrlRequest"
+              },
+              "examples" : {
+                "[PATCH] 사이트 URL 수정 실패" : {
+                  "value" : "{\n  \"siteUrl\" : \"https://example.com\"\n}"
+                },
+                "[PATCH] 사이트 URL 수정 성공" : {
+                  "value" : "{\n  \"siteUrl\" : \"https://example.com\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[PATCH] 사이트 URL 수정 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 공고를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[PATCH] 사이트 URL 수정 성공" : {
+                    "value" : "{\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/{id}/status" : {
+      "patch" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 상태 수정",
+        "description" : "공고 상태 수정",
+        "operationId" : "[PATCH] 상태 수정 ",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecruitUpdateStatusRequest"
+              },
+              "examples" : {
+                "[PATCH] 상태 수정 실패" : {
+                  "value" : "{\n  \"recruitStatus\" : \"APPLICATION_COMPLETED\"\n}"
+                },
+                "[PATCH] 상태 수정 성공" : {
+                  "value" : "{\n  \"recruitStatus\" : \"APPLICATION_COMPLETED\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[PATCH] 상태 수정 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 공고를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[PATCH] 상태 수정 성공" : {
+                    "value" : "{\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recruits/{id}/title" : {
+      "patch" : {
+        "tags" : [ "Recruit" ],
+        "summary" : "공고 타이틀 수정",
+        "description" : "공고 타이틀 수정",
+        "operationId" : "[PATCH] 제목 수정 ",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecruitUpdateTitleRequest"
+              },
+              "examples" : {
+                "[PATCH] 제목 수정 성공" : {
+                  "value" : "{\n  \"title\" : \"New Title\"\n}"
+                },
+                "[PATCH] 제목 수정 실패" : {
+                  "value" : "{\n  \"title\" : \"New Title\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RecruitGetResponse"
+                },
+                "examples" : {
+                  "[PATCH] 제목 수정 성공" : {
+                    "value" : "{\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[PATCH] 제목 수정 실패" : {
+                    "value" : "{\n  \"message\" : \"해당 공고를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/test/login" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "jwt 토큰 생성",
+        "description" : "jwt 토큰 생성",
+        "operationId" : "[로그인] ",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LoginRequest"
+              },
+              "examples" : {
+                "[로그인] 아이디_없음" : {
+                  "value" : "{\n  \"loginId\" : \"wrong\",\n  \"password\" : \"test123\"\n}"
+                },
+                "[로그인] 성공" : {
+                  "value" : "{\n  \"loginId\" : \"test\",\n  \"password\" : \"test123\"\n}"
+                },
+                "[로그인] 비밀번호_실패" : {
+                  "value" : "{\n  \"loginId\" : \"test\",\n  \"password\" : \"wrong\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[로그인] 아이디_없음" : {
+                    "value" : "{\n  \"message\" : \"해당 유저를 찾을 수 없습니다.\",\n  \"status\" : \"NOT_FOUND\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenDto"
+                },
+                "examples" : {
+                  "[로그인] 성공" : {
+                    "value" : "{\n  \"accessToken\" : \"accessToken\",\n  \"refreshToken\" : \"refreshToken\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                },
+                "examples" : {
+                  "[로그인] 비밀번호_실패" : {
+                    "value" : "{\n  \"message\" : \"비밀번호를 잘못 입력하셨습니다.\",\n  \"status\" : \"BAD_REQUEST\"\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/tag/{tag-id}" : {
+      "post" : {
+        "tags" : [ "Tag" ],
+        "summary" : "카드 태그 추가",
+        "description" : "카드 태그 추가",
+        "operationId" : "[카드_",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tag-id",
+          "in" : "path",
+          "description" : "Tag id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_태그_추가] 태그 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 태그를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  },
+                  "[카드_찾기_실패] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_태그_추가] 태그 중복 추가" : {
+                    "value" : "{\"message\":\"해당 태그가 이미 추가 돼있습니다.\",\"status\":\"BAD_REQUEST\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Tag" ],
+        "summary" : "카드 태그 삭제",
+        "description" : "카드 태그 삭제",
+        "operationId" : "[카드_태그_삭제] ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "Card id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "tag-id",
+          "in" : "path",
+          "description" : "Tag id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                },
+                "examples" : {
+                  "[카드_태그_삭제] 카드 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  },
+                  "[카드_태그_삭제] 카드 태그 매핑 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 카드와 태그 매핑을 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  },
+                  "[카드_태그_삭제] 태그 찾기 실패" : {
+                    "value" : "{\"message\":\"해당 태그를 찾을 수 없습니다\",\"status\":\"NOT_FOUND\"}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "RecruitGetResponse" : {
+        "title" : "RecruitGetResponse",
+        "type" : "object",
+        "properties" : {
+          "createdDate" : {
+            "type" : "string",
+            "description" : "createdDate"
+          },
+          "siteUrl" : {
+            "type" : "string",
+            "description" : "siteUrl"
+          },
+          "season" : {
+            "type" : "string",
+            "description" : "season"
+          },
+          "id" : {
+            "type" : "number",
+            "description" : "id"
+          },
+          "recruitStatus" : {
+            "type" : "string",
+            "description" : "recruitStatus"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
+      "CardImageDeleteRequest" : {
+        "title" : "CardImageDeleteRequest",
+        "type" : "object",
+        "properties" : {
+          "cardId" : {
+            "type" : "number",
+            "description" : "cardId"
+          },
+          "staticUrl" : {
+            "type" : "string",
+            "description" : "staticUrl"
+          }
+        }
+      },
+      "CardCreateRequest" : {
+        "title" : "CardCreateRequest",
+        "type" : "object",
+        "properties" : {
+          "cardTypeValueList" : {
+            "type" : "array",
+            "description" : "카드 타입값",
+            "items" : {
+              "oneOf" : [ {
+                "type" : "object"
+              }, {
+                "type" : "boolean"
+              }, {
+                "type" : "string"
+              }, {
+                "type" : "number"
+              } ]
+            }
+          },
+          "tagIdList" : {
+            "type" : "array",
+            "description" : "태그 ID",
+            "items" : {
+              "oneOf" : [ {
+                "type" : "object"
+              }, {
+                "type" : "boolean"
+              }, {
+                "type" : "string"
+              }, {
+                "type" : "number"
+              } ]
+            }
+          }
+        }
+      },
+      "ImageUploadResponse" : {
+        "title" : "ImageUploadResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "filename" : {
+              "type" : "string",
+              "description" : "filename"
+            },
+            "presignedUrl" : {
+              "type" : "string",
+              "description" : "presignedUrl"
+            }
+          }
+        }
+      },
+      "TagGetResponse" : {
+        "title" : "TagGetResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "name" : {
+              "type" : "string",
+              "description" : "태그 이름"
+            },
+            "id" : {
+              "type" : "number",
+              "description" : "태그 ID"
+            },
+            "type" : {
+              "type" : "string",
+              "description" : "태그 타입"
+            }
+          }
+        }
+      },
+      "CardTitleUpdateRequest" : {
+        "title" : "CardTitleUpdateRequest",
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "카드 제목"
+          }
+        }
+      },
+      "api-v1-card-images1501512887" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "에러 메시지"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "HTTP 상태 코드"
+          }
+        }
+      },
+      "RecruitUpdateStatusRequest" : {
+        "title" : "RecruitUpdateStatusRequest",
+        "type" : "object",
+        "properties" : {
+          "recruitStatus" : {
+            "type" : "string",
+            "description" : "recruitStatus"
+          }
+        }
+      },
+      "CardTypeCountGetResponse" : {
+        "title" : "CardTypeCountGetResponse",
+        "type" : "object",
+        "properties" : {
+          "면접_질문" : {
+            "type" : "number",
+            "description" : "면접_질문_개수"
+          },
+          "자기소개서" : {
+            "type" : "number",
+            "description" : "자기소개서_개수"
+          },
+          "경험_정리" : {
+            "type" : "number",
+            "description" : "면접_질문_개수"
+          }
+        }
+      },
+      "LoginRequest" : {
+        "title" : "LoginRequest",
+        "type" : "object",
+        "properties" : {
+          "password" : {
+            "type" : "string",
+            "description" : "password"
+          },
+          "loginId" : {
+            "type" : "string",
+            "description" : "loginId"
+          }
+        }
+      },
+      "CardContentUpdateRequest" : {
+        "title" : "CardContentUpdateRequest",
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "string",
+            "description" : "카드 본문"
+          }
+        }
+      },
+      "ImageUploadRequest" : {
+        "title" : "ImageUploadRequest",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "fileExtension" : {
+              "type" : "string",
+              "description" : "fileExtension"
+            }
+          }
+        }
+      },
+      "CardGetResponse" : {
+        "title" : "CardGetResponse",
+        "type" : "object",
+        "properties" : {
+          "tagList" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "name" : {
+                  "type" : "string",
+                  "description" : "태그 이름"
+                },
+                "id" : {
+                  "type" : "number",
+                  "description" : "태그 ID"
+                },
+                "type" : {
+                  "type" : "string",
+                  "description" : "태그 타입"
+                }
+              }
+            }
+          },
+          "cardTypeValueList" : {
+            "type" : "array",
+            "description" : "Card 타입값 리스트",
+            "items" : {
+              "oneOf" : [ {
+                "type" : "object"
+              }, {
+                "type" : "boolean"
+              }, {
+                "type" : "string"
+              }, {
+                "type" : "number"
+              } ]
+            }
+          },
+          "updatedDate" : {
+            "type" : "string",
+            "description" : "Card 수정일시"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "Card 제목"
+          },
+          "content" : {
+            "type" : "string",
+            "description" : "Card 내용"
+          }
+        }
+      },
+      "RecruitCreateRequest" : {
+        "title" : "RecruitCreateRequest",
+        "type" : "object",
+        "properties" : {
+          "recruitScheduleStage" : {
+            "type" : "string",
+            "description" : "recruitScheduleStage"
+          },
+          "siteUrl" : {
+            "type" : "string",
+            "description" : "siteUrl"
+          },
+          "season" : {
+            "type" : "string",
+            "description" : "season"
+          },
+          "deadline" : {
+            "type" : "string",
+            "description" : "deadline"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
+      "CardImageUploadCompleteRequest" : {
+        "title" : "CardImageUploadCompleteRequest",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "fileName" : {
+              "type" : "string",
+              "description" : "fileName"
+            }
+          }
+        }
+      },
+      "CardCreateResponse" : {
+        "title" : "CardCreateResponse",
+        "type" : "object",
+        "properties" : {
+          "cardId" : {
+            "type" : "number",
+            "description" : "Card ID"
+          }
+        }
+      },
+      "CardImageUploadCompleteResponse" : {
+        "title" : "CardImageUploadCompleteResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "staticUrl" : {
+              "type" : "string",
+              "description" : "staticUrl"
+            }
+          }
+        }
+      },
+      "TokenDto" : {
+        "title" : "TokenDto",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "accessToken"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "refreshToken"
+          }
+        }
+      },
+      "ErrorResponse" : {
+        "title" : "ErrorResponse",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "Error message"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "HTTP status code"
+          }
+        }
+      },
+      "RecruitUpdateSeasonRequest" : {
+        "title" : "RecruitUpdateSeasonRequest",
+        "type" : "object",
+        "properties" : {
+          "season" : {
+            "type" : "string",
+            "description" : "season"
+          }
+        }
+      },
+      "RecruitUpdateSiteUrlRequest" : {
+        "title" : "RecruitUpdateSiteUrlRequest",
+        "type" : "object",
+        "properties" : {
+          "siteUrl" : {
+            "type" : "string",
+            "description" : "siteUrl"
+          }
+        }
+      },
+      "RecruitUpdateTitleRequest" : {
+        "title" : "RecruitUpdateTitleRequest",
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
+      "CardListGetResponse" : {
+        "title" : "CardListGetResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "tagList" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "description" : "태그 이름"
+                  },
+                  "id" : {
+                    "type" : "number",
+                    "description" : "태그 ID"
+                  },
+                  "type" : {
+                    "type" : "string",
+                    "description" : "태그 타입"
+                  }
+                }
+              }
+            },
+            "updatedDate" : {
+              "type" : "string",
+              "description" : "Card 수정일시"
+            },
+            "id" : {
+              "type" : "number",
+              "description" : "Card ID"
+            },
+            "title" : {
+              "type" : "string",
+              "description" : "Card 제목"
+            }
+          }
+        }
+      }
+    }
+  }
+}

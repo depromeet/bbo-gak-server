@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RecruitStage {
+public enum RecruitScheduleStage {
 
+    CLOSING_DOCUMENT("서류 마감"),
     FIRST_INTERVIEW("1차 면접"),
     SECOND_INTERVIEW("2차 면접"),
     THIRD_INTERVIEW("3차 면접"),

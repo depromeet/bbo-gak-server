@@ -91,6 +91,14 @@ tasks.withType(GenerateSwaggerUI) {
     }
 }
 
+tasks.withType(Test).configureEach {
+    jvmArgs = jvmArgs + ['--add-opens=java.base/java.util=ALL-UNNAMED']
+}
+
+test {
+    jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED'
+}
+
 build {
     dependsOn(':openapi3')
 }

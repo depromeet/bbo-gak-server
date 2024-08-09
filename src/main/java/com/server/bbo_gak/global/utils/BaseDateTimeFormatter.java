@@ -11,4 +11,10 @@ public class BaseDateTimeFormatter {
             .withLocale(Locale.KOREA)
             .withZone(ZoneId.systemDefault());
     }
+
+    public static DateTimeFormatter getLocalDateFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            .withLocale(Locale.KOREA)
+            .withZone(ZoneId.systemDefault());
+    }
 }
