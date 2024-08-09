@@ -29,8 +29,12 @@ public class CardMemo extends BaseEntity {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    public CardMemo(String content, Card card) {
+    public CardMemo(Card card, String content) {
         this.content = content;
         this.card = card;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 }

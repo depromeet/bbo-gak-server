@@ -1,12 +1,11 @@
 package com.server.bbo_gak.domain.card.entity;
 
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
+import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,18 +42,23 @@ public class Card extends BaseEntity {
 
     private LocalDateTime accessTime;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private boolean copyFlag = false;
 
-    @Enumerated(EnumType.STRING)
-    private CardType cardType;
-
-    @OneToMany(mappedBy = "card")
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<CardTag> cardTagList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CardImage> cardImageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
+    private List<CardMemo> cardMemoList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
+    private List<CardType> cardTypeList = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "copy_info_id")
@@ -65,20 +69,19 @@ public class Card extends BaseEntity {
     private Recruit recruit;
 
     @Builder
-    public Card(String title, String content, LocalDateTime accessTime, CardType cardType, Long userId) {
+    public Card(String title, String content, LocalDateTime accessTime, List<CardType> cardTypeList, User user) {
         this.title = title;
         this.content = content;
         this.accessTime = accessTime;
-        this.cardType = cardType;
-        this.userId = userId;
+        this.cardTypeList = cardTypeList;
+        this.user = user;
     }
 
-    public static Card creatEmptyCard(String type, Long userId) {
+    public static Card creatEmptyCard(User user) {
         return Card.builder()
             .title("")
             .content("")
-            .userId(userId)
-            .cardType(CardType.findByValue(type))
+            .user(user)
             .accessTime(LocalDateTime.now())
             .build();
     }
