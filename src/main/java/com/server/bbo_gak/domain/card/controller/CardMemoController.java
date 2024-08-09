@@ -43,7 +43,7 @@ public class CardMemoController {
         return ResponseEntity.ok(cardMemoService.createCardMemo(user, request, cardId));
     }
 
-    @PutMapping("/{card-id}/card-momo/{card-memo-id}/content")
+    @PutMapping("/{card-id}/card-memo/{card-memo-id}/content")
     public ResponseEntity<Void> updateCardMemoContent(
         @AuthUser User user,
         @PathVariable("card-id") Long cardId,
