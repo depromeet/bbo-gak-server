@@ -21,6 +21,6 @@ public enum SeasonPeriod {
     }
 
     public String getSeasonName(int year) {
-        return year + "_" + this.name;
+        return year + " " + this.name;
     }
 }
