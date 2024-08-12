@@ -1,5 +1,7 @@
 package com.server.bbo_gak.domain.notification.entity;
 
+import com.server.bbo_gak.domain.recruit.entity.Recruit;
+import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.Column;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +28,8 @@ public class Notification extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
     private Long id;
+
+    private String title;
 
     private String message;
 
@@ -39,11 +44,29 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Notification(String message, boolean isRead, NotificationType type, Long referenceId, User user) {
+    @Builder
+    public Notification(String title, String message, boolean isRead, NotificationType type, Long referenceId,
+        User user) {
+        this.title = title;
         this.message = message;
         this.isRead = isRead;
         this.type = type;
         this.referenceId = referenceId;
         this.user = user;
+    }
+
+    public static Notification fromRecruitAndSchedule(Recruit recruit, RecruitSchedule recruitSchedule) {
+        return Notification.builder()
+            .isRead(false)
+            .user(recruit.getUser())
+            .type(NotificationType.RECRUIT)
+            .referenceId(recruit.getId())
+            .title(recruit.getTitle())
+            .message(createMessageByRecruitSchedule(recruitSchedule))
+            .build();
+    }
+
+    public static String createMessageByRecruitSchedule(RecruitSchedule recruitSchedule) {
+        return "공고의" + recruitSchedule.getRecruitScheduleStage().getValue() + "이 내일이예요!";
     }
 }

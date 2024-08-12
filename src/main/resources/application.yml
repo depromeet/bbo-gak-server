@@ -14,3 +14,8 @@ logging:
   level:
     root: INFO  # 모든 로그에 대한 기본 로그 레벨 설정
     org.springframework.security: TRACE
+
+scheduler:
+  thread:
+    pool:
+      size: 2

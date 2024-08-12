@@ -19,7 +19,7 @@ cloud:
   aws:
     s3:
       bucket: test
-      signature-version: AWS4-HMAC-SHA256ㅌ
+      signature-version: AWS4-HMAC-SHA256
     credentials:
       access-key: test
       secret-key: test
@@ -28,3 +28,8 @@ cloud:
       auto: false
     stack:
       auto: false
+
+scheduler:
+  thread:
+    pool:
+      size: 2
