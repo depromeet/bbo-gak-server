@@ -4,6 +4,7 @@ package com.server.bbo_gak.domain.recruit.service;
 import com.server.bbo_gak.domain.recruit.dao.SeasonRepository;
 import com.server.bbo_gak.domain.recruit.dto.response.SeasonGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Season;
+import com.server.bbo_gak.domain.recruit.entity.SeasonPeriod;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
@@ -42,9 +43,8 @@ public class SeasonService {
         int month = currentDate.getMonthValue();
         int year = currentDate.getYear();
 
-        String halfYear = month <= 6 ? "상반기" : "하반기";
-
-        return year + " " + halfYear;
+        SeasonPeriod currentPeriod = SeasonPeriod.fromMonth(month);
+        return currentPeriod.getSeasonName(year);
     }
 
     private List<Season> generateDefaultSeasonByCurrentTime(User user) {
@@ -54,13 +54,15 @@ public class SeasonService {
 
         List<Season> periods = new ArrayList<>();
 
-        if (month >= 1 && month <= 6) {
-            periods.add(new Season(year + " 상반기", user));
-            periods.add(new Season(year + " 하반기", user));
-        } else {
-            periods.add(new Season(year + " 하반기", user));
-            periods.add(new Season((year + 1) + " 상반기", user));
-        }
+        SeasonPeriod currentPeriod = SeasonPeriod.fromMonth(month);
+        periods.add(new Season(currentPeriod.getSeasonName(year), user));
+
+        SeasonPeriod nextPeriod = (currentPeriod == SeasonPeriod.FIRST_HALF)
+            ? SeasonPeriod.SECOND_HALF
+            : SeasonPeriod.FIRST_HALF;
+
+        int nextPeriodYear = (currentPeriod == SeasonPeriod.FIRST_HALF) ? year : year + 1;
+        periods.add(new Season(nextPeriod.getSeasonName(nextPeriodYear), user));
 
         return periods;
     }
