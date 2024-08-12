@@ -11,9 +11,10 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
 
 cloud:
   aws:

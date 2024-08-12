@@ -52,46 +52,42 @@ public class RecruitService {
 
         List<Recruit> recruits = recruitRepository.findAllByUserId(user.getId());
 
-        // 불합격이 아닌 공고중에서 스케줄이 비어 있거나 지난 일정만 등록되어 있는 공고 중에서 지원 상태가를 분리해냄
-        Map<Boolean, List<Recruit>> partitionedRecruits = partitionRecruits(recruits);
+        // 불합격이 아닌 공고중에서 스케줄이 비어 있거나 지난 일정만 등록되어 있는 공고 중에서 지원 상태가 불합격인 공고를 분리해냄
+        Map<Boolean, List<Recruit>> partitionedRecruitsByNeedingSchedule = partitionRecruits(recruits);
 
-        List<Recruit> matchingRecruits = partitionedRecruits.get(true);
-        List<Recruit> nonMatchingRecruits = partitionedRecruits.get(false);
+        List<Recruit> recruitsNeedingSchedule = partitionedRecruitsByNeedingSchedule.get(true);
+        List<Recruit> recruitsWithSchedule = partitionedRecruitsByNeedingSchedule.get(false);
 
-        //nonMatchingRecruits에서 시간이 지나지 않은 스케줄 중에서 가장 현재와 가까운 걸 기준으로 정렬
-        List<Recruit> sortedNonMatchingRecruits = nonMatchingRecruits.stream()
-            .sorted((r1, r2) -> {
-                LocalDate nearestDate1 = r1.getScheduleList().stream()
-                    .map(RecruitSchedule::getDeadLine)
-                    .filter(deadLine -> deadLine.isAfter(LocalDate.now()))
-                    .min(Comparator.naturalOrder())
-                    .orElse(LocalDate.MAX);
-
-                LocalDate nearestDate2 = r2.getScheduleList().stream()
-                    .map(RecruitSchedule::getDeadLine)
-                    .filter(deadLine -> deadLine.isAfter(LocalDate.now()))
-                    .min(Comparator.naturalOrder())
-                    .orElse(LocalDate.MAX);
-
-                return nearestDate1.compareTo(nearestDate2);
-            })
+        //recruitsWithSchedule에서 시간이 지나지 않은 스케줄 중에서 가장 현재와 가까운 걸 기준으로 정렬
+        List<Recruit> sortedRecruitsWithSchedule = recruitsWithSchedule.stream()
+            .sorted(Comparator.comparing(this::getNearestUpcomingDate))
             .toList();
 
-        matchingRecruits.addAll(sortedNonMatchingRecruits);
+        recruitsNeedingSchedule.addAll(sortedRecruitsWithSchedule);
 
-        return matchingRecruits.stream()
+        return recruitsNeedingSchedule.stream()
             .map(RecruitGetResponse::from)
             .toList();
+    }
+
+    private LocalDate getNearestUpcomingDate(Recruit recruit) {
+        return recruit.getScheduleList().stream()
+            .map(RecruitSchedule::getDeadLine)
+            .filter(deadLine -> deadLine.isAfter(LocalDate.now()))
+            .min(Comparator.naturalOrder())
+            .orElse(LocalDate.MAX);
     }
 
     private Map<Boolean, List<Recruit>> partitionRecruits(List<Recruit> recruits) {
         return recruits.stream()
             .filter(recruit -> !RecruitStatusCategory.isRejectionStatus(recruit.getRecruitStatus())) // 불합격 상태 필터링
-            .collect(Collectors.partitioningBy(recruit ->
-                recruit.getScheduleList().isEmpty() ||
-                    recruit.getScheduleList().stream()
-                        .allMatch(schedule -> schedule.getDeadLine().isBefore(LocalDate.now()))
-            ));
+            .collect(Collectors.partitioningBy(this::isNeedsScheduleUpdate));
+    }
+
+    private boolean isNeedsScheduleUpdate(Recruit recruit) {
+        List<RecruitSchedule> scheduleList = recruit.getScheduleList();
+        return scheduleList.isEmpty() || scheduleList.stream()
+            .allMatch(schedule -> schedule.getDeadLine().isBefore(LocalDate.now()));
     }
 
     @Transactional
