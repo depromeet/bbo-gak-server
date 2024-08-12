@@ -33,6 +33,4 @@ jobs:
       - name: build
         run: |
           chmod +x gradlew
-          ./gradlew build -x test
-          ./gradlew openapi3
-      
+          ./gradlew build -x test -x openapi3     

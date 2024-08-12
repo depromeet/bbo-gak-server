@@ -1,11 +1,19 @@
 package com.server.bbo_gak.domain.recruit.controller;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSeasonRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSiteUrlRequest;
@@ -29,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
@@ -253,12 +262,20 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
         public void 시즌별_목록_조회_성공() throws Exception {
             when(recruitService.getRecruitListBySeason(any(), any())).thenReturn(List.of(response));
 
-            mockMvc.perform(
-                    restDocsFactory.createRequest(DEFAULT_URL + "/bySeason?season={season}", null, HttpMethod.GET,
-                        objectMapper, "2024 상반기"))
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/bySeason", null, HttpMethod.GET, objectMapper)
+                    .queryParam("season", "2024 상반기"))
                 .andExpect(status().isOk())
-                .andDo(restDocsFactory.getSuccessResourceList("[GET] 분기별 공고 목록 조회 성공", "분기별 공고 목록 조회", "Recruit",
-                    List.of(), List.of(response)));
+                .andDo(document("[GET] 분기별 공고 리스트 조회 성공", preprocessResponse(prettyPrint()), resource(
+                    ResourceSnippetParameters.builder().description("분기별 공고 목록 조회").tags("Recruit")
+                        .queryParameters(parameterWithName("season").description("2024 상반기"))
+                        .responseSchema(Schema.schema("RecruitGetResponse"))
+                        .responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("ID"),
+                            fieldWithPath("[].title").type(JsonFieldType.STRING).description("제목"),
+                            fieldWithPath("[].season").type(JsonFieldType.STRING).description("분기"),
+                            fieldWithPath("[].siteUrl").type(JsonFieldType.STRING).description("사이트 url"),
+                            fieldWithPath("[].recruitStatus").type(JsonFieldType.STRING).description("지원 상태"),
+                            fieldWithPath("[].createdDate").type(JsonFieldType.STRING).description("생성일"))
+                        .build())));
         }
 
         @Test
