@@ -6,7 +6,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -38,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -264,9 +262,8 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
         public void 시즌별_목록_조회_성공() throws Exception {
             when(recruitService.getRecruitListBySeason(any(), any())).thenReturn(List.of(response));
 
-            mockMvc.perform(
-                    get(DEFAULT_URL + "/bySeason").contentType(MediaType.APPLICATION_JSON).queryParam("season", "2024_"
-                        + "상반기").accept(MediaType.APPLICATION_JSON))
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/bySeason", null, HttpMethod.GET, objectMapper)
+                    .queryParam("season", "2024 상반기"))
                 .andExpect(status().isOk())
                 .andDo(document("[GET] 분기별 공고 리스트 조회 성공", preprocessResponse(prettyPrint()), resource(
                     ResourceSnippetParameters.builder().description("분기별 공고 목록 조회").tags("Recruit")
