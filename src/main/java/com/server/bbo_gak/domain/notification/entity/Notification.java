@@ -69,4 +69,8 @@ public class Notification extends BaseEntity {
     public static String createMessageByRecruitSchedule(RecruitSchedule recruitSchedule) {
         return "공고의" + recruitSchedule.getRecruitScheduleStage().getValue() + "이 내일이예요!";
     }
+
+    public void updateReadTrue() {
+        isRead = true;
+    }
 }
