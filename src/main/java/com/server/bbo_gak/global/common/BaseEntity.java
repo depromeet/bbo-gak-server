@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -27,6 +28,7 @@ public abstract class BaseEntity {
     private LocalDateTime updatedDate;
 
     @Column(name = "deleted")
+    @Builder.Default
     private boolean deleted = false;
 
 }

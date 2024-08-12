@@ -12,7 +12,7 @@ build/
 !**/src/test/**/build/
 /src/main/generated/
 
-/src/main/resources/static/
+/src/main/resources/static/docs/*
 
 ### STS ###
 .apt_generated
