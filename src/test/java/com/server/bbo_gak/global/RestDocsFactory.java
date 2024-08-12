@@ -73,8 +73,30 @@ public class RestDocsFactory {
     public <T, R> RestDocumentationResultHandler getSuccessResource(
         String identifier, String description, String tag, T requestDto, R responseDto
     ) {
-        String requestSchemaName = requestDto.getClass().getSimpleName();
+        String requestSchemaName = requestDto != null ? requestDto.getClass().getSimpleName() : "";
         String responseSchemaName = responseDto != null ? responseDto.getClass().getSimpleName() : "";
+
+        return getRestDocumentationResultHandler(identifier, description, tag, requestDto, responseDto,
+            requestSchemaName, responseSchemaName);
+    }
+
+    private <T, R> RestDocumentationResultHandler getRestDocumentationResultHandler(String identifier,
+        String description, String tag, T requestDto, R responseDto, String requestSchemaName,
+        String responseSchemaName) {
+
+        if (requestDto == null) {
+            return MockMvcRestDocumentationWrapper.document(identifier,
+                preprocessResponse(prettyPrint()),
+                resource(
+                    ResourceSnippetParameters.builder()
+                        .tags(tag)
+                        .description(description)
+                        .responseSchema(Schema.schema(responseSchemaName))
+                        .responseFields(responseDto != null ? getFields(responseDto) : new FieldDescriptor[]{})
+                        .build()
+                )
+            );
+        }
 
         return MockMvcRestDocumentationWrapper.document(identifier,
             preprocessRequest(prettyPrint()),
@@ -95,8 +117,33 @@ public class RestDocsFactory {
     public <T, R> RestDocumentationResultHandler getSuccessResourceList(
         String identifier, String description, String tag, List<T> requestDtos, List<R> responseDtos
     ) {
-        String requestSchemaName = requestDtos.getFirst().getClass().getSimpleName();
-        String responseSchemaName = responseDtos.getFirst().getClass().getSimpleName();
+        String requestSchemaName = !requestDtos.isEmpty() ? requestDtos.getFirst().getClass().getSimpleName() : "";
+        String responseSchemaName = !responseDtos.isEmpty() ? responseDtos.getFirst().getClass().getSimpleName() : "";
+
+        return getRestDocumentationResultHandler(identifier, description, tag, requestDtos, responseDtos,
+            requestSchemaName,
+            responseSchemaName);
+    }
+
+    private <T, R> RestDocumentationResultHandler getRestDocumentationResultHandler(String identifier,
+        String description, String tag,
+        List<T> requestDtos, List<R> responseDtos, String requestSchemaName, String responseSchemaName) {
+
+        if (requestDtos.isEmpty()) {
+            return MockMvcRestDocumentationWrapper.document(identifier,
+                preprocessResponse(prettyPrint()),
+                resource(
+                    ResourceSnippetParameters.builder()
+                        .tags(tag)
+                        .description(description)
+                        .responseSchema(Schema.schema(responseSchemaName))
+                        .responseFields(
+                            getFieldsList(
+                                !responseDtos.isEmpty() ? responseDtos.getFirst() : new FieldDescriptor[]{}))
+                        .build()
+                )
+            );
+        }
 
         return MockMvcRestDocumentationWrapper.document(identifier,
             preprocessRequest(prettyPrint()),
@@ -108,7 +155,8 @@ public class RestDocsFactory {
                     .requestSchema(Schema.schema(requestSchemaName))
                     .responseSchema(Schema.schema(responseSchemaName))
                     .requestFields(getFieldsList(requestDtos.getFirst()))
-                    .responseFields(getFieldsList(responseDtos.getFirst()))
+                    .responseFields(getFieldsList(
+                        !responseDtos.isEmpty() ? responseDtos.getFirst() : new FieldDescriptor[]{}))
                     .build()
             )
         );
@@ -117,12 +165,26 @@ public class RestDocsFactory {
 
     public <T> RestDocumentationResultHandler getFailureResourceList(String identifier, String tag,
         List<T> requestDtos) {
-//        List<FieldDescriptor> requestFields = new ArrayList<>();
-//        for (T requestDto : requestDtos) {
-//            requestFields.addAll(getFieldsList(requestDto));
-//        }
-        String requestSchemaName = requestDtos.getFirst().getClass().getSimpleName();
 
+        String requestSchemaName = !requestDtos.isEmpty() ? requestDtos.getFirst().getClass().getSimpleName() : "";
+
+        return getRestDocumentationResultHandler(identifier, tag, requestDtos, requestSchemaName);
+    }
+
+    private <T> RestDocumentationResultHandler getRestDocumentationResultHandler(String identifier, String tag,
+        List<T> requestDtos, String requestSchemaName) {
+
+        if (requestDtos.isEmpty()) {
+            return MockMvcRestDocumentationWrapper.document(identifier,
+                preprocessResponse(prettyPrint()),
+                resource(
+                    ResourceSnippetParameters.builder()
+                        .tags(tag)
+                        .responseFields(getFailureFields())
+                        .build()
+                )
+            );
+        }
         return MockMvcRestDocumentationWrapper.document(identifier,
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
@@ -138,8 +200,24 @@ public class RestDocsFactory {
     }
 
     public <T> RestDocumentationResultHandler getFailureResource(String identifier, String tag, T requestDto) {
-        String requestSchemaName = requestDto.getClass().getSimpleName();
+        String requestSchemaName = requestDto != null ? requestDto.getClass().getSimpleName() : "";
 
+        return getRestDocumentationResultHandler(identifier, tag, requestDto, requestSchemaName);
+    }
+
+    private <T> RestDocumentationResultHandler getRestDocumentationResultHandler(String identifier, String tag,
+        T requestDto, String requestSchemaName) {
+        if (requestDto == null) {
+            return MockMvcRestDocumentationWrapper.document(identifier,
+                preprocessResponse(prettyPrint()),
+                resource(
+                    ResourceSnippetParameters.builder()
+                        .tags(tag)
+                        .responseFields(getFailureFields())
+                        .build()
+                )
+            );
+        }
         return MockMvcRestDocumentationWrapper.document(identifier,
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
@@ -161,17 +239,19 @@ public class RestDocsFactory {
                 .content(content)
                 .accept(MediaType.APPLICATION_JSON);
             case "GET" -> RestDocumentationRequestBuilders.get(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON);
             case "PUT" -> RestDocumentationRequestBuilders.put(url)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
                 .accept(MediaType.APPLICATION_JSON);
-            case "DELETE" -> RestDocumentationRequestBuilders.delete(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                .accept(MediaType.APPLICATION_JSON);
+            case "DELETE" -> content.equals("null") ?
+                RestDocumentationRequestBuilders.delete(url)
+                    .contentType(MediaType.APPLICATION_JSON)
+                :
+                    RestDocumentationRequestBuilders.delete(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content)
+                        .accept(MediaType.APPLICATION_JSON);
             default -> throw new IllegalArgumentException("Invalid HTTP method: " + method);
         };
     }
@@ -181,6 +261,7 @@ public class RestDocsFactory {
             case "POST" -> createPostRequest(url, content, pathParams);
             case "GET" -> createGetRequest(url, content, pathParams);
             case "PUT" -> createPutRequest(url, content, pathParams);
+            case "PATCH" -> createPatchRequest(url, content, pathParams);
             case "DELETE" -> createDeleteRequest(url, content, pathParams);
             default -> throw new IllegalArgumentException("Invalid HTTP method: " + method);
         };
@@ -193,11 +274,16 @@ public class RestDocsFactory {
             .accept(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createGetRequest(String url, String content, Object... pathParams) {
-        return RestDocumentationRequestBuilders.get(url, pathParams)
+    private RequestBuilder createPatchRequest(String url, String content, Object... pathParams) {
+        return RestDocumentationRequestBuilders.patch(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
             .accept(MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createGetRequest(String url, String content, Object... pathParams) {
+        return RestDocumentationRequestBuilders.get(url, pathParams)
+            .contentType(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createPutRequest(String url, String content, Object... pathParams) {
@@ -208,6 +294,10 @@ public class RestDocsFactory {
     }
 
     private RequestBuilder createDeleteRequest(String url, String content, Object... pathParams) {
+        if (content.equals("null")) {
+            return RestDocumentationRequestBuilders.delete(url, pathParams)
+                .contentType(MediaType.APPLICATION_JSON);
+        }
         return RestDocumentationRequestBuilders.delete(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
