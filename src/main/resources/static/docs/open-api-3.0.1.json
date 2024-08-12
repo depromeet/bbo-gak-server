@@ -76,7 +76,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[delete] s3에서_삭제할_이미지_찾기_실패" : {
@@ -366,7 +366,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[presigned-urls] 실패-유효하지않은파일이름" : {
@@ -384,7 +384,16 @@
         "tags" : [ "Recruit" ],
         "summary" : "분기별 공고 목록 조회",
         "description" : "분기별 공고 목록 조회",
-        "operationId" : "[GET] 분기별 공고 목록 조회 성공",
+        "operationId" : "[GET] 분기별 공고 리스트 조회 성공",
+        "parameters" : [ {
+          "name" : "season",
+          "in" : "query",
+          "description" : "2024 상반기",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
         "responses" : {
           "200" : {
             "description" : "200",
@@ -394,7 +403,7 @@
                   "$ref" : "#/components/schemas/RecruitGetResponse"
                 },
                 "examples" : {
-                  "[GET] 분기별 공고 목록 조회 성공" : {
+                  "[GET] 분기별 공고 리스트 조회 성공" : {
                     "value" : "[ {\n  \"id\" : 1,\n  \"title\" : \"New Title\",\n  \"season\" : \"2024 상반기\",\n  \"siteUrl\" : \"https://example.com\",\n  \"recruitStatus\" : \"지원 완료\",\n  \"createdDate\" : \"2023-01-01T00:00:00\"\n} ]"
                   }
                 }
@@ -453,7 +462,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[DELETE] 공고 삭제 실패" : {
@@ -507,7 +516,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[upload] S3에서_업로드된_이미지_찾기_실패" : {
@@ -530,6 +539,104 @@
                 "examples" : {
                   "[upload] 성공" : {
                     "value" : "[ {\n  \"staticUrl\" : \"https://example.com/file1.png\"\n}, {\n  \"staticUrl\" : \"https://example.com/file2.png\"\n} ]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/card-memo" : {
+      "get" : {
+        "tags" : [ "CardMemo" ],
+        "summary" : "카드_메모_조회",
+        "description" : "카드_메모_조회",
+        "operationId" : "[카드_메모_조회] 성공",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "card-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/com.server.bbo_gak.domain.card.dto.response.CardMemoCreateResponse"
+                },
+                "examples" : {
+                  "[카드_메모_조회] 성공" : {
+                    "value" : "[{\"id\":1,\"content\":\"test contents 111\",\"updatedDate\":\"2024-07-24 21:26:42\"},{\"id\":2,\"content\":\"test contents 222\",\"updatedDate\":\"2024-07-24 21:26:42\"},{\"id\":3,\"content\":\"test contents 222\",\"updatedDate\":\"2024-07-24 21:26:42\"}]"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "CardMemo" ],
+        "summary" : "카드_메모_생성",
+        "description" : "카드_메모_생성",
+        "operationId" : "[카드_메모_생성] ",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CardMemoCreateRequest"
+              },
+              "examples" : {
+                "[카드_메모_생성] 성공" : {
+                  "value" : "{\n  \"content\" : \"test content\"\n}"
+                },
+                "[카드_메모_생성] 카드_찾기_실패" : {
+                  "value" : "{\n  \"content\" : \"test content\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CardMemoCreateResponse"
+                },
+                "examples" : {
+                  "[카드_메모_생성] 성공" : {
+                    "value" : "{\n  \"cardMemoId\" : 7,\n  \"content\" : \"test content\"\n}"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "404",
+            "content" : {
+              "application/json;charset=UTF-8" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
+                },
+                "examples" : {
+                  "[카드_메모_생성] 카드_찾기_실패" : {
+                    "value" : "{\n  \"message\" : \"해당 카드를 찾을 수 없습니다\",\n  \"status\" : \"NOT_FOUND\"\n}"
                   }
                 }
               }
@@ -748,7 +855,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[PATCH] 분기 수정 실패" : {
@@ -799,7 +906,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[PATCH] 사이트 URL 수정 실패" : {
@@ -865,7 +972,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[PATCH] 상태 수정 실패" : {
@@ -946,7 +1053,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[PATCH] 제목 수정 실패" : {
@@ -991,7 +1098,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[로그인] 아이디_없음" : {
@@ -1021,7 +1128,7 @@
             "content" : {
               "application/json;charset=UTF-8" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/api-v1-card-images1501512887"
+                  "$ref" : "#/components/schemas/api-v1-recruits-id-season1501512887"
                 },
                 "examples" : {
                   "[로그인] 비밀번호_실패" : {
@@ -1030,6 +1137,36 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/cards/{card-id}/card-memo/{card-memo-id}" : {
+      "delete" : {
+        "tags" : [ "CardMemo" ],
+        "summary" : "카드_메모_삭제",
+        "description" : "카드_메모_삭제",
+        "operationId" : "[카드_메모_삭제] 성공",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "card-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "card-memo-id",
+          "in" : "path",
+          "description" : "card-memo-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200"
           }
         }
       }
@@ -1145,6 +1282,50 @@
           }
         }
       }
+    },
+    "/api/v1/cards/{card-id}/card-memo/{card-memo-id}/content" : {
+      "put" : {
+        "tags" : [ "CardMemo" ],
+        "summary" : "카드_메모_조회",
+        "description" : "카드_메모_조회",
+        "operationId" : "[카드_메모_내용_수정] 성공",
+        "parameters" : [ {
+          "name" : "card-id",
+          "in" : "path",
+          "description" : "card-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "card-memo-id",
+          "in" : "path",
+          "description" : "card-memo-id",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-cards-card-id-card-memo-card-memo-id-content486549215"
+              },
+              "examples" : {
+                "[카드_메모_내용_수정] 성공" : {
+                  "value" : "{\"content\":\"updated contents\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200"
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -1176,20 +1357,6 @@
           "title" : {
             "type" : "string",
             "description" : "title"
-          }
-        }
-      },
-      "CardImageDeleteRequest" : {
-        "title" : "CardImageDeleteRequest",
-        "type" : "object",
-        "properties" : {
-          "cardId" : {
-            "type" : "number",
-            "description" : "cardId"
-          },
-          "staticUrl" : {
-            "type" : "string",
-            "description" : "staticUrl"
           }
         }
       },
@@ -1246,38 +1413,11 @@
           }
         }
       },
-      "TagGetResponse" : {
-        "title" : "TagGetResponse",
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "name" : {
-              "type" : "string",
-              "description" : "태그 이름"
-            },
-            "id" : {
-              "type" : "number",
-              "description" : "태그 ID"
-            },
-            "type" : {
-              "type" : "string",
-              "description" : "태그 타입"
-            }
-          }
-        }
+      "com.server.bbo_gak.domain.card.dto.response.CardMemoCreateResponse" : {
+        "title" : "com.server.bbo_gak.domain.card.dto.response.CardMemoCreateResponse",
+        "type" : "object"
       },
-      "CardTitleUpdateRequest" : {
-        "title" : "CardTitleUpdateRequest",
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string",
-            "description" : "카드 제목"
-          }
-        }
-      },
-      "api-v1-card-images1501512887" : {
+      "api-v1-recruits-id-season1501512887" : {
         "type" : "object",
         "properties" : {
           "message" : {
@@ -1355,6 +1495,151 @@
           }
         }
       },
+      "CardImageUploadCompleteResponse" : {
+        "title" : "CardImageUploadCompleteResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "staticUrl" : {
+              "type" : "string",
+              "description" : "staticUrl"
+            }
+          }
+        }
+      },
+      "TokenDto" : {
+        "title" : "TokenDto",
+        "type" : "object",
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "accessToken"
+          },
+          "refreshToken" : {
+            "type" : "string",
+            "description" : "refreshToken"
+          }
+        }
+      },
+      "ErrorResponse" : {
+        "title" : "ErrorResponse",
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string",
+            "description" : "Error message"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "HTTP status code"
+          }
+        }
+      },
+      "RecruitUpdateSiteUrlRequest" : {
+        "title" : "RecruitUpdateSiteUrlRequest",
+        "type" : "object",
+        "properties" : {
+          "siteUrl" : {
+            "type" : "string",
+            "description" : "siteUrl"
+          }
+        }
+      },
+      "RecruitUpdateTitleRequest" : {
+        "title" : "RecruitUpdateTitleRequest",
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
+      "api-v1-cards-card-id-card-memo-card-memo-id-content486549215" : {
+        "type" : "object"
+      },
+      "CardImageDeleteRequest" : {
+        "title" : "CardImageDeleteRequest",
+        "type" : "object",
+        "properties" : {
+          "cardId" : {
+            "type" : "number",
+            "description" : "cardId"
+          },
+          "staticUrl" : {
+            "type" : "string",
+            "description" : "staticUrl"
+          }
+        }
+      },
+      "TagGetResponse" : {
+        "title" : "TagGetResponse",
+        "type" : "array",
+        "items" : {
+          "type" : "object",
+          "properties" : {
+            "name" : {
+              "type" : "string",
+              "description" : "태그 이름"
+            },
+            "id" : {
+              "type" : "number",
+              "description" : "태그 ID"
+            },
+            "type" : {
+              "type" : "string",
+              "description" : "태그 타입"
+            }
+          }
+        }
+      },
+      "CardTitleUpdateRequest" : {
+        "title" : "CardTitleUpdateRequest",
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string",
+            "description" : "카드 제목"
+          }
+        }
+      },
+      "CardMemoCreateRequest" : {
+        "title" : "CardMemoCreateRequest",
+        "type" : "object",
+        "properties" : {
+          "content" : {
+            "type" : "string",
+            "description" : "content"
+          }
+        }
+      },
+      "RecruitCreateRequest" : {
+        "title" : "RecruitCreateRequest",
+        "type" : "object",
+        "properties" : {
+          "recruitScheduleStage" : {
+            "type" : "string",
+            "description" : "recruitScheduleStage"
+          },
+          "siteUrl" : {
+            "type" : "string",
+            "description" : "siteUrl"
+          },
+          "season" : {
+            "type" : "string",
+            "description" : "season"
+          },
+          "deadline" : {
+            "type" : "string",
+            "description" : "deadline"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "title"
+          }
+        }
+      },
       "CardGetResponse" : {
         "title" : "CardGetResponse",
         "type" : "object",
@@ -1408,29 +1693,13 @@
           }
         }
       },
-      "RecruitCreateRequest" : {
-        "title" : "RecruitCreateRequest",
+      "CardCreateResponse" : {
+        "title" : "CardCreateResponse",
         "type" : "object",
         "properties" : {
-          "recruitScheduleStage" : {
-            "type" : "string",
-            "description" : "recruitScheduleStage"
-          },
-          "siteUrl" : {
-            "type" : "string",
-            "description" : "siteUrl"
-          },
-          "season" : {
-            "type" : "string",
-            "description" : "season"
-          },
-          "deadline" : {
-            "type" : "string",
-            "description" : "deadline"
-          },
-          "title" : {
-            "type" : "string",
-            "description" : "title"
+          "cardId" : {
+            "type" : "number",
+            "description" : "Card ID"
           }
         }
       },
@@ -1447,54 +1716,17 @@
           }
         }
       },
-      "CardCreateResponse" : {
-        "title" : "CardCreateResponse",
+      "CardMemoCreateResponse" : {
+        "title" : "CardMemoCreateResponse",
         "type" : "object",
         "properties" : {
-          "cardId" : {
+          "cardMemoId" : {
             "type" : "number",
-            "description" : "Card ID"
-          }
-        }
-      },
-      "CardImageUploadCompleteResponse" : {
-        "title" : "CardImageUploadCompleteResponse",
-        "type" : "array",
-        "items" : {
-          "type" : "object",
-          "properties" : {
-            "staticUrl" : {
-              "type" : "string",
-              "description" : "staticUrl"
-            }
-          }
-        }
-      },
-      "TokenDto" : {
-        "title" : "TokenDto",
-        "type" : "object",
-        "properties" : {
-          "accessToken" : {
-            "type" : "string",
-            "description" : "accessToken"
+            "description" : "cardMemoId"
           },
-          "refreshToken" : {
+          "content" : {
             "type" : "string",
-            "description" : "refreshToken"
-          }
-        }
-      },
-      "ErrorResponse" : {
-        "title" : "ErrorResponse",
-        "type" : "object",
-        "properties" : {
-          "message" : {
-            "type" : "string",
-            "description" : "Error message"
-          },
-          "status" : {
-            "type" : "string",
-            "description" : "HTTP status code"
+            "description" : "content"
           }
         }
       },
@@ -1505,26 +1737,6 @@
           "season" : {
             "type" : "string",
             "description" : "season"
-          }
-        }
-      },
-      "RecruitUpdateSiteUrlRequest" : {
-        "title" : "RecruitUpdateSiteUrlRequest",
-        "type" : "object",
-        "properties" : {
-          "siteUrl" : {
-            "type" : "string",
-            "description" : "siteUrl"
-          }
-        }
-      },
-      "RecruitUpdateTitleRequest" : {
-        "title" : "RecruitUpdateTitleRequest",
-        "type" : "object",
-        "properties" : {
-          "title" : {
-            "type" : "string",
-            "description" : "title"
           }
         }
       },

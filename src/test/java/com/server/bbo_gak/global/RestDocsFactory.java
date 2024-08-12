@@ -21,26 +21,26 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.stereotype.Component;
-import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @Component
 public class RestDocsFactory {
 
-    public RequestBuilder createRequest(
+    public MockHttpServletRequestBuilder createRequest(
         String url, Object requestDto, HttpMethod method, ObjectMapper objectMapper
     ) throws Exception {
         String content = objectMapper.writeValueAsString(requestDto);
         return buildRequest(url, content, method);
     }
 
-    public RequestBuilder createRequest(
+    public MockHttpServletRequestBuilder createRequest(
         String url, Object requestDto, HttpMethod method, ObjectMapper objectMapper, Object... pathParams
     ) throws Exception {
         String content = objectMapper.writeValueAsString(requestDto);
         return buildRequest(url, content, method, pathParams);
     }
 
-    public RequestBuilder createRequestList(
+    public MockHttpServletRequestBuilder createRequestList(
         String url, List<?> requestDtos, HttpMethod method, ObjectMapper objectMapper
     ) throws Exception {
         StringBuilder contentBuilder = new StringBuilder("[");
@@ -55,7 +55,7 @@ public class RestDocsFactory {
         return buildRequest(url, content, method);
     }
 
-    public RequestBuilder createRequestList(
+    public MockHttpServletRequestBuilder createRequestList(
         String url, List<?> requestDtos, HttpMethod method, ObjectMapper objectMapper, Object... pathParams
     ) throws Exception {
         StringBuilder contentBuilder = new StringBuilder("[");
@@ -232,7 +232,7 @@ public class RestDocsFactory {
         );
     }
 
-    private RequestBuilder buildRequest(String url, String content, HttpMethod method) {
+    private MockHttpServletRequestBuilder buildRequest(String url, String content, HttpMethod method) {
         return switch (method.name()) {
             case "POST" -> RestDocumentationRequestBuilders.post(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -256,7 +256,8 @@ public class RestDocsFactory {
         };
     }
 
-    public RequestBuilder buildRequest(String url, String content, HttpMethod method, Object... pathParams) {
+    public MockHttpServletRequestBuilder buildRequest(String url, String content, HttpMethod method,
+        Object... pathParams) {
         return switch (method.name()) {
             case "POST" -> createPostRequest(url, content, pathParams);
             case "GET" -> createGetRequest(url, content, pathParams);
@@ -267,33 +268,33 @@ public class RestDocsFactory {
         };
     }
 
-    private RequestBuilder createPostRequest(String url, String content, Object... pathParams) {
+    private MockHttpServletRequestBuilder createPostRequest(String url, String content, Object... pathParams) {
         return RestDocumentationRequestBuilders.post(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
             .accept(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createPatchRequest(String url, String content, Object... pathParams) {
+    private MockHttpServletRequestBuilder createPatchRequest(String url, String content, Object... pathParams) {
         return RestDocumentationRequestBuilders.patch(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
             .accept(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createGetRequest(String url, String content, Object... pathParams) {
+    private MockHttpServletRequestBuilder createGetRequest(String url, String content, Object... pathParams) {
         return RestDocumentationRequestBuilders.get(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createPutRequest(String url, String content, Object... pathParams) {
+    private MockHttpServletRequestBuilder createPutRequest(String url, String content, Object... pathParams) {
         return RestDocumentationRequestBuilders.put(url, pathParams)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
             .accept(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createDeleteRequest(String url, String content, Object... pathParams) {
+    private MockHttpServletRequestBuilder createDeleteRequest(String url, String content, Object... pathParams) {
         if (content.equals("null")) {
             return RestDocumentationRequestBuilders.delete(url, pathParams)
                 .contentType(MediaType.APPLICATION_JSON);
