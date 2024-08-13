@@ -37,14 +37,15 @@ public class CardService {
     private final CardTypeRepository cardTypeRepository;
 
     @Transactional(readOnly = true)
-    public CardTypeCountGetResponse getCardTypeCounts(User user) {
+    public CardTypeCountGetResponse getCardTypeCountsInMyInfo(User user) {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.MY_INFO.getCardTypeValueList();
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList);
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, false);
 
         return CardTypeCountGetResponse.from(cards);
     }
+
 
     @Transactional(readOnly = true)
     public CardGetResponse getCardDetail(User user, Long cardId) {
@@ -60,12 +61,14 @@ public class CardService {
     @Transactional(readOnly = true)
     public List<CardListGetResponse> getCardList(User user, String cardTypeValue) {
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue));
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue),
+            null);
 
         return cards.stream()
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
     }
+
 
     @Transactional
     public CardCreateResponse createCard(User user, CardCreateRequest cardCreateRequest) {
