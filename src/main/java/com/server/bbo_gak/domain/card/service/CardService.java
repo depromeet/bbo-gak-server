@@ -41,7 +41,7 @@ public class CardService {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.MY_INFO.getCardTypeValueList();
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList);
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, false);
 
         return CardTypeCountGetResponse.from(cards);
     }
@@ -61,7 +61,8 @@ public class CardService {
     @Transactional(readOnly = true)
     public List<CardListGetResponse> getCardList(User user, String cardTypeValue) {
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue));
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue),
+            null);
 
         return cards.stream()
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
