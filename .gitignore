@@ -4,10 +4,15 @@ HELP.md
 docker-compose.yml
 .env
 
+
+
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+/src/main/generated/
+
+/src/main/resources/static/docs/*
 
 ### STS ###
 .apt_generated
