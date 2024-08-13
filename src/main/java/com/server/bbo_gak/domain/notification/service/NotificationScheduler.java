@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -28,6 +29,7 @@ public class NotificationScheduler {
     //TODO:스케줄러 추가시 application.yml의 ThreadPool 개수를 증가시켜줘야합니다.
 
     @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
     public void executeAtMidnight() {
         log.info("유저별 마감 하루 남은 공고 알림 생성");
         List<Recruit> allRecruits = recruitRepository.findAll();
@@ -39,6 +41,7 @@ public class NotificationScheduler {
     }
 
     @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
     public void deleteOldNotificationsAtMidnight() {
         log.info("오래된 알림 삭제");
 
