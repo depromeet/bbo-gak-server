@@ -362,10 +362,10 @@ public class RestDocsFactory {
     private JsonFieldType determineFieldType(Class<?> fieldType) {
         if (fieldType == String.class || fieldType.isEnum()) {
             return JsonFieldType.STRING;
-        } else if (Number.class.isAssignableFrom(fieldType) || fieldType.isPrimitive()) {
-            return JsonFieldType.NUMBER;
         } else if (Boolean.class.isAssignableFrom(fieldType) || fieldType == boolean.class) {
             return JsonFieldType.BOOLEAN;
+        } else if (Number.class.isAssignableFrom(fieldType) || fieldType.isPrimitive()) {
+            return JsonFieldType.NUMBER;
         } else if (List.class.isAssignableFrom(fieldType)) {
             return JsonFieldType.ARRAY;
         } else {
