@@ -11,34 +11,27 @@ import lombok.Builder;
 public record CardGetResponse(
     String title,
     String content,
-    String updateDate,
-    String type,
-    List<CardTagResponse> cardTagList
+    String updatedDate,
+    List<String> cardTypeValueList,
+    List<TagGetResponse> tagList
 ) {
 
     public static CardGetResponse of(Card card, List<CardTag> cardTagList) {
+
+        List<TagGetResponse> tagGetResponseList = cardTagList.stream()
+            .map(cardTag -> TagGetResponse.from(cardTag.getTag()))
+            .toList();
+
+        List<String> cardTypeValueList = card.getCardTypeList().stream()
+            .map(cardType -> cardType.getCardTypeValue().getValue())
+            .toList();
+
         return CardGetResponse.builder()
             .title(card.getTitle())
             .content(card.getContent())
-            .updateDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
-            .type(card.getCardType().getValue())
-            .cardTagList(cardTagList.stream().map(CardTagResponse::of).toList())
+            .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
+            .cardTypeValueList(cardTypeValueList)
+            .tagList(tagGetResponseList)
             .build();
-    }
-
-    @Builder(access = AccessLevel.PRIVATE)
-    public record CardTagResponse(
-        Long id,
-        String name,
-        String type
-    ) {
-
-        public static CardTagResponse of(CardTag cardTag) {
-            return CardTagResponse.builder()
-                .id(cardTag.getId())
-                .name(cardTag.getTag().getName())
-                .type(cardTag.getTag().getTagType().getValue())
-                .build();
-        }
     }
 }

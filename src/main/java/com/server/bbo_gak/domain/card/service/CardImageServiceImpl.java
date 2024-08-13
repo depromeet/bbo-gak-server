@@ -25,18 +25,19 @@ class CardImageServiceImpl implements CardImageService {
 
     @Override
     @Transactional
-    public List<CardImageUploadCompleteResponse> addImagesToCard(CardImageUploadCompleteRequest request) {
-        Card card = cardRepository.findById(request.cardId())
+    public List<CardImageUploadCompleteResponse> addImagesToCard(Long cardId,
+        List<CardImageUploadCompleteRequest> requests) {
+        Card card = cardRepository.findById(cardId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
-        List<CardImage> cardImageList = request.fileNames().stream()
-            .map(fileName -> CardImage.of(card, fileName))
+        List<CardImage> cardImageList = requests.stream()
+            .map(request -> CardImage.of(card, request.fileName()))
             .toList();
 
         cardImageRepository.saveAll(cardImageList);
 
-        return request.fileNames().stream()
-            .map(s3Util::getS3ObjectUrl)
+        return requests.stream()
+            .map(request -> s3Util.getS3ObjectUrl(request.fileName()))
             .map(CardImageUploadCompleteResponse::new)
             .toList();
     }
