@@ -32,7 +32,7 @@ public class CardController {
 
     @GetMapping("/cards/type-count")
     public ResponseEntity<CardTypeCountGetResponse> getCardTypeCounts(@AuthUser User user) {
-        return ResponseEntity.ok(cardService.getCardTypeCounts(user));
+        return ResponseEntity.ok(cardService.getCardTypeCountsInMyInfo(user));
     }
 
     @GetMapping("/cards/{card-id}")

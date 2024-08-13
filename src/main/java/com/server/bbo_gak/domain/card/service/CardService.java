@@ -37,7 +37,7 @@ public class CardService {
     private final CardTypeRepository cardTypeRepository;
 
     @Transactional(readOnly = true)
-    public CardTypeCountGetResponse getCardTypeCounts(User user) {
+    public CardTypeCountGetResponse getCardTypeCountsInMyInfo(User user) {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.MY_INFO.getCardTypeValueList();
 
@@ -45,6 +45,7 @@ public class CardService {
 
         return CardTypeCountGetResponse.from(cards);
     }
+
 
     @Transactional(readOnly = true)
     public CardGetResponse getCardDetail(User user, Long cardId) {
@@ -66,6 +67,7 @@ public class CardService {
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
     }
+
 
     @Transactional
     public CardCreateResponse createCard(User user, CardCreateRequest cardCreateRequest) {
