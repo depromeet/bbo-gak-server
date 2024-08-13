@@ -18,4 +18,5 @@ public enum RecruitStatus {
 
 
     private final String value;
+
 }
