@@ -36,3 +36,8 @@ jwt:
   access-token-expiration-time: 3600 #1시간
   refresh-token-expiration-time: 604800 #7일
   issuer: test
+
+scheduler:
+  thread:
+    pool:
+      size: 2
