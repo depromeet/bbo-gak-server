@@ -29,4 +29,5 @@ public class AuthController {
         authService.logout(user);
         return ResponseEntity.ok().body(null);
     }
+
 }
