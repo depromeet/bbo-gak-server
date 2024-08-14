@@ -2,10 +2,9 @@ package com.server.bbo_gak.domain.notification.service;
 
 import com.server.bbo_gak.domain.notification.dao.NotificationRepository;
 import com.server.bbo_gak.domain.notification.entity.Notification;
-import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
+import com.server.bbo_gak.domain.recruit.dao.RecruitScheduleRepository;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
-import com.server.bbo_gak.domain.recruit.entity.RecruitStatusCategory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
@@ -23,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class NotificationScheduler {
 
-    private final RecruitRepository recruitRepository;
     private final NotificationRepository notificationRepository;
+    private final RecruitScheduleRepository recruitScheduleRepository;
 
     //TODO:스케줄러 추가시 application.yml의 ThreadPool 개수를 증가시켜줘야합니다.
 
@@ -32,9 +31,13 @@ public class NotificationScheduler {
     @Transactional
     public void executeAtMidnight() {
         log.info("유저별 마감 하루 남은 공고 알림 생성");
-        List<Recruit> allRecruits = recruitRepository.findAll();
 
-        List<Entry<Recruit, RecruitSchedule>> recruitsWithOneDayLeft = findRecruitsWithOneDayLeft(allRecruits);
+        LocalDate now = LocalDate.now();
+        List<RecruitSchedule> scheduleList = recruitScheduleRepository.findAllByDeadLineBetween(now,
+            now.plusDays(1));
+
+        List<Entry<Recruit, RecruitSchedule>> recruitsWithOneDayLeft = getRecruitAndScheduleMaps(scheduleList);
+
         List<Notification> notifications = createNotifications(recruitsWithOneDayLeft);
 
         notificationRepository.saveAll(notifications);
@@ -54,13 +57,9 @@ public class NotificationScheduler {
         notificationRepository.deleteAll(notificationsToDelete);
     }
 
-    private List<Entry<Recruit, RecruitSchedule>> findRecruitsWithOneDayLeft(List<Recruit> allRecruits) {
-        return allRecruits.stream()
-            .filter(recruit -> !RecruitStatusCategory.isRejectionStatus(recruit.getRecruitStatus()))
-            .flatMap(recruit -> recruit.getScheduleList().stream()
-                .filter(this::isDeadlineWithinOneDay)
-                .map(schedule -> new SimpleEntry<>(recruit, schedule))
-            )
+    private List<Entry<Recruit, RecruitSchedule>> getRecruitAndScheduleMaps(List<RecruitSchedule> scheduleList) {
+        return scheduleList.stream()
+            .map(schedule -> new SimpleEntry<>(schedule.getRecruit(), schedule))
             .collect(Collectors.toList());
     }
 
