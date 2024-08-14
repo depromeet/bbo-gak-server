@@ -2,7 +2,7 @@ package com.server.bbo_gak.domain.card.controller;
 
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
-import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
 import com.server.bbo_gak.domain.card.service.CardInRecruitService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class CardRecruitController {
+public class CardInRecruitController {
 
     private final CardInRecruitService cardInRecruitService;
 
     @GetMapping("/recruits/{recruit-id}/cards/type-count")
-    public ResponseEntity<CardTypeCountGetResponse> getCardTypeCounts(@AuthUser User user) {
+    public ResponseEntity<CardTypeCountInRecruitGetResponse> getCardTypeCounts(@AuthUser User user) {
         return ResponseEntity.ok(cardInRecruitService.getCardTypeCountsInRecruit(user));
     }
 
-    @GetMapping("/recruits/{recruit-id}/cards/{card-id}")
+    @GetMapping("/recruits/{recruit-id}/cards")
     public ResponseEntity<List<CardListGetResponse>> getCardDetail(
         @AuthUser User user,
         @PathVariable("recruit-id") Long recruitId,

@@ -9,7 +9,7 @@ import com.server.bbo_gak.domain.card.dao.CardTagRepository;
 import com.server.bbo_gak.domain.card.dao.CardTypeRepository;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
-import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
+import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardCopyInfo;
 import com.server.bbo_gak.domain.card.entity.CardImage;
@@ -46,13 +46,13 @@ public class CardInRecruitService {
 
 
     @Transactional(readOnly = true)
-    public CardTypeCountGetResponse getCardTypeCountsInRecruit(User user) {
+    public CardTypeCountInRecruitGetResponse getCardTypeCountsInRecruit(User user) {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.RECRUIT.getCardTypeValueList();
 
         List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, true);
 
-        return CardTypeCountGetResponse.from(cards);
+        return CardTypeCountInRecruitGetResponse.from(cards);
     }
 
     @Transactional(readOnly = true)
@@ -78,28 +78,28 @@ public class CardInRecruitService {
         Card copiedCard = Card.copyCardFromMyInfo(card, user, recruit);
 
         cardRepository.save(copiedCard);
-        copyCardMemberListFromCard(card, copiedCard);
+        copyCardDataListFromCard(card, copiedCard);
 
         return new CardCreateResponse(copiedCard.getId());
     }
 
-    private void copyCardMemberListFromCard(Card card, Card copiedCard) {
-        saveMemberList(card.getCardMemoList(), cardMemoRepository,
+    private void copyCardDataListFromCard(Card card, Card copiedCard) {
+        saveDataList(card.getCardMemoList(), cardMemoRepository,
             cardMemo -> new CardMemo(copiedCard, cardMemo.getContent()));
 
-        saveMemberList(card.getCardTypeList(), cardTypeRepository,
+        saveDataList(card.getCardTypeList(), cardTypeRepository,
             cardType -> new CardType(copiedCard, cardType.getCardTypeValue()));
 
-        saveMemberList(card.getCardTagList(), cardTagRepository,
+        saveDataList(card.getCardTagList(), cardTagRepository,
             cardTag -> new CardTag(copiedCard, cardTag.getTag()));
 
-        saveMemberList(card.getCardImageList(), cardImageRepository,
+        saveDataList(card.getCardImageList(), cardImageRepository,
             cardImage -> CardImage.of(copiedCard, cardImage.getFileName()));
 
         cardCopyInfoRepository.save(new CardCopyInfo(copiedCard));
     }
 
-    private <T, R> void saveMemberList(List<T> items, JpaRepository<R, ?> repository, Function<T, R> mapper) {
+    private <T, R> void saveDataList(List<T> items, JpaRepository<R, ?> repository, Function<T, R> mapper) {
 
         List<R> copiedList = items.stream()
             .map(mapper)
