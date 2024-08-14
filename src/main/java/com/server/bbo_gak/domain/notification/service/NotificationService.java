@@ -8,6 +8,7 @@ import com.server.bbo_gak.domain.user.entity.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +28,10 @@ public class NotificationService {
             .toList();
     }
 
+    @Transactional
     public void updateAllNotificationToRead(User user) {
-        notificationRepository.findAllByUserAndIsReadFalse(user)
-            .forEach(Notification::updateReadTrue);
+        List<Notification> notificationList = notificationRepository.findAllByUserAndIsReadFalse(user);
+        notificationList.forEach(Notification::updateReadTrue);
+        notificationRepository.saveAll(notificationList);
     }
 }
