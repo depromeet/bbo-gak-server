@@ -1,4 +1,5 @@
 name: deploy-bbogak-dev-server
+
 on:
   push:
     branches: main
@@ -19,10 +20,11 @@ jobs:
       - name: Build and Test
         run: |
           chmod +x gradlew
-          ./gradlew build -x openapi3
+          ./gradlew build -x openapi3 
 
   deploy:
     runs-on: ubuntu-latest
+    needs: ci
     steps:
       - name: Deploy spring MainServer(main)
         uses: appleboy/ssh-action@master
@@ -37,8 +39,8 @@ jobs:
             git fetch origin main
             git merge origin/main
             
-            ./gradlew clean build
-            ./gradlew openapi3
+            ./gradlew clean build 
+            ./gradlew openapi3 
             docker rm bbo-gak-server_back_1 --force
             docker rmi bbo-gak-server_back
             docker-compose -f docker-compose-dev.yml up --build -d
