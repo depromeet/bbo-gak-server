@@ -27,8 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
-    private String[] allowUrls = {"/", "/api/v1/users/test/login", "/docs/**", "/v3/**", "/favicon.ico",
-        "/api/v1/users/social-login", "/api/v1/users/test/access-token"};
+    private String[] allowUrls = {"/", "/api/v1/users/test/login", "/api/v1/users/refreshToken", "/api/v1/users/social-login", "/api/v1/users/test/access-token", "/docs/**", "/v3/**",
+        "/favicon.ico"};
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -63,7 +63,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-            List.of("http://114.70.23.79:8080", "http://localhost:8080", "http://52.65.6.74:8080")); // 허용할 오리진 지정
+            List.of("http://114.70.23.79:8080", "http://localhost:8080", "http://52.65.6.74:8080",
+                "http://localhost:3000")); // 허용할 오리진 지정
         configuration.addAllowedMethod("*");
         configuration.setAllowedHeaders(List.of("*")); // 허용할 헤더
         configuration.setAllowCredentials(true);

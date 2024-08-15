@@ -1,8 +1,12 @@
 package com.server.bbo_gak.domain.recruit.service;
 
+import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
+import org.springframework.stereotype.Service;
+
+@Service
 public interface RecruitScheduleService {
 
-    void createRecruitSchedule();
+    RecruitSchedule createRecruitSchedule(RecruitSchedule recruitSchedule);
 
     void getRecruitScheduleList();
 

@@ -11,20 +11,39 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
 
 cloud:
   aws:
     s3:
       bucket: test
-      signature-version: AWS4-HMAC-SHA256ㅌ
+      signature-version: AWS4-HMAC-SHA256
     credentials:
-      access-key: test
-      secret-key: test
+      access-key: 0eFd7h2PLQ5tH7v3jBcXFr6L8hYh5u3g1kFxWrZ0dJc=
+      secret-key: q8aV4Mf4r7l5u9OxC7ZtVx2qY2eDz9Tw5uDl9JQ6SJI=
     region:
       static: test
       auto: false
     stack:
       auto: false
+
+jwt:
+  access-token-secret: 0eFd7h2PLQ5tH7v3jBcXFr6L8hYh5u3g1kFxWrZ0dJc=
+  refresh-token-secret: q8aV4Mf4r7l5u9OxC7ZtVx2qY2eDz9Tw5uDl9JQ6SJI=
+  access-token-expiration-time: 3600 #1시간
+  refresh-token-expiration-time: 604800 #7일
+  issuer: test
+
+google:
+  login:
+    client_id: test
+    client_secret: test
+    redirect_uri: test
+
+scheduler:
+  thread:
+    pool:
+      size: 2

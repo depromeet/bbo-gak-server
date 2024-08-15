@@ -1,28 +1,39 @@
 package com.server.bbo_gak.domain.card.entity;
 
-import com.server.bbo_gak.global.error.exception.ErrorCode;
-import com.server.bbo_gak.global.error.exception.NotFoundException;
-import java.util.Arrays;
-import lombok.AllArgsConstructor;
+import com.server.bbo_gak.global.common.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
-public enum CardType {
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class CardType extends BaseEntity {
 
-    EXPERIENCE("경험_정리"),
-    PERSONAL_STATEMENT("자기소개서"),
-    INTERVIEW_QUESTION("면접_질문"),
-    DOCUMENT_PREPARING("서류_준비"),
-    ASSIGNMENT_PREPARING("과제_준비"),
-    INTERVIEW_PREPARING("인터뷰_준비");
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "card_type_id")
+    private Long id;
 
-    private final String value;
+    @Enumerated(EnumType.STRING)
+    private CardTypeValue cardTypeValue;
 
-    public static CardType findByValue(String value) {
-        return Arrays.stream(CardType.values())
-            .filter(cardType -> cardType.getValue().equals(value))
-            .findFirst()
-            .orElseThrow((() -> new NotFoundException(ErrorCode.CARD_TYPE_NOT_FOUND)));
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id")
+    private Card card;
+
+    public CardType(Card card, CardTypeValue cardTypeValue) {
+        this.card = card;
+        this.cardTypeValue = cardTypeValue;
     }
 }

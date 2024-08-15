@@ -22,6 +22,7 @@ public enum ErrorCode {
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "토큰이 없습니다"),
     TOKEN_SUBJECT_FORMAT_ERROR(HttpStatus.UNAUTHORIZED, "Subject 값에 Long 타입이 아닌 다른 타입이 들어있습니다."),
     AT_EXPIRED_AND_RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AT는 만료되었고 RT는 비어있습니다."),
+    RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "RT가 비어있습니다"),
 
     //OAuth
     AUTH_GET_USER_INFO_FAILED(HttpStatus.UNAUTHORIZED, "SocialAccessToken을 통해 사용자 정보를 가져오는 데에 실패했습니다."),
@@ -42,7 +43,21 @@ public enum ErrorCode {
 
     //Tag
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다"),
-    TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다.");
+
+    TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다."),
+
+    //Season
+    SEASON_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 분기를 찾을 수 없습니다"),
+
+    //Recruit
+    RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고를 찾을 수 없습니다"),
+
+    CARD_TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드와 태그 매핑을 찾을 수 없습니다"),
+
+    //CardMemo
+    CARD_MEMO_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다");
+
+
     private final HttpStatus status;
     private final String message;
 

@@ -1,7 +1,7 @@
 jwt:
   access-token-secret: ${JWT_ACCESS_TOKEN_SECRET:}
   refresh-token-secret: ${JWT_REFRESH_TOKEN_SECRET:}
-  access-token-expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:7200} #2시간
+  access-token-expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME:36000000} #10000시간
   refresh-token-expiration-time: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME:604800} #7일
   issuer: ${JWT_ISSUER:}
 

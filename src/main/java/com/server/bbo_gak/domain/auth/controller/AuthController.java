@@ -2,6 +2,7 @@ package com.server.bbo_gak.domain.auth.controller;
 
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
+import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
@@ -10,6 +11,7 @@ import com.server.bbo_gak.global.annotation.AuthUser;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -50,9 +52,15 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/test/logout")
+    @PostMapping("/refreshToken")
+    public ResponseEntity<TokenDto> validateRefreshToken(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.ok(authService.validateRefreshToken(request));
+    }
+
+    @GetMapping("/logout")
     public ResponseEntity<Void> logout(@AuthUser User user) {
         authService.logout(user);
         return ResponseEntity.ok().body(null);
     }
+
 }

@@ -6,10 +6,12 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
+import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.user.entity.OauthInfo;
@@ -18,11 +20,15 @@ import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import com.server.bbo_gak.global.security.jwt.entity.RefreshTokenRepository;
 import com.server.bbo_gak.global.security.jwt.service.JwtTokenService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,13 +54,29 @@ class AuthServiceImplTest {
     }
 
     @Test
-    void 테스트_로그인_유저가_없을때_실패() {
-        when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.empty());
+    void 테스트_로그아웃_실패() {
+        User user = AuthTestUser.builder()
+                .role(UserRole.USER)
+                .oauthInfo(OauthInfo.builder().name("name").email("testUser").build())
+                .build();
 
-        LoginRequest request = new LoginRequest("testUser", "password");
+        when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(true);
+        doNothing().when(refreshTokenRepository).deleteById(anyLong());
 
-        assertThrows(NotFoundException.class, () -> authService.login(request));
+        authService.logout(user);
     }
+
+    @Nested
+    class 테스트_로그인 {
+
+        @Test
+        void 테스트_로그인_유저가_없을때_실패() {
+            when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.empty());
+
+            LoginRequest request = new LoginRequest("testUser", "password");
+
+            assertThrows(NotFoundException.class, () -> authService.login(request));
+        }
 
     @Test
     void 테스트_로그인_유저_비밀번호_다를때_실패() {
@@ -66,12 +88,12 @@ class AuthServiceImplTest {
             .password("wrongPassword")
             .build();
 
-        when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
+            when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
 
-        LoginRequest request = new LoginRequest("testUser", "password");
+            LoginRequest request = new LoginRequest("testUser", "password");
 
-        assertThrows(BusinessException.class, () -> authService.login(request));
-    }
+            assertThrows(BusinessException.class, () -> authService.login(request));
+        }
 
     @Test
     void 테스트_로그인_성공() {
@@ -83,32 +105,51 @@ class AuthServiceImplTest {
             .password("password")
             .build();
 
-        when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
-        when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(false);
-        when(jwtTokenService.createTokenDto(anyLong(), any(UserRole.class))).thenReturn(
-            new TokenDto("accessToken", "refreshToken"));
+            when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
+            when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(false);
+            when(jwtTokenService.createTokenDto(anyLong(), any(UserRole.class))).thenReturn(
+                new TokenDto("accessToken", "refreshToken"));
 
-        LoginRequest request = new LoginRequest("testUser", "password");
+            LoginRequest request = new LoginRequest("testUser", "password");
 
-        TokenDto tokenDto = authService.login(request);
+            TokenDto tokenDto = authService.login(request);
 
-        verify(refreshTokenRepository, never()).deleteById(anyLong());
+            verify(refreshTokenRepository, never()).deleteById(anyLong());
+        }
     }
 
-    @Test
-    void 테스트_로그아웃_실패() {
-        //TODO: 수정 필요
-        User user = User.builder()
-            .role(UserRole.USER)
-            .oauthInfo(OauthInfo.builder().oauthId("1").name("name").email("testUser").provider(
-                OauthProvider.GOOGLE).build())
-            .build();
-        //User user = new User("name", "testUser", UserRole.USER);
+    @Nested
+    class 리프레쉬_토큰 {
 
-        when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(false);
-        doNothing().when(refreshTokenRepository).deleteById(anyLong());
+        @Test
+        public void 만료() throws Exception {
+            String expiredRefreshToken = "expiredRefreshToken";
+            RefreshTokenRequest request = new RefreshTokenRequest(expiredRefreshToken);
 
-        authService.logout(user);
+            when(authService.validateRefreshToken(request)).thenThrow(new ExpiredJwtException(null, null, "Expired"));
+
+            assertThrows(JwtException.class, () -> authService.validateRefreshToken(request));
+
+            verify(jwtTokenService, times(1)).validateRefreshToken(request.refreshToken());
+        }
+
+        @Test
+        public void 유효() throws Exception {
+            String validRefreshToken = "validRefreshToken";
+            RefreshTokenRequest request = new RefreshTokenRequest(validRefreshToken);
+            TokenDto tokenDto = new TokenDto("newAccessToken", "newRefreshToken");
+            AccessTokenDto accessTokenDto = new AccessTokenDto(1L, UserRole.USER, tokenDto.accessToken());
+
+            when(jwtTokenService.validateRefreshToken(validRefreshToken)).thenReturn(true);
+            when(jwtTokenService.recreateTokenDtoAtValidate(validRefreshToken)).thenReturn(tokenDto);
+            when(jwtTokenService.retrieveAccessToken(tokenDto.accessToken())).thenReturn(accessTokenDto);
+
+            authService.validateRefreshToken(request);
+
+            verify(jwtTokenService, times(1)).validateRefreshToken(validRefreshToken);
+            verify(jwtTokenService, times(1)).recreateTokenDtoAtValidate(validRefreshToken);
+            verify(jwtTokenService, times(1)).retrieveAccessToken(tokenDto.accessToken());
+        }
 
     }
 }

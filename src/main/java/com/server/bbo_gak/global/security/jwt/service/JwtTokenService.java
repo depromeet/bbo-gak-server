@@ -3,6 +3,7 @@ package com.server.bbo_gak.global.security.jwt.service;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.security.PrincipalDetails;
 import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import com.server.bbo_gak.global.security.jwt.entity.RefreshToken;
@@ -18,6 +19,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -28,6 +33,13 @@ public class JwtTokenService {
     public static final String TOKEN_ROLE_NAME = "role";
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    public void setAuthenticationToContext(Long memberId, UserRole role) {
+        UserDetails userDetails = PrincipalDetails.ofJwt(memberId, role);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+            userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
     /**
      * 클라이언트가 로그인 시 전달할 AT, RT를 생성합니다.

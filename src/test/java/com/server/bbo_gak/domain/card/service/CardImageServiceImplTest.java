@@ -94,7 +94,8 @@ public class CardImageServiceImplTest {
             when(s3Util.getS3ObjectUrl(anyString())).thenAnswer(
                 invocation -> "https://example.com/" + invocation.getArgument(0));
 
-            List<CardImageUploadCompleteResponse> responses = cardImageService.addImagesToCard(1L, uploadValidRequest);
+            List<CardImageUploadCompleteResponse> responses = cardImageService.addImagesToCard(1L,
+                uploadValidRequest);
 
             assertEquals(2, responses.size());
             assertEquals("https://example.com/card/1/file1.png", responses.get(0).staticUrl());
