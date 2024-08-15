@@ -20,7 +20,7 @@ jobs:
       - name: Build and Test
         run: |
           chmod +x gradlew
-          ./gradlew build -x openapi3 --no-daemon
+          ./gradlew build -x openapi3 
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,8 +39,8 @@ jobs:
             git fetch origin main
             git merge origin/main
             
-            ./gradlew clean build --no-daemon
-            ./gradlew openapi3 --no-daemon
+            ./gradlew clean build 
+            ./gradlew openapi3 
             docker rm bbo-gak-server_back_1 --force
             docker rmi bbo-gak-server_back
             docker-compose -f docker-compose-dev.yml up --build -d
