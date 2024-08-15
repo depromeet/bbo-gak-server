@@ -38,8 +38,9 @@ public abstract class AbstractRestDocsTests {
     protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
-    @MockBean
-    private UserRepository userRepository;
+
+//    @MockBean
+//    private UserRepository userRepository;
 
     @BeforeEach
     void setUp(final RestDocumentationContextProvider restDocumentation) {
@@ -53,7 +54,7 @@ public abstract class AbstractRestDocsTests {
             .role(UserRole.USER)
             .build();
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+        //when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(documentationConfiguration(restDocumentation))

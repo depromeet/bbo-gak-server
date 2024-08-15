@@ -39,9 +39,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Sql("/recruit-test-data.sql")
 public class RecruitControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1/recruits";

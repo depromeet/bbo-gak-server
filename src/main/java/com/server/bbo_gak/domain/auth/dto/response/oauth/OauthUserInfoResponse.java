@@ -1,7 +1,9 @@
 package com.server.bbo_gak.domain.auth.dto.response.oauth;
 
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
+import lombok.Builder;
 
+@Builder
 public record OauthUserInfoResponse(
     String oauthId,
     String email,

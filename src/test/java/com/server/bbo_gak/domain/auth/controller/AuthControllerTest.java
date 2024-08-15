@@ -22,7 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
+import com.server.bbo_gak.domain.auth.dto.response.oauth.OauthUserInfoResponse;
 import com.server.bbo_gak.domain.auth.service.AuthService;
+import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.user.entity.UserRole;
@@ -59,7 +61,7 @@ public class AuthControllerTest extends AbstractRestDocsTests {
     private static final String DEFAULT_URL = "/api/v1/users";
 
     @MockBean
-    private AuthService authService;
+    private GoogleService googleService;
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
@@ -100,16 +102,19 @@ public class AuthControllerTest extends AbstractRestDocsTests {
             //given
             String socialAccessToken = "sampleToken";
             OauthProvider provider = OauthProvider.GOOGLE;
-            LoginResponse mockLoginResponse = LoginResponse.builder()
-                    .accessToken("accessToken")
-                    .refreshToken("refreshToken")
+            //구글 서비스 모킹
+            OauthUserInfoResponse mockOauthUserInfoResponse = OauthUserInfoResponse.builder()
+                    .oauthId("oauthId")
+                    .email("email")
+                    .name("name")
+                    .provider(provider)
                     .build();
-            when(authService.socialLogin(socialAccessToken, provider)).thenReturn(mockLoginResponse);
+            when(googleService.getOauthUserInfo(socialAccessToken)).thenReturn(mockOauthUserInfoResponse);
 
             //when
             mockMvc.perform(post("/api/v1/users/social-login")
                             .header("SOCIAL-AUTH-TOKEN", socialAccessToken)
-                            .param("provider", provider.name())
+                            .queryParam("provider", provider.name())
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
 
@@ -121,8 +126,8 @@ public class AuthControllerTest extends AbstractRestDocsTests {
                             header().string(HttpHeaders.CONTENT_TYPE, matchesPattern("application/json(;charset=UTF-8)?")))
                     // Verifying output serialization
                     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                    .andExpect(jsonPath("$.accessToken").value("accessToken")) //$로 JSON 루트 객체 접근
-                    .andExpect(jsonPath("$.refreshToken").value("refreshToken")) //
+                    .andExpect(jsonPath("$.accessToken").isNotEmpty()) // accessToken 존재 검증
+                    .andExpect(jsonPath("$.refreshToken").isNotEmpty()) // refreshToken 존재 검증
 
                     // RestDocs 문서
                     .andDo(document("[소셜 로그인] 성공",

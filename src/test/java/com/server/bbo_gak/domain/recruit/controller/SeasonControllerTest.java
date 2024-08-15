@@ -77,7 +77,7 @@ public class SeasonControllerTest extends AbstractRestDocsTests {
                 .role(UserRole.USER)
                 .build();
 
-            when(userRepository.findById(2L)).thenReturn(Optional.of(mockUser));
+            //when(userRepository.findById(2L)).thenReturn(Optional.of(mockUser));
 
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL, null, HttpMethod.GET, objectMapper))

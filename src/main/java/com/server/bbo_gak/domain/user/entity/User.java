@@ -1,15 +1,7 @@
 package com.server.bbo_gak.domain.user.entity;
 
 import com.server.bbo_gak.global.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +22,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @AttributeOverrides({
+            @AttributeOverride(name = "oauthId", column = @Column(name = "oauth_id")),
+            @AttributeOverride(name = "name", column = @Column(name = "name")),
+            @AttributeOverride(name = "email", column = @Column(name = "email")),
+            @AttributeOverride(name = "provider", column = @Column(name = "provider"))
+    })
     @Embedded
     private OauthInfo oauthInfo;
 

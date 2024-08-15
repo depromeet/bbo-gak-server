@@ -22,9 +22,12 @@ import com.server.bbo_gak.global.security.jwt.service.JwtTokenService;
 import io.jsonwebtoken.JwtException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -40,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse socialLogin(String socialAccessToken, OauthProvider provider) {
         // accessToken으로 사용자 정보 얻어오기
         OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, provider);
+        log.error("oauthUserInfo: " + oauthUserInfo);
 
         // DB에서 회원 찾기
         Optional<User> optionalUser = userService.findUserByOauthInfo(OauthInfo.builder()
@@ -48,6 +52,8 @@ public class AuthServiceImpl implements AuthService {
             .email(oauthUserInfo.email())
             .provider(oauthUserInfo.provider()).build());
         User user = optionalUser.orElseGet(() -> userService.createUser(oauthUserInfo)); // DB에 없으면 회원가입
+        log.info("user's oauthInfo: "+ user.getOauthInfo() + "user's id :" + user.getId());
+
 
         if (refreshTokenRepository.existsRefreshTokenByMemberId(user.getId())) {
             refreshTokenRepository.deleteById(user.getId()); //기존 토큰 삭제
