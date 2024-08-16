@@ -22,13 +22,20 @@ cloud:
       bucket: test
       signature-version: AWS4-HMAC-SHA256
     credentials:
-      access-key: test
-      secret-key: test
+      access-key: 0eFd7h2PLQ5tH7v3jBcXFr6L8hYh5u3g1kFxWrZ0dJc=
+      secret-key: q8aV4Mf4r7l5u9OxC7ZtVx2qY2eDz9Tw5uDl9JQ6SJI=
     region:
       static: test
       auto: false
     stack:
       auto: false
+
+jwt:
+  access-token-secret: 0eFd7h2PLQ5tH7v3jBcXFr6L8hYh5u3g1kFxWrZ0dJc=
+  refresh-token-secret: q8aV4Mf4r7l5u9OxC7ZtVx2qY2eDz9Tw5uDl9JQ6SJI=
+  access-token-expiration-time: 3600 #1시간
+  refresh-token-expiration-time: 604800 #7일
+  issuer: test
 
 scheduler:
   thread:

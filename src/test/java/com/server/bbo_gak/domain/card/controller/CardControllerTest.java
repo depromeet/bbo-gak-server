@@ -36,18 +36,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 @ActiveProfiles("test")
 @Sql("/card-test-data.sql")
 public class CardControllerTest extends AbstractRestDocsTests {
 
+    private static final String DEFAULT_URL = "/api/v1";
     @Autowired
     private CardRepository cardRepository;
-
     @Autowired
     private CardTagRepository cardTagRepository;
-
-    private static final String DEFAULT_URL = "/api/v1";
 
     @Nested
     class 카드_타입_카운트_조회 {

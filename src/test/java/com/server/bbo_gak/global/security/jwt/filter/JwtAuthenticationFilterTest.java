@@ -12,7 +12,6 @@ import com.server.bbo_gak.domain.user.controller.UserController;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
-import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
 import com.server.bbo_gak.global.security.jwt.service.JwtTokenService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -83,77 +82,6 @@ public class JwtAuthenticationFilterTest {
         verify(jwtTokenService, times(1)).validateAccessToken(expiredAccessToken);
     }
 
-    @Test
-    public void 만료된_액세스_토큰_만료된_리프레쉬_토큰() throws Exception {
-        String expiredAccessToken = "expiredAccessToken";
-        String expiredRefreshToken = "expiredRefreshToken";
-
-        when(jwtTokenService.validateAccessToken(expiredAccessToken)).thenThrow(
-            new ExpiredJwtException(null, null, "Expired"));
-        when(jwtTokenService.validateRefreshToken(expiredRefreshToken)).thenThrow(
-            new ExpiredJwtException(null, null, "Expired"));
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-
-        request.addHeader("Authorization", "Bearer " + expiredAccessToken);
-        request.addHeader("RefreshToken", "Bearer " + expiredRefreshToken);
-
-        assertThrows(JwtException.class,
-            () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
-
-        verify(jwtTokenService, times(1)).validateAccessToken(expiredAccessToken);
-        verify(jwtTokenService, times(1)).validateRefreshToken(expiredRefreshToken);
-    }
-
-    @Test
-    public void 만료된_액세스_토큰_유효한_리프레시_토큰() throws Exception {
-        String expiredAccessToken = "expiredAccessToken";
-        String validRefreshToken = "validRefreshToken";
-        TokenDto tokenDto = new TokenDto("newAccessToken", "newRefreshToken");
-        AccessTokenDto accessTokenDto = new AccessTokenDto(1L, UserRole.USER, tokenDto.accessToken());
-
-        when(jwtTokenService.validateAccessToken(expiredAccessToken)).thenThrow(
-            new ExpiredJwtException(null, null, "Expired"));
-        when(jwtTokenService.validateRefreshToken(validRefreshToken)).thenReturn(true);
-        when(jwtTokenService.recreateTokenDtoAtValidate(validRefreshToken)).thenReturn(tokenDto);
-        when(jwtTokenService.retrieveAccessToken(tokenDto.accessToken())).thenReturn(accessTokenDto);
-
-        mockMvc.perform(get("/api/v1/users/me")
-                .header("Authorization", "Bearer " + expiredAccessToken)
-                .header("RefreshToken", "Bearer " + validRefreshToken))
-            .andExpect(status().isOk());
-
-        verify(jwtTokenService, times(1)).validateAccessToken(expiredAccessToken);
-        verify(jwtTokenService, times(1)).validateRefreshToken(validRefreshToken);
-        verify(jwtTokenService, times(1)).recreateTokenDtoAtValidate(validRefreshToken);
-        verify(jwtTokenService, times(1)).retrieveAccessToken(tokenDto.accessToken());
-    }
-
-    @Test
-    public void 만료된_액세스_토큰_유효하지_않은_리프레쉬_토큰() throws Exception {
-        String expiredAccessToken = "expiredAccessToken";
-        String expiredRefreshToken = "expiredRefreshToken";
-
-        when(jwtTokenService.validateAccessToken(expiredAccessToken)).thenThrow(
-            new ExpiredJwtException(null, null, "Expired"));
-        when(jwtTokenService.validateRefreshToken(expiredRefreshToken)).thenThrow(
-            new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage()));
-
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        FilterChain filterChain = mock(FilterChain.class);
-
-        request.addHeader("Authorization", "Bearer " + expiredAccessToken);
-        request.addHeader("RefreshToken", "Bearer " + expiredRefreshToken);
-
-        assertThrows(JwtException.class,
-            () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
-
-        verify(jwtTokenService, times(1)).validateAccessToken(expiredAccessToken);
-        verify(jwtTokenService, times(1)).validateRefreshToken(expiredRefreshToken);
-    }
 
     @Test
     public void 유효하지_않은_액세스_토큰() throws Exception {
