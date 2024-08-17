@@ -21,11 +21,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(OauthUserInfoResponse oauthUserInfo) {
         User user = User.builder()
             .role(UserRole.USER)
-            .oauthInfo(OauthInfo.builder()
-                .oauthId(oauthUserInfo.oauthId())
-                .email(oauthUserInfo.email())
-                .name(oauthUserInfo.name())
-                .provider(oauthUserInfo.provider()).build()
+            .oauthInfo(OauthInfo.from(oauthUserInfo)
             ).build();
         userRepository.save(user);
         log.info("[UserServiceImpl] user's oauthInfo: "+ user.getOauthInfo() + "user's id :" + user.getId());

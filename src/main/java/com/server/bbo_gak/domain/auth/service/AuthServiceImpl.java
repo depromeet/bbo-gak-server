@@ -46,11 +46,7 @@ public class AuthServiceImpl implements AuthService {
         log.error("oauthUserInfo: " + oauthUserInfo);
 
         // DB에서 회원 찾기
-        Optional<User> optionalUser = userService.findUserByOauthInfo(OauthInfo.builder()
-            .oauthId(oauthUserInfo.oauthId())
-            .name(oauthUserInfo.name())
-            .email(oauthUserInfo.email())
-            .provider(oauthUserInfo.provider()).build());
+        Optional<User> optionalUser = userService.findUserByOauthInfo(OauthInfo.from(oauthUserInfo));
         User user = optionalUser.orElseGet(() -> userService.createUser(oauthUserInfo)); // DB에 없으면 회원가입
         log.info("user's oauthInfo: "+ user.getOauthInfo() + "user's id :" + user.getId());
 
