@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.recruit.controller;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.server.bbo_gak.domain.recruit.dto.response.SeasonGetResponse;
@@ -12,7 +11,6 @@ import com.server.bbo_gak.global.AbstractRestDocsTests;
 import com.server.bbo_gak.global.RestDocsFactory;
 import com.server.bbo_gak.global.security.PrincipalDetails;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -77,7 +75,6 @@ public class SeasonControllerTest extends AbstractRestDocsTests {
                 .role(UserRole.USER)
                 .build();
 
-            //when(userRepository.findById(2L)).thenReturn(Optional.of(mockUser));
 
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL, null, HttpMethod.GET, objectMapper))
