@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.recruit.service;
 
-import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
@@ -155,17 +154,5 @@ public class RecruitService {
     private Recruit findRecruitByUserAndId(User user, Long recruitId) {
         return recruitRepository.findByUserIdAndId(user.getId(), recruitId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
-    }
-
-    public void getCardListInRecruit(User user, Long recruitId, CardType type) {
-
-    }
-
-    public void getCardTypeCountsInRecruit(User user, Long recruitId) {
-
-    }
-
-    public void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId) {
-
     }
 }

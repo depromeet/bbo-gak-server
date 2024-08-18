@@ -42,11 +42,11 @@ public class Card extends BaseEntity {
 
     private LocalDateTime accessTime;
 
+    private Boolean copyFlag = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    private boolean copyFlag = false;
 
     @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<CardTag> cardTagList = new ArrayList<>();
@@ -60,21 +60,24 @@ public class Card extends BaseEntity {
     @OneToMany(mappedBy = "card", fetch = FetchType.LAZY)
     private List<CardType> cardTypeList = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "copy_info_id")
-    private CopyInfo copyInfo;
+    @OneToOne(mappedBy = "card", fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_copy_info_id")
+    private CardCopyInfo cardCopyInfo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recruit_id")
     private Recruit recruit;
 
     @Builder
-    public Card(String title, String content, LocalDateTime accessTime, List<CardType> cardTypeList, User user) {
+    public Card(String title, String content, LocalDateTime accessTime, List<CardType> cardTypeList, User user,
+        Boolean copyFlag, Recruit recruit) {
         this.title = title;
         this.content = content;
         this.accessTime = accessTime;
         this.cardTypeList = cardTypeList;
+        this.copyFlag = copyFlag;
         this.user = user;
+        this.recruit = recruit;
     }
 
     public static Card creatEmptyCard(User user) {
@@ -82,7 +85,19 @@ public class Card extends BaseEntity {
             .title("")
             .content("")
             .user(user)
+            .copyFlag(false)
             .accessTime(LocalDateTime.now())
+            .build();
+    }
+
+    public static Card copyCardFromMyInfo(Card card, User user, Recruit recruit) {
+        return Card.builder()
+            .title(card.getTitle())
+            .content(card.getContent())
+            .user(user)
+            .copyFlag(true)
+            .accessTime(LocalDateTime.now())
+            .recruit(recruit)
             .build();
     }
 

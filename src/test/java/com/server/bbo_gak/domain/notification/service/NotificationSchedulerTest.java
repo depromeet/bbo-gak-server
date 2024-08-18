@@ -13,7 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/notification-test-data.sql")
+@Sql({"/all-data-delete.sql", "/notification-test-data.sql"})
 public class NotificationSchedulerTest {
 
     @Autowired
