@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/card-test-data.sql")
+@Sql({"/all-data-delete.sql", "/card-test-data.sql"})
 public class TagControllerTest extends AbstractRestDocsTests {
 
     @Autowired

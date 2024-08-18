@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/card-test-data.sql")
+@Sql({"/all-data-delete.sql", "/card-test-data.sql"})
 public class CardInRecruitControllerTest extends AbstractRestDocsTests {
 
     @Autowired

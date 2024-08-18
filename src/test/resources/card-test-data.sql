@@ -1,22 +1,3 @@
-delete
-from card_memo;
-delete
-from card_tag;
-delete
-from tag;
-delete
-from card_type;
-delete
-from card_copy_info;
-delete
-from card;
-delete
-from recruit;
-delete
-from recruit_season;
-delete
-from users;
-
 INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role)
 VALUES (false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000', 1, 'AuthTestUser', 'test', 'test', 'test',
         'test',
