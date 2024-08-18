@@ -23,12 +23,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @AttributeOverrides({
-            @AttributeOverride(name = "oauthId", column = @Column(name = "oauth_id")),
-            @AttributeOverride(name = "name", column = @Column(name = "name")),
-            @AttributeOverride(name = "email", column = @Column(name = "email")),
-            @AttributeOverride(name = "provider", column = @Column(name = "provider"))
-    })
     @Embedded
     private OauthInfo oauthInfo;
 
