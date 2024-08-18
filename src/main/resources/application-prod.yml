@@ -13,3 +13,13 @@ spring:
 
 server:
   forward-headers-strategy: framework
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /api/health-check
+  endpoint:
+    health:
+      enabled: true
+
