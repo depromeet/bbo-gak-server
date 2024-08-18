@@ -21,8 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriComponentsBuilder;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -57,10 +55,6 @@ public class GoogleService implements OauthService {
 
     // 프론트와 연결끝나면 지워도 됨.
     public String getToken(String code) {
-//        log.info("redirect uri: {}", googleOAuthConfig.getGoogleRedirectUri());
-        // 토큰 요청 데이터
-        String uri = UriComponentsBuilder.fromOriginHeader(GOOGLE_TOKEN_URI)
-            .toUriString();
 
         Map<String, String> params = new LinkedHashMap<>();
         params.put("client_id", googleOAuthConfig.getGoogleClientId());
