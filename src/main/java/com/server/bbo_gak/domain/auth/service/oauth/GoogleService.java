@@ -33,27 +33,26 @@ public class GoogleService implements OauthService {
 
     @Override
     public OauthUserInfoResponse getOauthUserInfo(String accessToken) {
-        GoogleOauthUserInfoResponse response = null;
+        GoogleOauthUserInfoResponse response = getGoogleOauthUserInfo(accessToken);
+        return new OauthUserInfoResponse(response.id(), response.email(), response.name(), GOOGLE);
+    }
+
+    private GoogleOauthUserInfoResponse getGoogleOauthUserInfo(String accessToken){
         try {
             RestClient restClient = RestClient.create();
-            response = restClient.get()
-                .uri(GOOGLE_USER_INFO_URI)
-                .header(AUTHORIZATION, TOKEN_PREFIX + accessToken)
-                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError,
-                    (googleRequest, googleResponse) -> {
-                        throw new BusinessException(AUTH_GET_USER_INFO_FAILED);
-                    })
-                .body(GoogleOauthUserInfoResponse.class);
+            return restClient.get()
+                    .uri(GOOGLE_USER_INFO_URI)
+                    .header(AUTHORIZATION, TOKEN_PREFIX + accessToken)
+                    .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError,
+                            (googleRequest, googleResponse) -> {
+                                throw new BusinessException(AUTH_GET_USER_INFO_FAILED);
+                            })
+                    .body(GoogleOauthUserInfoResponse.class);
         } catch (Exception e) {
             throw new BusinessException(AUTH_GET_USER_INFO_FAILED);
         }
-
-        assert response != null;
-        log.info("getOAuthUserInfo = oauthId {} / email {} / name {}", response.id(), response.email(),
-            response.name());
-        return new OauthUserInfoResponse(response.id(), response.email(), response.name(), GOOGLE);
     }
 
     // 프론트와 연결끝나면 지워도 됨.
