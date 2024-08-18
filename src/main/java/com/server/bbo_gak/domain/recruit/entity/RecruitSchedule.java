@@ -45,4 +45,12 @@ public class RecruitSchedule {
     public void setRecruit(Recruit recruit) {
         this.recruit = recruit;
     }
+
+    public static RecruitSchedule of(Recruit recruit, RecruitScheduleStage recruitScheduleStage, String deadLine){
+        return RecruitSchedule.builder()
+                .recruit(recruit)
+                .recruitScheduleStage(recruitScheduleStage)
+                .deadLine(LocalDate.parse(deadLine)).build();
+    }
+
 }
