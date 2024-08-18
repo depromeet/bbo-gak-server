@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/notification-test-data.sql")
+@Sql({"/all-data-delete.sql", "/notification-test-data.sql"})
 public class NotificationControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1/notifications";
