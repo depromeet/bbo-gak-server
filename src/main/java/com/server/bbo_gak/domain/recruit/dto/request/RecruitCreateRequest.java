@@ -1,7 +1,6 @@
 package com.server.bbo_gak.domain.recruit.dto.request;
 
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
-import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
 import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
 import com.server.bbo_gak.domain.recruit.entity.Season;
@@ -15,15 +14,14 @@ public record RecruitCreateRequest(
     String deadline
 ) {
 
-    public Recruit toEntity(User user, Season season, RecruitSchedule schedule) {
+    public Recruit toEntity(User user, Season season) {
         return Recruit.builder()
             .season(season)
             .title(title)
             .siteUrl(siteUrl)
             .recruitStatus(RecruitStatus.APPLICATION_COMPLETED)
             .user(user)
-            .build()
-            .addSchedule(schedule);
+            .build();
     }
 
 }
