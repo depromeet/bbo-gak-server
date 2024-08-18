@@ -28,7 +28,7 @@ public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
     private String[] allowUrls = {"/", "/api/v1/users/test/login", "/docs/**", "/v3/**", "/favicon.ico",
-        "/api/docs/**", "/api/v3/**"};
+        "/api/docs/**", "/api/v3/**", "/api/health-check/**"};
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -78,5 +78,4 @@ public class SecurityConfig {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
