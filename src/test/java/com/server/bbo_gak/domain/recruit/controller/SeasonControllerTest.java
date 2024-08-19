@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/season-test-data.sql")
+@Sql({"/all-data-delete.sql", "/season-test-data.sql"})
 public class SeasonControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1/seasons";

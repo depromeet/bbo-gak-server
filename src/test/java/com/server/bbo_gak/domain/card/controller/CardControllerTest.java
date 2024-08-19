@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/card-test-data.sql")
+@Sql({"/all-data-delete.sql", "/card-test-data.sql"})
 public class CardControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1";
