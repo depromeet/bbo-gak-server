@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,11 +46,16 @@ public class GoogleService implements OauthService {
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError,
                             (googleRequest, googleResponse) -> {
-                                throw new BusinessException(AUTH_GET_USER_INFO_FAILED);
+                                throw new BusinessException("Client error: " + googleResponse.getStatusCode(), AUTH_GET_USER_INFO_FAILED);
                             })
+                    .onStatus(HttpStatusCode::is5xxServerError, (googleRequest, googleResponse) -> {
+                        throw new BusinessException("Server error: " + googleResponse.getStatusCode(), AUTH_GET_USER_INFO_FAILED);
+                    })
                     .body(GoogleOauthUserInfoResponse.class);
-        } catch (Exception e) {
-            throw new BusinessException(AUTH_GET_USER_INFO_FAILED);
+        }  catch (RestClientException e) { // RestClient 관련 에러
+            throw new BusinessException("RestClientException: " + e.getMessage(), AUTH_GET_USER_INFO_FAILED);
+        } catch (Exception e) { // 그 외 일반적인 예외
+            throw new BusinessException("Unexpected error: " + e.getMessage(), AUTH_GET_USER_INFO_FAILED);
         }
     }
 
