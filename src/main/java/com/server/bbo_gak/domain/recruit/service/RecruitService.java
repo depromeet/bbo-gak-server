@@ -5,6 +5,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
+import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatusCategory;
 import com.server.bbo_gak.domain.recruit.entity.Season;
@@ -98,7 +99,8 @@ public class RecruitService {
 
         // 공고 일정 생성
         RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
-                RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline())
+            RecruitSchedule.of(recruit, RecruitScheduleStage.findByValue(request.recruitScheduleStage()),
+                request.deadline())
         );
 
         // 공고에 공고 일정을 설정
@@ -134,10 +136,10 @@ public class RecruitService {
     }
 
     @Transactional
-    public RecruitGetResponse updateRecruitStatus(User user, Long recruitId, RecruitStatus recruitStatus) {
+    public RecruitGetResponse updateRecruitStatus(User user, Long recruitId, String recruitStatus) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
-        recruit.updateRecruitStatus(recruitStatus);
+        recruit.updateRecruitStatus(RecruitStatus.findByValue(recruitStatus));
 
         return RecruitGetResponse.from(recruitRepository.save(recruit));
     }

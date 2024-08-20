@@ -51,6 +51,9 @@ public enum ErrorCode {
 
     //Recruit
     RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고를 찾을 수 없습니다"),
+    RECRUIT_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 지원 상태를 찾을 수 없습니다"),
+    RECRUIT_SCHEDULE_STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 일정 단계를 찾을 수 없습니다"),
+
 
     CARD_TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드와 태그 매핑을 찾을 수 없습니다"),
 

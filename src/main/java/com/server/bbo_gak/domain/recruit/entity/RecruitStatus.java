@@ -1,5 +1,8 @@
 package com.server.bbo_gak.domain.recruit.entity;
 
+import com.server.bbo_gak.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,6 +19,12 @@ public enum RecruitStatus {
     FINAL_ACCEPTANCE("최종 합격"),
     FINAL_REJECTED("최종 탈락");
 
-
     private final String value;
+
+    public static RecruitStatus findByValue(String value) {
+        return Arrays.stream(RecruitStatus.values())
+            .filter(recruitStatus -> recruitStatus.getValue().equals(value))
+            .findFirst()
+            .orElseThrow((() -> new NotFoundException(ErrorCode.RECRUIT_STATUS_NOT_FOUND)));
+    }
 }

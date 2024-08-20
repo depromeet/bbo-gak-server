@@ -42,15 +42,19 @@ public class RecruitSchedule {
         this.deadLine = deadLine;
     }
 
-    public void setRecruit(Recruit recruit) {
-        this.recruit = recruit;
+    public static RecruitSchedule of(Recruit recruit, RecruitScheduleStage recruitScheduleStage, String deadLine) {
+        return RecruitSchedule.builder()
+            .recruit(recruit)
+            .recruitScheduleStage(recruitScheduleStage)
+            .deadLine(LocalDate.parse(deadLine)).build();
     }
 
-    public static RecruitSchedule of(Recruit recruit, RecruitScheduleStage recruitScheduleStage, String deadLine){
-        return RecruitSchedule.builder()
-                .recruit(recruit)
-                .recruitScheduleStage(recruitScheduleStage)
-                .deadLine(LocalDate.parse(deadLine)).build();
+    public int getDDay() {
+        return LocalDate.now().until(this.deadLine).getDays();
+    }
+
+    public void setRecruit(Recruit recruit) {
+        this.recruit = recruit;
     }
 
 }
