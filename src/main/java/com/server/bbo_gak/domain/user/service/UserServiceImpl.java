@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(OauthUserInfoResponse oauthUserInfo) {
-        User user = User.fromOauthUserInfo(oauthUserInfo);
+        User user = User.from(oauthUserInfo.toEntity());
         userRepository.save(user);
 
         return user;

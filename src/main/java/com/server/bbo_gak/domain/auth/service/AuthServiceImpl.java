@@ -7,7 +7,6 @@ import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
-import com.server.bbo_gak.domain.user.entity.OauthInfo;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.service.UserService;
@@ -41,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
         OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, provider);
 
         // DB에서 회원 찾기
-        User user = userService.findUserByOauthInfo(OauthInfo.from(oauthUserInfo))
+        User user = userService.findUserByOauthInfo(oauthUserInfo.toEntity())
                 .orElseGet(() -> userService.createUser(oauthUserInfo)); //DB에 회원이 없으면 회원가입
 
 

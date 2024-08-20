@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.user.entity;
 
-import com.server.bbo_gak.domain.auth.dto.response.oauth.OauthUserInfoResponse;
 import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -27,10 +26,10 @@ public class User extends BaseEntity {
     private OauthInfo oauthInfo;
 
     // User 생성 팩토리 메서드
-    public static User fromOauthUserInfo(OauthUserInfoResponse oauthUserInfo) {
+    public static User from(OauthInfo oauthInfo) {
         return User.builder()
                 .role(UserRole.USER)
-                .oauthInfo(OauthInfo.from(oauthUserInfo))
+                .oauthInfo(oauthInfo)
                 .build();
     }
 }
