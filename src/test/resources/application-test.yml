@@ -37,6 +37,12 @@ jwt:
   refresh-token-expiration-time: 604800 #7일
   issuer: test
 
+google:
+  login:
+    client_id: test
+    client_secret: test
+    redirect_uri: test
+
 scheduler:
   thread:
     pool:

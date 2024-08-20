@@ -1,22 +1,16 @@
 package com.server.bbo_gak.domain.user.entity;
 
 import com.server.bbo_gak.global.common.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -25,16 +19,17 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
-    private String name;
-
-    private String email;
-
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public User(String name, String email, UserRole role) {
-        this.name = name;
-        this.email = email;
-        this.role = role;
+    @Embedded
+    private OauthInfo oauthInfo;
+
+    // User 생성 팩토리 메서드
+    public static User from(OauthInfo oauthInfo) {
+        return User.builder()
+                .role(UserRole.USER)
+                .oauthInfo(oauthInfo)
+                .build();
     }
 }

@@ -2,8 +2,8 @@ package com.server.bbo_gak.domain.auth.service;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -14,6 +14,8 @@ import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
+import com.server.bbo_gak.domain.user.entity.OauthInfo;
+import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.error.exception.BusinessException;
@@ -53,13 +55,15 @@ class AuthServiceImplTest {
 
     @Test
     void 테스트_로그아웃_실패() {
-        User user = new User("name", "testUser", UserRole.USER);
+        User user = AuthTestUser.builder()
+                .role(UserRole.USER)
+                .oauthInfo(OauthInfo.builder().name("name").email("testUser").build())
+                .build();
 
         when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(true);
         doNothing().when(refreshTokenRepository).deleteById(anyLong());
 
         authService.logout(user);
-
     }
 
     @Nested
@@ -74,9 +78,15 @@ class AuthServiceImplTest {
             assertThrows(NotFoundException.class, () -> authService.login(request));
         }
 
-        @Test
-        void 테스트_로그인_유저_비밀번호_다를때_실패() {
-            AuthTestUser authTestUser = new AuthTestUser("name", "email", UserRole.USER, "testUser", "wrongPassword");
+    @Test
+    void 테스트_로그인_유저_비밀번호_다를때_실패() {
+        AuthTestUser authTestUser = AuthTestUser.builder()
+            .role(UserRole.USER)
+            .oauthInfo(OauthInfo.builder().oauthId("1").name("name").email("email").provider(
+                OauthProvider.GOOGLE).build())
+            .loginId("testUser")
+            .password("wrongPassword")
+            .build();
 
             when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
 
@@ -85,9 +95,15 @@ class AuthServiceImplTest {
             assertThrows(BusinessException.class, () -> authService.login(request));
         }
 
-        @Test
-        void 테스트_로그인_성공() {
-            AuthTestUser authTestUser = new AuthTestUser("name", "email", UserRole.USER, "testUser", "password");
+    @Test
+    void 테스트_로그인_성공() {
+        AuthTestUser authTestUser = AuthTestUser.builder()
+            .role(UserRole.USER)
+            .oauthInfo(OauthInfo.builder().oauthId("1").name("name").email("email").provider(
+                OauthProvider.GOOGLE).build())
+            .loginId("testUser")
+            .password("password")
+            .build();
 
             when(authTestUserRepository.findByLoginId(anyString())).thenReturn(Optional.of(authTestUser));
             when(refreshTokenRepository.existsRefreshTokenByMemberId(anyLong())).thenReturn(false);
