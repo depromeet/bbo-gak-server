@@ -45,10 +45,11 @@ pipeline {
         stage('Build & Push Docker Image') {
             steps {
                 script {
-                    sh 'docker buildx build --push --platform linux/amd64 -t $DOCKER_IMAGE .'
+                    sh 'docker buildx build --push --platform linux/amd64 --build-arg PROFILE=prod -t $DOCKER_IMAGE .'
                 }
             }
         }
+
         stage('ssh-test') {
             steps{
                 script{
