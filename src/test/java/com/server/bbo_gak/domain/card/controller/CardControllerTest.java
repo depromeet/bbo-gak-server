@@ -22,6 +22,7 @@ import com.server.bbo_gak.domain.card.dao.CardTagRepository;
 import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,6 +54,11 @@ public class CardControllerTest extends AbstractRestDocsTests {
 
     @Nested
     class 카드_단건_조회 {
+
+        @Test
+        public void test_non_pass() {
+            Assertions.assertEquals(1, "1");
+        }
 
         @Test
         public void 성공() throws Exception {

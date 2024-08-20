@@ -22,11 +22,16 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
                 script {
                     sh './gradlew clean build'
                     sh './gradlew openapi3'
+                }
+            }
+            post {
+                failure {
+                    error 'Deployment failed!'
                 }
             }
         }
@@ -64,7 +69,7 @@ pipeline {
             echo 'Deployment was successful!'
         }
         failure {
-            echo 'Deployment failed!'
+            error 'Deployment failed!'
         }
     }
 }
