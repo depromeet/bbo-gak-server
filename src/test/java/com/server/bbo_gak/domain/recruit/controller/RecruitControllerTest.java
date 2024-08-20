@@ -130,7 +130,8 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
 
         @Test
         public void 성공() throws Exception {
-            RecruitUpdateStatusRequest request = new RecruitUpdateStatusRequest(RecruitStatus.APPLICATION_COMPLETED);
+            RecruitUpdateStatusRequest request =
+                new RecruitUpdateStatusRequest(RecruitStatus.APPLICATION_COMPLETED.getValue());
 
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL + "/{id}/status", request, HttpMethod.PATCH, objectMapper,
@@ -142,7 +143,20 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
 
         @Test
         public void 찾을수_없음_실패() throws Exception {
-            RecruitUpdateStatusRequest request = new RecruitUpdateStatusRequest(RecruitStatus.APPLICATION_COMPLETED);
+            RecruitUpdateStatusRequest request =
+                new RecruitUpdateStatusRequest(RecruitStatus.APPLICATION_COMPLETED.getValue());
+
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/{id}/status", request, HttpMethod.PATCH, objectMapper,
+                        100L))
+                .andExpect(status().isNotFound())
+                .andDo(restDocsFactory.getFailureResource("[PATCH] 상태 수정 실패", "Recruit", request));
+        }
+
+        @Test
+        public void 존재하지않는_상태_실패() throws Exception {
+            RecruitUpdateStatusRequest request =
+                new RecruitUpdateStatusRequest("지원 준비 중");
 
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL + "/{id}/status", request, HttpMethod.PATCH, objectMapper,
@@ -189,7 +203,7 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
                 "2024 상반기",
                 "New Recruit Title",
                 "https://example.com",
-                RecruitScheduleStage.CLOSING_DOCUMENT,
+                RecruitScheduleStage.CLOSING_DOCUMENT.getValue(),
                 "2024-12-31"
             );
 
@@ -197,6 +211,21 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isOk())
                 .andDo(restDocsFactory.getSuccessResource("[POST] 공고 생성 성공", "공고 생성", "Recruit", request,
                     response));
+        }
+
+        @Test
+        public void 실패() throws Exception {
+            RecruitCreateRequest request = new RecruitCreateRequest(
+                "2024 상반기",
+                "New Recruit Title",
+                "https://example.com",
+                "서류통과",
+                "2024-12-31"
+            );
+
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL, request, HttpMethod.POST, objectMapper))
+                .andExpect(status().isNotFound())
+                .andDo(restDocsFactory.getFailureResource("[POST] 공고 생성 실패", "Recruit", request));
         }
     }
 
