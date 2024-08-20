@@ -54,7 +54,6 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
 
     @BeforeEach
     void setUp() {
-
         response = RecruitGetResponse.builder()
             .id(1L)
             .title("New Title")
@@ -64,7 +63,7 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
             .createdDate("2023-01-01T00:00:00")
             .nearestSchedule(RecruitScheduleGetResponse.builder()
                 .id(1L)
-                .recruitScheduleStage(RecruitScheduleStage.CLOSING_DOCUMENT)
+                .recruitScheduleStage(RecruitScheduleStage.CLOSING_DOCUMENT.getValue())
                 .deadLine("2024-01-01T00:00:00")
                 .build())
             .build();
@@ -337,5 +336,4 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
                     List.of(), List.of(response)));
         }
     }
-
 }

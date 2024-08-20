@@ -130,7 +130,7 @@ public class JwtTokenService {
         return refreshTokenRepository.existsRefreshTokenByToken(refreshToken);
     }
 
-    public TokenDto recreateTokenDtoAtInValidate(User user) {
+    public TokenDto recreateTokenDtoAtInvalidate(User user) {
         refreshTokenRepository.deleteById(user.getId());
 
         return createTokenDto(user.getId(), user.getRole());

@@ -39,7 +39,8 @@ public class ImageServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
+        user = User.builder()
+            .build();
         setField(user, "id", 1L);
     }
 

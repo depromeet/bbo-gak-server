@@ -3,7 +3,6 @@ package com.server.bbo_gak.global;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRole;
 import com.server.bbo_gak.global.security.PrincipalDetails;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,11 +40,6 @@ public abstract class AbstractRestDocsTests {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
             userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        User mockUser = User.builder()
-            .id(1L)
-            .role(UserRole.USER)
-            .build();
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context)
             .apply(documentationConfiguration(restDocumentation))

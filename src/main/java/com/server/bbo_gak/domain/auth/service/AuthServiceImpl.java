@@ -1,12 +1,19 @@
 package com.server.bbo_gak.domain.auth.service;
 
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
+import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
+import com.server.bbo_gak.domain.auth.dto.response.oauth.OauthUserInfoResponse;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
+import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
+import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.domain.user.entity.UserRepository;
+import com.server.bbo_gak.domain.user.service.UserService;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -24,6 +31,28 @@ public class AuthServiceImpl implements AuthService {
     private final AuthTestUserRepository authTestUserRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenService jwtTokenService;
+    private final GoogleService googleService;
+    private final UserService userService;
+    private final UserRepository userRepository;
+
+    @Override
+    @Transactional
+    public LoginResponse socialLogin(String socialAccessToken, OauthProvider provider) {
+        // accessToken으로 사용자 정보 얻어오기
+        OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, provider);
+
+        // DB에서 회원 찾기
+        User user = userRepository.findUserByOauthInfo(oauthUserInfo.toEntity())
+                .orElseGet(() -> userService.createUser(oauthUserInfo)); //DB에 회원이 없으면 회원가입
+
+
+        if (refreshTokenRepository.existsRefreshTokenByMemberId(user.getId())) {
+            refreshTokenRepository.deleteById(user.getId()); //기존 토큰 삭제
+        }
+        TokenDto tokenDto = jwtTokenService.createTokenDto(user.getId(), user.getRole()); // 토큰 발급
+
+        return LoginResponse.of(tokenDto);
+    }
 
     @Override
     @Transactional
@@ -66,5 +95,12 @@ public class AuthServiceImpl implements AuthService {
         if (refreshTokenRepository.existsRefreshTokenByMemberId(user.getId())) {
             refreshTokenRepository.deleteById(user.getId());
         }
+    }
+
+    private OauthUserInfoResponse getMemberInfo(String socialAccessToken, OauthProvider provider) {
+        return switch (provider) {
+            case GOOGLE -> googleService.getOauthUserInfo(socialAccessToken);
+            default -> throw new InvalidValueException(ErrorCode.INVALID_PROVIDER_TYPE);
+        };
     }
 }
