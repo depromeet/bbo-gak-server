@@ -13,6 +13,9 @@ public record RecruitScheduleGetResponse(
 ) {
 
     public static RecruitScheduleGetResponse from(RecruitSchedule schedule) {
+        if (schedule == null) {
+            return null;
+        }
         return RecruitScheduleGetResponse.builder()
             .id(schedule.getId())
             .recruitScheduleStage(schedule.getRecruitScheduleStage())
