@@ -1,9 +1,7 @@
 package com.server.bbo_gak.domain.recruit.service;
 
-import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
-import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
@@ -93,12 +91,21 @@ public class RecruitService {
     @Transactional
     public RecruitGetResponse createRecruit(User user, RecruitCreateRequest request) {
 
-        RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
-            RecruitScheduleCreateRequest.of(request.recruitScheduleStage(), request.deadline())
-        );
         Season season = seasonService.getSeasonByName(user, request.season());
-        Recruit recruit = request.toEntity(user, season, recruitSchedule);
-        return RecruitGetResponse.from(recruitRepository.save(recruit));
+        Recruit recruit = request.toEntity(user, season);
+        // 공고 저장하여 id 확보
+        Recruit savedRecruit = recruitRepository.save(recruit);
+
+        // 공고 일정 생성
+        RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
+                RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline())
+        );
+
+        // 공고에 공고 일정을 설정
+        savedRecruit.addSchedule(recruitSchedule);
+        recruitRepository.save(recruit);
+
+        return RecruitGetResponse.from(savedRecruit);
     }
 
     @Transactional
@@ -147,17 +154,5 @@ public class RecruitService {
     private Recruit findRecruitByUserAndId(User user, Long recruitId) {
         return recruitRepository.findByUserIdAndId(user.getId(), recruitId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
-    }
-
-    public void getCardListInRecruit(User user, Long recruitId, CardType type) {
-
-    }
-
-    public void getCardTypeCountsInRecruit(User user, Long recruitId) {
-
-    }
-
-    public void copyMyInfoCardToRecruit(User user, Long CardId, Long recruitId) {
-
     }
 }

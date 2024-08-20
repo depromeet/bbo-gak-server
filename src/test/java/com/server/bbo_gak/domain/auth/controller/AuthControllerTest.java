@@ -55,7 +55,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Rollback(true)
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/auth-test-data.sql")
+@Sql({"/all-data-delete.sql", "/auth-test-data.sql"})
 public class AuthControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1/users";

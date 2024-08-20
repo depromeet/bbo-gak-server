@@ -1,3 +1,4 @@
+
 delete
 from refresh_token;
 
