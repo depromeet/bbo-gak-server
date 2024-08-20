@@ -9,6 +9,7 @@ import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.domain.user.entity.UserRepository;
 import com.server.bbo_gak.domain.user.service.UserService;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
@@ -32,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenService jwtTokenService;
     private final GoogleService googleService;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -40,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
         OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, provider);
 
         // DB에서 회원 찾기
-        User user = userService.findUserByOauthInfo(oauthUserInfo.toEntity())
+        User user = userRepository.findUserByOauthInfo(oauthUserInfo.toEntity())
                 .orElseGet(() -> userService.createUser(oauthUserInfo)); //DB에 회원이 없으면 회원가입
 
 
