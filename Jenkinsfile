@@ -25,8 +25,8 @@ pipeline {
         stage('Build & Test') {
             steps {
                 script {
-                    sh './gradlew openapi3'
                     sh './gradlew clean build'
+                    sh './gradlew openapi3'
                 }
             }
             post {
