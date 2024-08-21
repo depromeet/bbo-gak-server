@@ -5,7 +5,7 @@ docker-compose.yml
 .env 
 
  
- 
+   
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
