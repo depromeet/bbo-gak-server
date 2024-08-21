@@ -2,10 +2,10 @@ HELP.md
 .gradle
 
 docker-compose.yml
-.env
+.env 
 
  
-
+ 
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
