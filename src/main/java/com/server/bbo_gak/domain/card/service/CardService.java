@@ -20,6 +20,7 @@ import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,7 @@ public class CardService {
             null);
 
         return cards.stream()
+            .sorted(Comparator.comparing(Card::getUpdatedDate).reversed())
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
     }

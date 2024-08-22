@@ -23,6 +23,7 @@ import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -62,6 +63,7 @@ public class CardInRecruitService {
             recruitId);
 
         return cards.stream()
+            .sorted(Comparator.comparing(Card::getUpdatedDate).reversed())
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
     }
