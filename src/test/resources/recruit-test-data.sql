@@ -47,3 +47,13 @@ VALUES (1, 1, 'FIRST_INTERVIEW', '2024-12-31'),
        (7, 7, 'SECOND_INTERVIEW', TIMESTAMPADD(DAY, -1, CURRENT_TIMESTAMP)),
        (8, 7, 'FINAL_INTERVIEW', TIMESTAMPADD(DAY, 1, CURRENT_TIMESTAMP))
 ;
+
+INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_at, user_id, content, title, recruit_id)
+VALUES (false, false, '2024-07-24 21:22:04.000000', 1, '2024-07-24 21:22:07.000000', '2024-07-24 21:22:08.000000', 1,
+        'test_contents', 'test_title', 1);
+INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_at, user_id, content, title, recruit_id)
+VALUES (false, false, '1970-01-01 00:00:00.001000', 2, '1970-01-01 00:00:00.001000', '1970-01-01 00:00:00.001000', 1,
+        'testc', 'testc', 1);
+INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_at, user_id, content, title, recruit_id)
+VALUES (false, false, '1970-01-01 00:00:00.001000', 3, '1970-01-01 00:00:00.001000', '1970-01-01 00:00:00.001000', 1,
+        'testc', 'testt', 1);
