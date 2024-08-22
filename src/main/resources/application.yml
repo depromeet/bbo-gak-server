@@ -1,7 +1,4 @@
 spring:
-  web:
-    resources:
-      add-mappings: false
   profiles:
     active: local
     group:
