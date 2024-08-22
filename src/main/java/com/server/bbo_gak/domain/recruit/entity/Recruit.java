@@ -28,7 +28,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE recruit SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE recruit SET deleted = true WHERE recruit_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recruit extends BaseEntity {
 

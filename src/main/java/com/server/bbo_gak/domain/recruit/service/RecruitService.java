@@ -97,24 +97,29 @@ public class RecruitService {
         // 공고 저장하여 id 확보
         Recruit savedRecruit = recruitRepository.save(recruit);
 
-        // 공고 일정 생성
-        RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
-            RecruitSchedule.of(recruit, RecruitScheduleStage.findByValue(request.recruitScheduleStage()),
-                request.deadline())
-        );
+        addRecruitScheduleIfRequired(request, savedRecruit);
 
         // 공고에 공고 일정을 설정
-        savedRecruit.addSchedule(recruitSchedule);
         recruitRepository.save(recruit);
 
         return RecruitGetResponse.from(savedRecruit);
+    }
+
+    private void addRecruitScheduleIfRequired(RecruitCreateRequest request, Recruit recruit) {
+        if (request.deadline() != null && !request.deadline().isEmpty()) {
+            RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
+                RecruitSchedule.of(recruit, RecruitScheduleStage.findByValue(request.recruitScheduleStage()),
+                    request.deadline())
+            );
+            recruit.addSchedule(recruitSchedule);
+        }
     }
 
     @Transactional
     public void deleteRecruit(User user, Long recruitId) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
-        recruitRepository.deleteById(recruitId);
+        recruitRepository.deleteById(recruit.getId());
     }
 
     @Transactional

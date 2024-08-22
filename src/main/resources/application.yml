@@ -1,4 +1,7 @@
 spring:
+  web:
+    resources:
+      add-mappings: false
   profiles:
     active: local
     group:
@@ -19,3 +22,4 @@ scheduler:
   thread:
     pool:
       size: 2
+
