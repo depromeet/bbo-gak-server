@@ -66,7 +66,6 @@ public class CardController {
         @PathVariable("card-id") Long cardId,
         @RequestBody CardTypeUpdateRequest request
     ) {
-
         cardService.updateCardType(user, cardId, request);
         return ResponseEntity.ok().body(null);
     }

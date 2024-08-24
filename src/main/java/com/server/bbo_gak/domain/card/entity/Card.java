@@ -109,5 +109,9 @@ public class Card extends BaseEntity {
         this.content = content;
     }
 
+    public void updateCardTypeList(List<CardType> cardTypeList) {
+        this.cardTypeList = cardTypeList;
+    }
+
 
 }

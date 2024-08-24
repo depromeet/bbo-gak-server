@@ -79,7 +79,8 @@ public class CardService {
 
         Card card = cardRepository.save(Card.creatEmptyCard(user));
 
-        List<CardType> cardTypeList = getValidCardTypeList(cardCreateRequest, card);
+        List<CardType> cardTypeList = getValidCardTypeList(cardCreateRequest.cardTypeValueGroup(), card,
+            cardCreateRequest.cardTypeValueList());
 
         cardTypeRepository.saveAll(cardTypeList);
 
@@ -100,19 +101,15 @@ public class CardService {
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
-        List<Long> cardTypeIdList = card
-            .getCardTypeList()
-            .stream().map(CardType::getId)
-            .toList();
+        cardTypeRepository.deleteAll(card.getCardTypeList());
 
-        cardTypeRepository.deleteAllById(cardTypeIdList);
+        List<CardType> cardTypeList = getValidCardTypeList(request.cardTypeValueGroup(), card,
+            request.cardTypeValueList());
 
-        List<CardType> cardTypes = request.typeList().stream()
-            .map(CardTypeValue::findByValue)
-            .map(cardTypeValue -> new CardType(card, cardTypeValue))
-            .toList();
+        cardTypeRepository.saveAll(cardTypeList);
 
-        cardTypeRepository.saveAll(cardTypes);
+        // 양방향 연관 관계 고려 메소드
+        card.updateCardTypeList(cardTypeList);
     }
 
 
@@ -144,11 +141,12 @@ public class CardService {
         cardRepository.delete(card);
     }
 
-    private List<CardType> getValidCardTypeList(CardCreateRequest cardCreateRequest, Card card) {
+    private List<CardType> getValidCardTypeList(String cardTypeValueGroupValue, Card card,
+        List<String> cardTypeValueList) {
 
-        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(cardCreateRequest.cardTypeValueGroup());
+        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(cardTypeValueGroupValue);
 
-        List<CardType> cardTypeList = cardCreateRequest.cardTypeValueList().stream()
+        List<CardType> cardTypeList = cardTypeValueList.stream()
             .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
             .toList();
 
