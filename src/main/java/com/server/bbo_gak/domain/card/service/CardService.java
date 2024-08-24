@@ -8,6 +8,7 @@ import com.server.bbo_gak.domain.card.dao.TagRepository;
 import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardCreateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.request.CardTypeUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
@@ -19,6 +20,7 @@ import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
+import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import java.util.Comparator;
 import java.util.List;
@@ -77,9 +79,7 @@ public class CardService {
 
         Card card = cardRepository.save(Card.creatEmptyCard(user));
 
-        List<CardType> cardTypeList = cardCreateRequest.cardTypeValueList().stream()
-            .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
-            .toList();
+        List<CardType> cardTypeList = getValidCardTypeList(cardCreateRequest, card);
 
         cardTypeRepository.saveAll(cardTypeList);
 
@@ -93,6 +93,28 @@ public class CardService {
 
         return new CardCreateResponse(card.getId());
     }
+
+    @Transactional
+    public void updateCardType(User user, Long cardId, CardTypeUpdateRequest request) {
+
+        Card card = cardRepository.findByIdAndUser(cardId, user)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
+
+        List<Long> cardTypeIdList = card
+            .getCardTypeList()
+            .stream().map(CardType::getId)
+            .toList();
+
+        cardTypeRepository.deleteAllById(cardTypeIdList);
+
+        List<CardType> cardTypes = request.typeList().stream()
+            .map(CardTypeValue::findByValue)
+            .map(cardTypeValue -> new CardType(card, cardTypeValue))
+            .toList();
+
+        cardTypeRepository.saveAll(cardTypes);
+    }
+
 
     @Transactional
     public void updateCardTitle(User user, Long cardId, CardTitleUpdateRequest request) {
@@ -120,5 +142,42 @@ public class CardService {
 
         cardTagRepository.deleteAll(card.getCardTagList());
         cardRepository.delete(card);
+    }
+
+    private List<CardType> getValidCardTypeList(CardCreateRequest cardCreateRequest, Card card) {
+
+        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(cardCreateRequest.cardTypeValueGroup());
+
+        List<CardType> cardTypeList = cardCreateRequest.cardTypeValueList().stream()
+            .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
+            .toList();
+
+        // 내정보에서 카드 생성인 경우
+        if (cardTypeValueGroup.equals(CardTypeValueGroup.MY_INFO)) {
+
+            if (cardTypeList.size() > 1) {
+                throw new InvalidValueException(ErrorCode.MY_INFO_CARD_TYPE_OVERSIZE);
+            }
+
+            if (!CardTypeValueGroup.MY_INFO.contains(cardTypeList.getFirst().getCardTypeValue())) {
+                throw new InvalidValueException(ErrorCode.CARD_TYPE_NOT_MATCHED);
+            }
+
+            return cardTypeList;
+        }
+
+        // 공고에서 카드 생성인 경우
+        if (cardTypeValueGroup.equals(CardTypeValueGroup.RECRUIT)) {
+
+            for (CardType cardType : cardTypeList) {
+                if (!CardTypeValueGroup.RECRUIT.contains(cardType.getCardTypeValue())) {
+                    throw new InvalidValueException(ErrorCode.CARD_TYPE_NOT_MATCHED);
+                }
+            }
+
+            return cardTypeList;
+        }
+
+        throw new InvalidValueException(ErrorCode.CARD_TYPE_NOT_FOUND);
     }
 }

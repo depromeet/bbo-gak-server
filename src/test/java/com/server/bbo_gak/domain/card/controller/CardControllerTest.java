@@ -128,7 +128,8 @@ public class CardControllerTest extends AbstractRestDocsTests {
     @Nested
     class 카드_신규_생성 {
 
-        CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리", "자기소개서"), Arrays.asList(1L, 2L));
+        CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
+            "내_정보");
 
         @Test
         @Transactional
@@ -139,8 +140,11 @@ public class CardControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isOk()).andDo(document("[create] 카드 신규 생성", preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder().description("카드 신규 생성").tags("Card")
                         .requestSchema(Schema.schema("CardCreateRequest"))
-                        .requestFields(fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
-                            fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"))
+                        .requestFields(
+                            fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
+                            fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"),
+                            fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING).description("카드 타입 그룹값")
+                        )
                         .responseSchema(Schema.schema("CardCreateResponse"))
                         .responseFields(fieldWithPath("cardId").type(JsonFieldType.NUMBER).description("Card ID"))
                         .build())));

@@ -3,6 +3,7 @@ package com.server.bbo_gak.domain.card.controller;
 import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardCreateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.request.CardTypeUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
@@ -57,6 +58,17 @@ public class CardController {
         @RequestBody CardCreateRequest cardCreateRequest) {
 
         return ResponseEntity.ok(cardService.createCard(user, cardCreateRequest));
+    }
+
+    @PutMapping("/cards/{card-id}/card-type")
+    public ResponseEntity<Void> updateCardType(
+        @AuthUser User user,
+        @PathVariable("card-id") Long cardId,
+        @RequestBody CardTypeUpdateRequest request
+    ) {
+
+        cardService.updateCardType(user, cardId, request);
+        return ResponseEntity.ok().body(null);
     }
 
     @PutMapping("/cards/{card-id}/title")

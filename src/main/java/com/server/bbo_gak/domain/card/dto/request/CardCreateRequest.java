@@ -9,7 +9,9 @@ public record CardCreateRequest(
     List<String> cardTypeValueList,
 
     @Size(max = 3)
-    List<Long> tagIdList
+    List<Long> tagIdList,
+
+    String cardTypeValueGroup
 ) {
 
 }
