@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.h2database:h2'
     testImplementation 'com.h2database:h2'
 
+    //sentry
+    implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.14.0'
+
     // Test
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
