@@ -1,5 +1,6 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.domain.user.entity.Job;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,6 +24,9 @@ public class Tag {
 
     @Enumerated(EnumType.STRING)
     private TagType tagType;
+
+    @Enumerated(EnumType.STRING)
+    private Job job;
 
     private String name;
 }

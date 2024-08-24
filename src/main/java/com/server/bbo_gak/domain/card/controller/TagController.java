@@ -22,8 +22,10 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/tags")
-    public ResponseEntity<List<TagGetResponse>> getAllTagList() {
-        return ResponseEntity.ok(tagService.getAllTagList());
+    public ResponseEntity<List<TagGetResponse>> getAllTagList(
+        @AuthUser User user
+    ) {
+        return ResponseEntity.ok(tagService.getAllTagList(user));
     }
 
     @GetMapping("/cards/{card-id}/tags")

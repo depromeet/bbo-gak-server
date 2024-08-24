@@ -1,6 +1,6 @@
-INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role)
+INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role, job)
 VALUES (false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000', 1, 'AuthTestUser', 'test', 'test', 'test',
-        'test', 'USER');
+        'test', 'USER', 'DEVELOPER');
 
 INSERT INTO recruit_season (recruit_season_id, name, user_id)
 VALUES (1, 'test', 1);
@@ -31,12 +31,12 @@ INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_a
 VALUES (false, true, '2024-07-24 21:22:04.000000', 6, '2024-07-24 21:22:07.000000', '2024-07-24 21:22:08.000000', 1,
         'test_contents', 'test_title', 1);
 
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (1, '스프링', 'CAPABILITY');
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (2, '리액트', 'CAPABILITY');
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (3, '봉사활동', 'PERSONALITY');
+INSERT INTO tag (tag_id, name, tag_type, job)
+VALUES (1, '스프링', 'CAPABILITY', 'DEVELOPER');
+INSERT INTO tag (tag_id, name, tag_type, job)
+VALUES (2, '리액트', 'CAPABILITY', 'DEVELOPER');
+INSERT INTO tag (tag_id, name, tag_type, job)
+VALUES (3, '봉사활동', 'PERSONALITY', 'DESIGNER');
 
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (1, 'EXPERIENCE', 1, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
