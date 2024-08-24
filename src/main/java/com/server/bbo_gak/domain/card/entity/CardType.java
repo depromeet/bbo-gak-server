@@ -14,9 +14,13 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE card_type SET deleted = true WHERE card_type_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardType extends BaseEntity {
 

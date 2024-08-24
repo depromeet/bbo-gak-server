@@ -1,5 +1,6 @@
 package com.server.bbo_gak.domain.recruit.entity;
 
+import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,11 +16,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE recruit_schedule SET deleted = true WHERE recruit_schedule_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecruitSchedule {
+public class RecruitSchedule extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
