@@ -17,6 +17,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSeasonRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSiteUrlRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateStatusRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateTitleRequest;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitScheduleGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
@@ -246,6 +247,36 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
             mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL, request, HttpMethod.POST, objectMapper))
                 .andExpect(status().isNotFound())
                 .andDo(restDocsFactory.getFailureResource("[POST] 공고 생성 실패", "Recruit", request));
+        }
+    }
+
+    @Nested
+    class 공고_조회 {
+
+        RecruitGetInnerResponse response = RecruitGetInnerResponse.builder()
+            .id(1L)
+            .title("New Title")
+            .season("2024 상반기")
+            .siteUrl("https://example.com")
+            .recruitStatus(RecruitStatus.APPLICATION_COMPLETED.getValue())
+            .build();
+
+        @Test
+        public void 성공() throws Exception {
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/{id}", null, HttpMethod.GET, objectMapper, 1L))
+                .andExpect(status().isOk())
+                .andDo(restDocsFactory.getSuccessResource("[GET] 공고 조회 성공", "공고 조회", "Recruit", null, response));
+
+        }
+
+        @Test
+        public void 찾을수_없음_실패() throws Exception {
+
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/{id}", null, HttpMethod.GET, objectMapper, 100L))
+                .andExpect(status().isNotFound())
+                .andDo(restDocsFactory.getFailureResource("[GET] 공고 조회 실패", "Recruit", null));
         }
     }
 
