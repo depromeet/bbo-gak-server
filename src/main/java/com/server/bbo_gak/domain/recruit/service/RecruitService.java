@@ -2,6 +2,7 @@ package com.server.bbo_gak.domain.recruit.service;
 
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
@@ -87,6 +88,11 @@ public class RecruitService {
         List<RecruitSchedule> scheduleList = recruit.getScheduleList();
         return scheduleList.isEmpty() || scheduleList.stream()
             .allMatch(schedule -> schedule.getDeadLine().isBefore(LocalDate.now()));
+    }
+
+    public RecruitGetInnerResponse getRecruit(User user, Long recruitId) {
+        Recruit recruit = findRecruitByUserAndId(user, recruitId);
+        return RecruitGetInnerResponse.from(recruit);
     }
 
     @Transactional
