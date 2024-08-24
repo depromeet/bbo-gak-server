@@ -8,13 +8,13 @@ VALUES (false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000', 1, 'A
 ;
 
 -- Season 테이블에 데이터 삽입
-INSERT INTO recruit_season (recruit_season_id, name, user_id)
-VALUES (1, '2024 상반기', 1),
-       (2, '2024 하반기', 1),
-       (3, '2024 상반기', 2),
-       (4, '2024 하반기', 2),
-       (5, '2024 상반기', 3),
-       (6, '2024 하반기', 3)
+INSERT INTO recruit_season (recruit_season_id, name, user_id, deleted, update_at, created_at)
+VALUES (1, '2024 상반기', 1, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000'),
+       (2, '2024 하반기', 1, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000'),
+       (3, '2024 상반기', 2, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000'),
+       (4, '2024 하반기', 2, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000'),
+       (5, '2024 상반기', 3, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000'),
+       (6, '2024 하반기', 3, false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000')
 ;
 
 -- Recruit 테이블에 데이터 삽입
@@ -37,15 +37,15 @@ VALUES (1, 'Title for one day left', 'http://example.com/1', 'DOCUMENT_PASSED', 
 ;
 
 -- RecruitSchedule 테이블에 데이터 삽입
-INSERT INTO recruit_schedule (recruit_schedule_id, recruit_id, recruit_schedule_stage, dead_line)
-VALUES (1, 1, 'FIRST_INTERVIEW', '2024-12-31'),
-       (2, 4, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP)),
-       (3, 5, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 1, CURRENT_TIMESTAMP)),
-       (4, 6, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 2, CURRENT_TIMESTAMP)),
-       (5, 6, 'SECOND_INTERVIEW', TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP)),
-       (6, 7, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, -2, CURRENT_TIMESTAMP)),
-       (7, 7, 'SECOND_INTERVIEW', TIMESTAMPADD(DAY, -1, CURRENT_TIMESTAMP)),
-       (8, 7, 'FINAL_INTERVIEW', TIMESTAMPADD(DAY, 1, CURRENT_TIMESTAMP))
+INSERT INTO recruit_schedule (recruit_schedule_id, recruit_id, recruit_schedule_stage, dead_line, deleted, update_at, created_at)
+VALUES (1, 1, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (2, 4, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (3, 5, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 1, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (4, 6, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, 2, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (5, 6, 'SECOND_INTERVIEW', TIMESTAMPADD(DAY, 3, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (6, 7, 'FIRST_INTERVIEW', TIMESTAMPADD(DAY, -2, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (7, 7, 'SECOND_INTERVIEW', TIMESTAMPADD(DAY, -1, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000'),
+       (8, 7, 'FINAL_INTERVIEW', TIMESTAMPADD(DAY, 1, CURRENT_TIMESTAMP), false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000')
 ;
 
 INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_at, user_id, content, title, recruit_id)

@@ -1,6 +1,7 @@
 package com.server.bbo_gak.domain.recruit.entity;
 
 import com.server.bbo_gak.domain.user.entity.User;
+import com.server.bbo_gak.global.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,12 +14,16 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
 @Table(name = "recruit_season")
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE recruit_season SET deleted = true WHERE recruit_season_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Season {
+public class Season extends BaseEntity {
 
     String name;
     @Id
