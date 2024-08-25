@@ -64,4 +64,16 @@ public class RecruitScheduleController {
         recruitScheduleService.updateDeadLine(id, recruitScheduleId, request.deadLine());
         return ResponseEntity.ok().body(null);
     }
+
+    /**
+     * 공고 일정 삭제
+     */
+    @DeleteMapping("/{recruit-schedule-id}")
+    public ResponseEntity<Void> deleteRecruitSchedule(
+        @PathVariable("id") Long id, //공고 id
+        @PathVariable("recruit-schedule-id") Long recruitScheduleId
+    ) {
+        recruitScheduleService.deleteRecruitSchedule(id, recruitScheduleId);
+        return ResponseEntity.ok().body(null);
+    }
 }

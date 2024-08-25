@@ -18,6 +18,5 @@ public interface RecruitScheduleService {
 
     void updateDeadLine(Long recruitId, Long recruitScheduleId, String deadLine);
 
-
-    void deleteRecruitSchedule();
+    void deleteRecruitSchedule(Long recruitId, Long recruitScheduleId);
 }

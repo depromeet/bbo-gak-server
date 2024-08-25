@@ -22,10 +22,22 @@ public class RecruitScheduleServiceImpl implements RecruitScheduleService {
     private final RecruitRepository recruitRepository;
 
     @Override
-    public void deleteRecruitSchedule() {
-        
+    @Transactional
+    public RecruitSchedule createRecruitSchedule(Long id, RecruitScheduleCreateRequest request) {
+        Recruit recruit = recruitRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
+        return recruitScheduleRepository.save(RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline()));
     }
 
+    @Override
+    @Transactional
+    public List<RecruitScheduleGetResponse> getRecruitScheduleList(Long recruitId) {
+        return recruitScheduleRepository.findAllByRecruitId(recruitId).stream()
+            .map(RecruitScheduleGetResponse::from)
+            .toList();
+    }
+
+    @Override
     @Transactional
     public void updateRecruitScheduleStage(Long recruitId, Long recruitScheduleId, String stage) {
         RecruitSchedule recruitSchedule = recruitScheduleRepository.findByIdAndRecruitId(
@@ -35,6 +47,7 @@ public class RecruitScheduleServiceImpl implements RecruitScheduleService {
         recruitSchedule.updateRecruitScheduleStage(stage);
     }
 
+    @Override
     @Transactional
     public void updateDeadLine(Long recruitId, Long recruitScheduleId, String deadLine){
         RecruitSchedule recruitSchedule = recruitScheduleRepository.findByIdAndRecruitId(
@@ -44,18 +57,13 @@ public class RecruitScheduleServiceImpl implements RecruitScheduleService {
         recruitSchedule.updateDeadLine(deadLine);
     }
 
-
     @Override
-    public List<RecruitScheduleGetResponse> getRecruitScheduleList(Long recruitId) {
-        return recruitScheduleRepository.findAllByRecruitId(recruitId).stream()
-                .map(RecruitScheduleGetResponse::from)
-                .toList();
-    }
+    @Transactional
+    public void deleteRecruitSchedule(Long recruitId, Long recruitScheduleId) {
+        RecruitSchedule recruitSchedule = recruitScheduleRepository.findByIdAndRecruitId(
+                recruitScheduleId, recruitId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_SCHEDULE_NOT_FOUND));
 
-    @Override
-    public RecruitSchedule createRecruitSchedule(Long id, RecruitScheduleCreateRequest request) {
-        Recruit recruit = recruitRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
-        return recruitScheduleRepository.save(RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline()));
+        recruitScheduleRepository.deleteById(recruitSchedule.getId());
     }
 }

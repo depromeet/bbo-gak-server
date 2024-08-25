@@ -104,4 +104,16 @@ class RecruitScheduleControllerTest extends AbstractRestDocsTests {
     }
   }
 
+  @Nested
+  class 공고일정_삭제 {
+
+    @Test
+    public void 성공() throws Exception {
+      mockMvc.perform(
+              restDocsFactory.createRequest(DEFAULT_URL+"/{recruit-schedule-id}", null, HttpMethod.DELETE, objectMapper, 1L, 1L))
+          .andExpect(status().isOk())
+          .andDo(restDocsFactory.getSuccessResource("[DELETE] 공고일정 삭제 성공", "공고일정 삭제", "RecruitSchedule", null, null));
+    }
+  }
+
 }
