@@ -113,11 +113,11 @@ public class RecruitService {
   }
 
   private void addRecruitScheduleIfRequired(RecruitCreateRequest request, Recruit recruit) {
-    if (request.deadline() != null && !request.deadline().isEmpty()) {
+    if (request.deadLine() != null && !request.deadLine().isEmpty()) {
       RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
           recruit.getId(),
           RecruitScheduleCreateRequest.of(
-              request.recruitScheduleStage(), request.deadline())
+              request.recruitScheduleStage(), request.deadLine())
       );
       recruit.addSchedule(recruitSchedule);
     }

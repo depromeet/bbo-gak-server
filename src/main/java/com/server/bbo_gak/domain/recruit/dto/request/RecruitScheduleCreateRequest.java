@@ -5,13 +5,13 @@ import lombok.Builder;
 @Builder
 public record RecruitScheduleCreateRequest(
     String recruitScheduleStage,
-    String deadline
+    String deadLine
 ) {
 
-    public static RecruitScheduleCreateRequest of(String recruitScheduleStage, String deadline) {
+    public static RecruitScheduleCreateRequest of(String recruitScheduleStage, String deadLine) {
         return RecruitScheduleCreateRequest.builder()
             .recruitScheduleStage(recruitScheduleStage)
-            .deadline(deadline)
+            .deadLine(deadLine)
             .build();
     }
 }

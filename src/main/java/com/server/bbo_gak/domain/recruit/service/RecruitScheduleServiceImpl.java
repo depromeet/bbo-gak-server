@@ -26,7 +26,7 @@ public class RecruitScheduleServiceImpl implements RecruitScheduleService {
     public RecruitSchedule createRecruitSchedule(Long id, RecruitScheduleCreateRequest request) {
         Recruit recruit = recruitRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
-        return recruitScheduleRepository.save(RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline()));
+        return recruitScheduleRepository.save(RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadLine()));
     }
 
     @Override
