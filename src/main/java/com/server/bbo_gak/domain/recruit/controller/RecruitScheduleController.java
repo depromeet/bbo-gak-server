@@ -4,6 +4,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateReques
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleUpdateDeadLineRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleUpdateStageRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitScheduleGetResponse;
+import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
 import com.server.bbo_gak.domain.recruit.service.RecruitScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,11 @@ public class RecruitScheduleController {
      * 공고 일정 생성
      */
     @PostMapping("")
-    public ResponseEntity<Void> createRecruitSchedule(
+    public ResponseEntity<RecruitScheduleGetResponse> createRecruitSchedule(
             @PathVariable("id") Long id, //공고 id
             @RequestBody RecruitScheduleCreateRequest request) {
-        recruitScheduleService.createRecruitSchedule(id, request);
-        return ResponseEntity.ok().body(null);
+        RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(id, request);
+        return ResponseEntity.ok().body(RecruitScheduleGetResponse.from(recruitSchedule));
     }
 
     /**
@@ -48,7 +49,7 @@ public class RecruitScheduleController {
         @PathVariable("recruit-schedule-id") Long recruitScheduleId,
         @RequestBody RecruitScheduleUpdateStageRequest request
     ) {
-        recruitScheduleService.updateRecruitScheduleStage(id, recruitScheduleId, request.stage());
+        recruitScheduleService.updateRecruitScheduleStage(id, recruitScheduleId, request.recruitScheduleStage());
         return ResponseEntity.ok().body(null);
     }
 
