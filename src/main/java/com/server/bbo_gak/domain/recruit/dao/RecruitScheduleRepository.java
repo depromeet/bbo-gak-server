@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RecruitScheduleRepository extends JpaRepository<RecruitSchedule, Long> {
 
     List<RecruitSchedule> findAllByDeadLineBetween(LocalDate now, LocalDate nowPlusOneDay);
+
+    List<RecruitSchedule> findAllByRecruitId(Long recruitId);
 }

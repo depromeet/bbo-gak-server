@@ -50,7 +50,8 @@ public class RecruitSchedule {
         return RecruitSchedule.builder()
                 .recruit(recruit)
                 .recruitScheduleStage(recruitScheduleStage)
-                .deadLine(LocalDate.parse(deadLine)).build();
+                .deadLine(LocalDate.parse(deadLine))
+                .build();
     }
 
 }

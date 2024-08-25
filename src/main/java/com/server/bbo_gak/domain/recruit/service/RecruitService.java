@@ -2,6 +2,7 @@ package com.server.bbo_gak.domain.recruit.service;
 
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
+import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
@@ -98,7 +99,7 @@ public class RecruitService {
 
         // 공고 일정 생성
         RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
-                RecruitSchedule.of(recruit, request.recruitScheduleStage(), request.deadline())
+                recruit.getId(), RecruitScheduleCreateRequest.of(request.recruitScheduleStage(), request.deadline())
         );
 
         // 공고에 공고 일정을 설정
