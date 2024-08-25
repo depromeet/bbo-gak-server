@@ -67,6 +67,7 @@ public class RecruitSchedule extends BaseEntity {
     }
 
     public void updateDeadLine(String deadLine) {
+        // TODO: date 유효성 검사해서 이상한 날짜면 에러 리턴
         this.deadLine = LocalDate.parse(deadLine);
     }
 
