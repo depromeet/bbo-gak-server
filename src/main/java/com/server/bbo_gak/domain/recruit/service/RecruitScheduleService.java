@@ -14,7 +14,10 @@ public interface RecruitScheduleService {
 
     List<RecruitScheduleGetResponse> getRecruitScheduleList(Long recruitId);
 
-    void updateRecruitSchedule();
+    void updateRecruitScheduleStage(Long recruitId, Long recruitScheduleId, String stage);
+
+    void updateDeadLine(Long recruitId, Long recruitScheduleId, String deadLine);
+
 
     void deleteRecruitSchedule();
 }

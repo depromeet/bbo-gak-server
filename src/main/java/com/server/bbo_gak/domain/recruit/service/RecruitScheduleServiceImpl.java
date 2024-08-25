@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +26,24 @@ public class RecruitScheduleServiceImpl implements RecruitScheduleService {
         
     }
 
-    @Override
-    public void updateRecruitSchedule() {
+    @Transactional
+    public void updateRecruitScheduleStage(Long recruitId, Long recruitScheduleId, String stage) {
+        RecruitSchedule recruitSchedule = recruitScheduleRepository.findByIdAndRecruitId(
+                recruitScheduleId, recruitId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_SCHEDULE_NOT_FOUND));
 
+        recruitSchedule.updateRecruitScheduleStage(stage);
     }
+
+    @Transactional
+    public void updateDeadLine(Long recruitId, Long recruitScheduleId, String deadLine){
+        RecruitSchedule recruitSchedule = recruitScheduleRepository.findByIdAndRecruitId(
+                recruitScheduleId, recruitId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_SCHEDULE_NOT_FOUND));
+
+        recruitSchedule.updateDeadLine(deadLine);
+    }
+
 
     @Override
     public List<RecruitScheduleGetResponse> getRecruitScheduleList(Long recruitId) {

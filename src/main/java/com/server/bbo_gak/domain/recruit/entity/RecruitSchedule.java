@@ -62,4 +62,12 @@ public class RecruitSchedule extends BaseEntity {
         this.recruit = recruit;
     }
 
+    public void updateRecruitScheduleStage(String stage) {
+        this.recruitScheduleStage = RecruitScheduleStage.findByValue(stage);
+    }
+
+    public void updateDeadLine(String deadLine) {
+        this.deadLine = LocalDate.parse(deadLine);
+    }
+
 }
