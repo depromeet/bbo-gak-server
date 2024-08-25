@@ -1,5 +1,6 @@
 package com.server.bbo_gak.domain.card.entity;
 
+import com.server.bbo_gak.global.common.BaseEntity;
 import com.server.bbo_gak.global.constant.FileExtension;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,11 +16,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE card_image SET deleted = true WHERE card_image_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CardImage {
+public class CardImage extends BaseEntity {
 
     private final String TYPE = "card_content";
     @Id

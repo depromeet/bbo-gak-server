@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
+import com.server.bbo_gak.domain.user.entity.OauthInfo;
+import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRepository;
 import com.server.bbo_gak.domain.user.entity.UserRole;
@@ -43,7 +45,11 @@ class AuthenticationArgumentResolverTest {
     @Test
     void Auth에서_현재_유저_가져오기() throws Exception {
         // Given
-        User user = new User("name", "testUser", UserRole.USER);
+        User user = User.builder()
+            .role(UserRole.USER)
+            .oauthInfo(OauthInfo.builder().oauthId("1").name("name").email("testUser").provider(
+                OauthProvider.GOOGLE).build())
+            .build();
         setField(user, "id", 1L); // 리플렉션을 사용하여 ID 설정
 
         PrincipalDetails principalDetails = new PrincipalDetails(user.getId(), user.getRole());

@@ -1,7 +1,6 @@
 package com.server.bbo_gak.domain.recruit.dto.request;
 
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
-import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
 import com.server.bbo_gak.domain.recruit.entity.Season;
 import com.server.bbo_gak.domain.user.entity.User;
@@ -10,7 +9,7 @@ public record RecruitCreateRequest(
     String season,
     String title,
     String siteUrl,
-    RecruitScheduleStage recruitScheduleStage,
+    String recruitScheduleStage,
     String deadline
 ) {
 

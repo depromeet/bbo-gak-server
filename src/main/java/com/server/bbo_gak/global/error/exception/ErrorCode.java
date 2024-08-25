@@ -24,6 +24,10 @@ public enum ErrorCode {
     AT_EXPIRED_AND_RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "AT는 만료되었고 RT는 비어있습니다."),
     RT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "RT가 비어있습니다"),
 
+    //OAuth
+    AUTH_GET_USER_INFO_FAILED(HttpStatus.UNAUTHORIZED, "SocialAccessToken을 통해 사용자 정보를 가져오는 데에 실패했습니다."),
+    INVALID_PROVIDER_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 방식의 로그인입니다."),
+
     PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호를 잘못 입력하셨습니다."),
 
     //User
@@ -47,6 +51,9 @@ public enum ErrorCode {
 
     //Recruit
     RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고를 찾을 수 없습니다"),
+    RECRUIT_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 지원 상태를 찾을 수 없습니다"),
+    RECRUIT_SCHEDULE_STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 일정 단계를 찾을 수 없습니다"),
+
 
     CARD_TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드와 태그 매핑을 찾을 수 없습니다"),
 

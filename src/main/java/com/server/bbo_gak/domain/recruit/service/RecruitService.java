@@ -2,10 +2,12 @@ package com.server.bbo_gak.domain.recruit.service;
 
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
+import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatusCategory;
 import com.server.bbo_gak.domain.recruit.entity.Season;
@@ -89,6 +91,11 @@ public class RecruitService {
             .allMatch(schedule -> schedule.getDeadLine().isBefore(LocalDate.now()));
     }
 
+    public RecruitGetInnerResponse getRecruit(User user, Long recruitId) {
+        Recruit recruit = findRecruitByUserAndId(user, recruitId);
+        return RecruitGetInnerResponse.from(recruit);
+    }
+
     @Transactional
     public RecruitGetResponse createRecruit(User user, RecruitCreateRequest request) {
 
@@ -97,23 +104,29 @@ public class RecruitService {
         // 공고 저장하여 id 확보
         Recruit savedRecruit = recruitRepository.save(recruit);
 
-        // 공고 일정 생성
-        RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
-                recruit.getId(), RecruitScheduleCreateRequest.of(request.recruitScheduleStage(), request.deadline())
-        );
+        addRecruitScheduleIfRequired(request, savedRecruit);
 
         // 공고에 공고 일정을 설정
-        savedRecruit.addSchedule(recruitSchedule);
         recruitRepository.save(recruit);
 
         return RecruitGetResponse.from(savedRecruit);
+    }
+
+    private void addRecruitScheduleIfRequired(RecruitCreateRequest request, Recruit recruit) {
+        if (request.deadline() != null && !request.deadline().isEmpty()) {
+            RecruitSchedule recruitSchedule = recruitScheduleService.createRecruitSchedule(
+                RecruitSchedule.of(recruit.getId(), RecruitScheduleStage.findByValue(request.recruitScheduleStage()),
+                    request.deadline())
+            );
+            recruit.addSchedule(recruitSchedule);
+        }
     }
 
     @Transactional
     public void deleteRecruit(User user, Long recruitId) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
-        recruitRepository.deleteById(recruitId);
+        recruitRepository.deleteById(recruit.getId());
     }
 
     @Transactional
@@ -135,10 +148,10 @@ public class RecruitService {
     }
 
     @Transactional
-    public RecruitGetResponse updateRecruitStatus(User user, Long recruitId, RecruitStatus recruitStatus) {
+    public RecruitGetResponse updateRecruitStatus(User user, Long recruitId, String recruitStatus) {
         Recruit recruit = findRecruitByUserAndId(user, recruitId);
 
-        recruit.updateRecruitStatus(recruitStatus);
+        recruit.updateRecruitStatus(RecruitStatus.findByValue(recruitStatus));
 
         return RecruitGetResponse.from(recruitRepository.save(recruit));
     }

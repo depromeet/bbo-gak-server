@@ -1,0 +1,25 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+
+server:
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /api/health-check
+  endpoint:
+    health:
+      enabled: true
+
