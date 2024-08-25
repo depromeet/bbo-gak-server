@@ -47,10 +47,10 @@ public class RecruitSchedule extends BaseEntity {
         this.deadLine = deadLine;
     }
 
-    public static RecruitSchedule of(Recruit recruit, RecruitScheduleStage recruitScheduleStage, String deadLine) {
+    public static RecruitSchedule of(Recruit recruit, String recruitScheduleStage, String deadLine) {
         return RecruitSchedule.builder()
             .recruit(recruit)
-            .recruitScheduleStage(recruitScheduleStage)
+            .recruitScheduleStage(RecruitScheduleStage.findByValue(recruitScheduleStage))
             .deadLine(LocalDate.parse(deadLine)).build();
     }
 
