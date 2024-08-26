@@ -50,6 +50,6 @@ jobs:
             
             ./gradlew clean build
             ./gradlew openapi3
-            docker rm bbo-gak-server_back_1 --force
-            docker rmi bbo-gak-server_back
+            docker rm bbo-gak-server-back-1 --force
+            docker rmi bbo-gak-server-back
             docker-compose -f docker-compose-dev.yml up --build -d
