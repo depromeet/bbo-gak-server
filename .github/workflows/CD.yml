@@ -39,6 +39,7 @@ jobs:
             git commit -m "temp commit"
             git fetch origin main
             git merge origin/main
+            git pull origin main
             if [ $? -ne 0 ]; then         # 병합 명령어의 종료 상태를 확인합니다.
               echo "Merge conflict detected. Resolving by applying remote changes."
               git checkout --theirs $(git diff --name-only --diff-filter=U) # 충돌이 발생한 파일에 원격 변경 사항을 적용합니다.
