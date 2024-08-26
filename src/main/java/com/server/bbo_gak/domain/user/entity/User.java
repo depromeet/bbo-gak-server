@@ -37,11 +37,15 @@ public class User extends BaseEntity {
     @Embedded
     private OauthInfo oauthInfo;
 
+    @Enumerated(EnumType.STRING)
+    private Job job;
+
     // User 생성 팩토리 메서드
     public static User from(OauthInfo oauthInfo) {
         return User.builder()
             .role(UserRole.USER)
             .oauthInfo(oauthInfo)
+            .job(Job.DEVELOPER)
             .build();
     }
 }

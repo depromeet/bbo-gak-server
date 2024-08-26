@@ -25,8 +25,9 @@ public class TagService {
     private final CardTagRepository cardTagRepository;
 
     @Transactional(readOnly = true)
-    public List<TagGetResponse> getAllTagList() {
-        return tagRepository.findAll().stream()
+    public List<TagGetResponse> getAllTagList(User user) {
+
+        return tagRepository.findAllByJob(user.getJob()).stream()
             .map(TagGetResponse::from)
             .toList();
     }

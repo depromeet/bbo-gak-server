@@ -25,8 +25,6 @@ public class CardDao {
         QCard qCard = QCard.card;
         QCardType qCardType = QCardType.cardType;
 
-        createRecruitBooleanBuilder(qCard, isRecruit);
-
         return query.selectFrom(qCard)
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
@@ -41,13 +39,12 @@ public class CardDao {
         QCard qCard = QCard.card;
         QCardType qCardType = QCardType.cardType;
 
-        createRecruitBooleanBuilder(qCard, recruitId);
-
         return query.selectFrom(qCard)
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
                 .and(qCardType.cardTypeValue.eq(cardTypeValue))
-                .and(createRecruitBooleanBuilder(qCard, recruitId)))
+                .and(createRecruitBooleanBuilder(qCard, recruitId))
+            )
             .distinct()
             .fetch();
     }
@@ -72,6 +69,5 @@ public class CardDao {
         }
 
         return builder.and(qCard.recruit.id.eq(recruitId)).and(qCard.copyFlag.isTrue());
-
     }
 }
