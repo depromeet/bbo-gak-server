@@ -1,6 +1,7 @@
 package com.server.bbo_gak.domain.card.controller;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -15,6 +16,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -117,22 +119,42 @@ public class CardControllerTest extends AbstractRestDocsTests {
     class 카드_리스트_조회 {
 
         @Test
-        public void 성공() throws Exception {
+        public void 성공_태그_필터_없는_케이스() throws Exception {
 
-            mockMvc.perform(
-                get(DEFAULT_URL + "/cards").contentType(MediaType.APPLICATION_JSON).queryParam("type", "자기소개서")
-                    .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(
-                document("[select] 카드 리스트 조회", preprocessResponse(prettyPrint()), resource(
-                    ResourceSnippetParameters.builder().description("카드 리스트 조회").tags("Card")
-                        .queryParameters(parameterWithName("type").description("타입"))
-                        .responseSchema(Schema.schema("CardListGetResponse"))
-                        .responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("Card ID"),
-                            fieldWithPath("[].title").type(JsonFieldType.STRING).description("Card 제목"),
-                            fieldWithPath("[].updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
-                            fieldWithPath("[].tagList.[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
-                            fieldWithPath("[].tagList.[].name").type(JsonFieldType.STRING).description("태그 이름"),
-                            fieldWithPath("[].tagList.[].type").type(JsonFieldType.STRING).description("태그 타입"))
-                        .build())));
+            mockMvc.perform(get(DEFAULT_URL + "/cards").contentType(MediaType.APPLICATION_JSON)
+                    .queryParam("type", "면접_질문")
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andDo(document("[select] 카드 리스트 조회", preprocessResponse(prettyPrint()), resource(getBuild())));
+        }
+
+        @Test
+        public void 성공_태그_필터_존재_하는_케이스() throws Exception {
+
+            mockMvc.perform(get(DEFAULT_URL + "/cards").contentType(MediaType.APPLICATION_JSON)
+                    .queryParam("type", "면접_질문")
+                    .queryParam("tag-ids", "1")
+                    .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andDo(document("[select] 카드 리스트 조회", preprocessResponse(prettyPrint()), resource(getBuild())));
+        }
+
+        private ResourceSnippetParameters getBuild() {
+            return ResourceSnippetParameters.builder().description("카드 리스트 조회").tags("Card")
+                .queryParameters(
+                    parameterWithName("type").description("타입"),
+                    parameterWithName("tag-ids").description("태그 아이디 리스트").optional())
+                .responseSchema(Schema.schema("CardListGetResponse"))
+                .responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("Card ID"),
+                    fieldWithPath("[].title").type(JsonFieldType.STRING).description("Card 제목"),
+                    fieldWithPath("[].updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
+                    fieldWithPath("[].tagList.[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
+                    fieldWithPath("[].tagList.[].name").type(JsonFieldType.STRING).description("태그 이름"),
+                    fieldWithPath("[].tagList.[].type").type(JsonFieldType.STRING).description("태그 타입"))
+                .build();
         }
     }
 

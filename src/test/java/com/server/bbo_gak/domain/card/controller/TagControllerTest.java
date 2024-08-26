@@ -51,7 +51,7 @@ public class TagControllerTest extends AbstractRestDocsTests {
             // TEST
             ResultActions resultActions = mockMvc.perform(getRequest())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(3)));
 
             // DOCS
             resultActions.andDo(document("[태그_전체_목록_조회] 성공", resource(getSuccessResponseResource())));

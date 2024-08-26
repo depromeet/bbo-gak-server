@@ -18,12 +18,15 @@ import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
+import com.server.bbo_gak.domain.card.entity.Tag;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,12 +65,22 @@ public class CardService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardListGetResponse> getCardList(User user, String cardTypeValue) {
+    public List<CardListGetResponse> getCardList(User user, String cardTypeValue, List<Long> tagIdList) {
+
+        List<Tag> tagList = tagRepository.findAllById(Optional.ofNullable(tagIdList).orElse(Collections.emptyList()));
 
         List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue),
             null);
 
         return cards.stream()
+            .filter(card -> {
+
+                if (tagList.isEmpty()) {
+                    return true;
+                }
+                
+                return card.isTagListContain(tagList);
+            })
             .sorted(Comparator.comparing(Card::getUpdatedDate).reversed())
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());

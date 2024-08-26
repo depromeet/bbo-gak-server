@@ -47,9 +47,11 @@ public class CardController {
     @GetMapping("/cards")
     public ResponseEntity<List<CardListGetResponse>> getCardList(
         @AuthUser User user,
-        @RequestParam("type") String type) {
+        @RequestParam("type") String type,
+        @RequestParam(value = "tag-ids", required = false) List<Long> tagIdList
+    ) {
 
-        return ResponseEntity.ok(cardService.getCardList(user, type));
+        return ResponseEntity.ok(cardService.getCardList(user, type, tagIdList));
     }
 
     @PostMapping("/card")

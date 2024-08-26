@@ -113,5 +113,11 @@ public class Card extends BaseEntity {
         this.cardTypeList = cardTypeList;
     }
 
+    public boolean isTagListContain(List<Tag> tagList) {
+        return cardTagList.stream()
+            .map(CardTag::getTag)
+            .anyMatch(tagList::contains);
+    }
+
 
 }
