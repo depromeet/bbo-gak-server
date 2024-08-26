@@ -47,10 +47,10 @@ public class RecruitSchedule extends BaseEntity {
         this.deadLine = deadLine;
     }
 
-    public static RecruitSchedule of(Recruit recruit, RecruitScheduleStage recruitScheduleStage, String deadLine) {
+    public static RecruitSchedule of(Recruit recruit, String recruitScheduleStage, String deadLine) {
         return RecruitSchedule.builder()
             .recruit(recruit)
-            .recruitScheduleStage(recruitScheduleStage)
+            .recruitScheduleStage(RecruitScheduleStage.findByValue(recruitScheduleStage))
             .deadLine(LocalDate.parse(deadLine)).build();
     }
 
@@ -60,6 +60,15 @@ public class RecruitSchedule extends BaseEntity {
 
     public void setRecruit(Recruit recruit) {
         this.recruit = recruit;
+    }
+
+    public void updateRecruitScheduleStage(String stage) {
+        this.recruitScheduleStage = RecruitScheduleStage.findByValue(stage);
+    }
+
+    public void updateDeadLine(String deadLine) {
+        // TODO: date 유효성 검사해서 이상한 날짜면 에러 리턴
+        this.deadLine = LocalDate.parse(deadLine);
     }
 
 }

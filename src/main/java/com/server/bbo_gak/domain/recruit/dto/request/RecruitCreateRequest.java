@@ -10,7 +10,7 @@ public record RecruitCreateRequest(
     String title,
     String siteUrl,
     String recruitScheduleStage,
-    String deadline
+    String deadLine
 ) {
 
     public Recruit toEntity(User user, Season season) {
