@@ -31,12 +31,12 @@ INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_a
 VALUES (false, true, '2024-07-24 21:22:04.000000', 6, '2024-07-24 21:22:07.000000', '2024-07-24 21:22:08.000000', 1,
         'test_contents', 'test_title', 1);
 
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (1, '스프링', 'CAPABILITY');
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (2, '리액트', 'CAPABILITY');
-INSERT INTO tag (tag_id, name, tag_type)
-VALUES (3, '봉사활동', 'PERSONALITY');
+INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
+VALUES (1, '스프링', 'CAPABILITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
+VALUES (2, '리액트', 'CAPABILITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
+VALUES (3, '봉사활동', 'PERSONALITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (1, 'EXPERIENCE', 1, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');

@@ -1,6 +1,7 @@
 package com.server.bbo_gak.domain.recruit.controller;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -10,11 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
+import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSeasonRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSiteUrlRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateStatusRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateTitleRequest;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitScheduleGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
@@ -49,6 +52,9 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
 
     @Autowired
     private RestDocsFactory restDocsFactory;
+
+    @Autowired
+    private RecruitRepository recruitRepository;
 
     private RecruitGetResponse response;
 
@@ -213,6 +219,22 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
         }
 
         @Test
+        public void 일정없음_성공() throws Exception {
+            RecruitCreateRequest request = new RecruitCreateRequest(
+                "2024 상반기",
+                "New Recruit Title",
+                "https://example.com",
+                RecruitScheduleStage.CLOSING_DOCUMENT.getValue(),
+                null
+            );
+
+            mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL, request, HttpMethod.POST, objectMapper))
+                .andExpect(status().isOk())
+                .andDo(restDocsFactory.getSuccessResource("[POST] 공고 생성 성공", "공고 생성", "Recruit", request,
+                    response));
+        }
+
+        @Test
         public void 실패() throws Exception {
             RecruitCreateRequest request = new RecruitCreateRequest(
                 "2024 상반기",
@@ -229,15 +251,46 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
     }
 
     @Nested
+    class 공고_조회 {
+
+        RecruitGetInnerResponse response = RecruitGetInnerResponse.builder()
+            .id(1L)
+            .title("New Title")
+            .season("2024 상반기")
+            .siteUrl("https://example.com")
+            .recruitStatus(RecruitStatus.APPLICATION_COMPLETED.getValue())
+            .build();
+
+        @Test
+        public void 성공() throws Exception {
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/{id}", null, HttpMethod.GET, objectMapper, 1L))
+                .andExpect(status().isOk())
+                .andDo(restDocsFactory.getSuccessResource("[GET] 공고 조회 성공", "공고 조회", "Recruit", null, response));
+
+        }
+
+        @Test
+        public void 찾을수_없음_실패() throws Exception {
+
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/{id}", null, HttpMethod.GET, objectMapper, 100L))
+                .andExpect(status().isNotFound())
+                .andDo(restDocsFactory.getFailureResource("[GET] 공고 조회 실패", "Recruit", null));
+        }
+    }
+
+    @Nested
     class 공고_삭제 {
 
         @Test
         public void 성공() throws Exception {
-
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL + "/{id}", null, HttpMethod.DELETE, objectMapper, 1L))
                 .andExpect(status().isOk())
                 .andDo(restDocsFactory.getSuccessResource("[DELETE] 공고 삭제 성공", "공고 삭제", "Recruit", null, null));
+
+            assertTrue(recruitRepository.findById(1L).isEmpty());
         }
 
         @Test

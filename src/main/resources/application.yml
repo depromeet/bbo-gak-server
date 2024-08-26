@@ -20,3 +20,8 @@ scheduler:
   thread:
     pool:
       size: 2
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  exception-resolver-order: -2147483647
+  tracesSampleRate: 1.0

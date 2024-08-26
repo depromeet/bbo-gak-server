@@ -25,6 +25,7 @@ pipeline {
         stage('Build & Test') {
             steps {
                 script {
+                    sh 'mkdir -p $WORKSPACE/src/main/resources/static/docs && touch $WORKSPACE/src/main/resources/static/docs/open-api-3.0.1.json'
                     sh './gradlew clean build'
                     sh './gradlew openapi3'
                 }
