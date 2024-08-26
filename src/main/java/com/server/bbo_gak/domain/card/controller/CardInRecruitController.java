@@ -29,12 +29,13 @@ public class CardInRecruitController {
     }
 
     @GetMapping("/recruits/{recruit-id}/cards")
-    public ResponseEntity<List<CardListGetResponse>> getCardDetail(
+    public ResponseEntity<List<CardListGetResponse>> getCardList(
         @AuthUser User user,
         @PathVariable("recruit-id") Long recruitId,
-        @RequestParam("type") String type) {
+        @RequestParam("type") String type,
+        @RequestParam(value = "tag-ids", required = false) List<Long> tagIdList) {
 
-        return ResponseEntity.ok(cardInRecruitService.getCardListInRecruit(user, recruitId, type));
+        return ResponseEntity.ok(cardInRecruitService.getCardListInRecruit(user, recruitId, type, tagIdList));
     }
 
     @PostMapping("/recruits/{recruit-id}/cards/{card-id}")

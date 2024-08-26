@@ -1,6 +1,6 @@
-INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role)
+INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role, job)
 VALUES (false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000', 1, 'AuthTestUser', 'test', 'test', 'test',
-        'test', 'USER');
+        'test', 'USER', 'DEVELOPER');
 
 INSERT INTO recruit_season (recruit_season_id, name, user_id)
 VALUES (1, 'test', 1);
@@ -31,12 +31,14 @@ INSERT INTO card (deleted, copy_flag, access_time, card_id, created_at, update_a
 VALUES (false, true, '2024-07-24 21:22:04.000000', 6, '2024-07-24 21:22:07.000000', '2024-07-24 21:22:08.000000', 1,
         'test_contents', 'test_title', 1);
 
-INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
-VALUES (1, '스프링', 'CAPABILITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
-INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
-VALUES (2, '리액트', 'CAPABILITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
-INSERT INTO tag (tag_id, name, tag_type, deleted, update_at, created_at)
-VALUES (3, '봉사활동', 'PERSONALITY', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, job, deleted, update_at, created_at)
+VALUES (1, '스프링', 'CAPABILITY', 'DEVELOPER', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, job, deleted, update_at, created_at)
+VALUES (2, '리액트', 'CAPABILITY', 'DEVELOPER', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, job, deleted, update_at, created_at)
+VALUES (3, '알고리즘', 'CAPABILITY', 'DEVELOPER', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+INSERT INTO tag (tag_id, name, tag_type, job, deleted, update_at, created_at)
+VALUES (4, '봉사활동', 'PERSONALITY', 'DESIGNER', false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (1, 'EXPERIENCE', 1, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
@@ -76,7 +78,17 @@ VALUES (false, 1, 1, '2024-07-24 21:26:28.000000', 1, '2024-07-24 21:26:40.00000
 INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
 VALUES (false, 1, 2, '2024-07-24 21:26:29.000000', 2, '2024-07-24 21:26:41.000000');
 INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
-VALUES (false, 2, 3, '2024-07-24 21:26:31.000000', 2, '2024-07-24 21:26:42.000000');
+VALUES (false, 2, 3, '2024-07-24 21:26:28.000000', 2, '2024-07-24 21:26:40.000000');
+INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
+VALUES (false, 2, 4, '2024-07-24 21:26:29.000000', 3, '2024-07-24 21:26:41.000000');
+INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
+VALUES (false, 3, 5, '2024-07-24 21:26:31.000000', 2, '2024-07-24 21:26:42.000000');
+INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
+VALUES (false, 3, 6, '2024-07-24 21:26:31.000000', 3, '2024-07-24 21:26:42.000000');
+INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
+VALUES (false, 4, 7, '2024-07-24 21:26:31.000000', 4, '2024-07-24 21:26:42.000000');
+INSERT INTO card_tag (deleted, card_id, card_tag_id, created_at, tag_id, update_at)
+VALUES (false, 4, 8, '2024-07-24 21:26:31.000000', 4, '2024-07-24 21:26:42.000000');
 
 INSERT INTO card_memo (deleted, card_id, card_memo_id, created_at, content, update_at)
 VALUES (false, 1, 1, '2024-07-24 21:26:31.000000', 'test contents 111', '2024-07-24 21:26:42.000000');

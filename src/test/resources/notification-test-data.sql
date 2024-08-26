@@ -1,7 +1,6 @@
-INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role)
+INSERT INTO users (deleted, created_at, update_at, user_id, dtype, email, login_id, name, password, role, job)
 VALUES (false, '2024-07-24 21:27:20.000000', '2024-07-24 21:27:21.000000', 1, 'AuthTestUser', null, 'test', 'test',
-        'test',
-        'USER');
+        'test', 'USER', 'DEVELOPER');
 
 -- 다음으로 recruit_season 테이블에 데이터를 삽입합니다.
 INSERT INTO recruit_season (recruit_season_id, name, user_id, deleted, update_at, created_at)

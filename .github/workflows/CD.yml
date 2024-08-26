@@ -30,6 +30,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
@@ -49,6 +50,6 @@ jobs:
             
             ./gradlew clean build
             ./gradlew openapi3
-            docker rm bbo-gak-server_back_1 --force
-            docker rmi bbo-gak-server_back
+            docker rm bbo-gak-server-back-1 --force
+            docker rmi bbo-gak-server-back
             docker-compose -f docker-compose-dev.yml up --build -d

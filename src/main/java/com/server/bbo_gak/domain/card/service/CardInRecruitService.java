@@ -7,6 +7,7 @@ import com.server.bbo_gak.domain.card.dao.CardMemoRepository;
 import com.server.bbo_gak.domain.card.dao.CardRepository;
 import com.server.bbo_gak.domain.card.dao.CardTagRepository;
 import com.server.bbo_gak.domain.card.dao.CardTypeRepository;
+import com.server.bbo_gak.domain.card.dao.TagRepository;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
@@ -18,13 +19,16 @@ import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
+import com.server.bbo_gak.domain.card.entity.Tag;
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +48,7 @@ public class CardInRecruitService {
     private final CardTagRepository cardTagRepository;
     private final CardImageRepository cardImageRepository;
     private final CardCopyInfoRepository cardCopyInfoRepository;
+    private final TagRepository tagRepository;
 
 
     @Transactional(readOnly = true)
@@ -57,12 +62,16 @@ public class CardInRecruitService {
     }
 
     @Transactional(readOnly = true)
-    public List<CardListGetResponse> getCardListInRecruit(User user, Long recruitId, String cardTypeValue) {
+    public List<CardListGetResponse> getCardListInRecruit(User user, Long recruitId, String cardTypeValue
+        , List<Long> tagIdList) {
+
+        List<Tag> tagList = tagRepository.findAllById(Optional.ofNullable(tagIdList).orElse(Collections.emptyList()));
 
         List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue),
             recruitId);
 
         return cards.stream()
+            .filter(card -> tagList.isEmpty() || card.isTagListContain(tagList))
             .sorted(Comparator.comparing(Card::getUpdatedDate).reversed())
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
