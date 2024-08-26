@@ -12,9 +12,13 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE card_tag SET deleted = true WHERE card_tag_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardTag extends BaseEntity {
 

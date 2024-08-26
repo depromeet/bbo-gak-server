@@ -5,6 +5,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSeasonRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateSiteUrlRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateStatusRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateTitleRequest;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
 import com.server.bbo_gak.domain.recruit.service.RecruitService;
 import com.server.bbo_gak.domain.user.entity.User;
@@ -34,6 +35,14 @@ public class RecruitController {
         @AuthUser User user
     ) {
         return ResponseEntity.ok(recruitService.getTotalRecruitList(user));
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<RecruitGetInnerResponse> getRecruitInnerInfo(
+        @AuthUser User user,
+        @PathVariable("id") Long id
+    ) {
+        return ResponseEntity.ok(recruitService.getRecruit(user, id));
     }
 
 

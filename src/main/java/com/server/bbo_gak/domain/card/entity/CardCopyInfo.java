@@ -13,9 +13,13 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @Entity
+@SQLRestriction("deleted = false")
+@SQLDelete(sql = "UPDATE card_copy_info SET deleted = true WHERE card_copy_info_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CardCopyInfo extends BaseEntity {
 
