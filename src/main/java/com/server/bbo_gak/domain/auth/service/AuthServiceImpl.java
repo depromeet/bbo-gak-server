@@ -13,7 +13,6 @@ import com.server.bbo_gak.domain.user.entity.UserRepository;
 import com.server.bbo_gak.domain.user.service.UserService;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
-import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import com.server.bbo_gak.global.security.jwt.dto.AccessTokenDto;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -37,9 +36,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public LoginResponse socialLogin(String socialAccessToken, OauthProvider provider) {
+    public LoginResponse socialLogin(String socialAccessToken, String provider) {
+
         // accessToken으로 사용자 정보 얻어오기
-        OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, provider);
+        OauthUserInfoResponse oauthUserInfo = getMemberInfo(socialAccessToken, OauthProvider.findByName(provider));
 
         // DB에서 회원 찾기
         User user = userRepository.findUserByOauthInfo(oauthUserInfo.toEntity())
@@ -100,7 +100,6 @@ public class AuthServiceImpl implements AuthService {
     private OauthUserInfoResponse getMemberInfo(String socialAccessToken, OauthProvider provider) {
         return switch (provider) {
             case GOOGLE -> googleService.getOauthUserInfo(socialAccessToken);
-            default -> throw new InvalidValueException(ErrorCode.INVALID_PROVIDER_TYPE);
         };
     }
 }
