@@ -4,7 +4,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -19,6 +18,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -312,43 +312,43 @@ public class RestDocsFactory {
         };
     }
 
-    private <T> FieldDescriptor[] getFields(T dto) {
+    public <T> FieldDescriptor[] getFields(T dto) {
         List<FieldDescriptor> fields = new ArrayList<>();
-        Field[] declaredFields = dto.getClass().getDeclaredFields();
-        for (Field field : declaredFields) {
-            field.setAccessible(true);
-            String name = field.getName();
-            JsonFieldType type = determineFieldType(field.getType());
-            Object value = getFieldValue(dto, field);
-
-            fields.add(fieldWithPath(name)
-                .type(type)
-                .description(name)
-                .attributes(Attributes.key("example").value(value != null ? value.toString() : "null"))); // 필드 값 추가
-        }
-
+        generateFieldDescriptors(dto, "", fields);
         return fields.toArray(new FieldDescriptor[0]);
     }
 
-    private <T> FieldDescriptor[] getFieldsList(T dto) {
+    public <T> FieldDescriptor[] getFieldsList(T dto) {
         List<FieldDescriptor> fields = new ArrayList<>();
+        generateFieldDescriptors(dto, "[].", fields);
+        return fields.toArray(new FieldDescriptor[0]);
+    }
+
+    private <T> void generateFieldDescriptors(T dto, String pathPrefix, List<FieldDescriptor> fields) {
         Field[] declaredFields = dto.getClass().getDeclaredFields();
         for (Field field : declaredFields) {
             field.setAccessible(true);
-            String name = field.getName();
+            String name = pathPrefix + field.getName();
             JsonFieldType type = determineFieldType(field.getType());
             Object value = getFieldValue(dto, field);
 
-            // 배열 필드 경로 설정
-            String path = "[]." + name;
-
-            fields.add(fieldWithPath(path)
-                .type(type)
-                .description(name)
-                .attributes(Attributes.key("example").value(value != null ? value.toString() : "null")));
+            if (type == JsonFieldType.OBJECT) {
+                // 중첩된 객체 처리
+                fields.add(fieldWithPath(name)
+                    .type(JsonFieldType.OBJECT)
+                    .description(field.getName())
+                    .optional());
+                if (value != null) {
+                    generateFieldDescriptors(value, name + ".", fields);
+                }
+            } else {
+                fields.add(fieldWithPath(name)
+                    .type(type)
+                    .description(field.getName())
+                    .optional()
+                    .attributes(Attributes.key("example").value(value != null ? value.toString() : "null")));
+            }
         }
-
-        return fields.toArray(new FieldDescriptor[0]);
     }
 
     private <T> Object getFieldValue(T dto, Field field) {
@@ -373,5 +373,8 @@ public class RestDocsFactory {
         }
     }
 
+    private FieldDescriptor fieldWithPath(String path) {
+        return PayloadDocumentation.fieldWithPath(path);
+    }
 
 }

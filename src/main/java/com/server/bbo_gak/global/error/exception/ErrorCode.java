@@ -32,6 +32,7 @@ public enum ErrorCode {
 
     //User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
+    JOB_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 직업을 찾을 수 없습니다"),
 
     //Image
     IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
@@ -40,10 +41,12 @@ public enum ErrorCode {
     //Card
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다"),
     CARD_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입을 찾을 수 없습니다"),
+    CARD_TYPE_VALUE_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입 그룹(내 정보 or 공고)을 찾을 수 없습니다."),
+    CARD_TYPE_NOT_MATCHED(HttpStatus.BAD_REQUEST, "카드 타입이 맞지 않습니다"),
+    MY_INFO_CARD_TYPE_OVERSIZE(HttpStatus.BAD_REQUEST, "내 정보에서는 하나의 카드 타입만 할당 가능합니다."),
 
     //Tag
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 태그를 찾을 수 없습니다"),
-
     TAG_DUPLICATED(HttpStatus.BAD_REQUEST, "해당 태그가 이미 추가 돼있습니다."),
 
     //Season
@@ -51,6 +54,12 @@ public enum ErrorCode {
 
     //Recruit
     RECRUIT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고를 찾을 수 없습니다"),
+    RECRUIT_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 지원 상태를 찾을 수 없습니다"),
+    RECRUIT_SCHEDULE_STAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고 일정 단계를 찾을 수 없습니다"),
+
+
+    //RecruitSchedule
+    RECRUIT_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공고일정을 찾을 수 없습니다"),
 
     CARD_TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드와 태그 매핑을 찾을 수 없습니다"),
 

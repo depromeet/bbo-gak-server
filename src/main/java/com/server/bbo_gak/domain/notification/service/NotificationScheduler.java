@@ -65,8 +65,8 @@ public class NotificationScheduler {
 
     private boolean isDeadlineWithinOneDay(RecruitSchedule schedule) {
         LocalDate now = LocalDate.now();
-        LocalDate deadline = schedule.getDeadLine();
-        return (deadline.equals(now) || deadline.equals(now.plusDays(1)));
+        LocalDate deadLine = schedule.getDeadLine();
+        return (deadLine.equals(now) || deadLine.equals(now.plusDays(1)));
     }
 
     private List<Notification> createNotifications(List<Entry<Recruit, RecruitSchedule>> recruitsWithOneDayLeft) {

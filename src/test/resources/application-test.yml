@@ -10,11 +10,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-      show-sql: true
     properties:
       hibernate:
+        show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.H2Dialect
+        default_batch_fetch_size: 1000
 
 cloud:
   aws:
@@ -47,3 +48,8 @@ scheduler:
   thread:
     pool:
       size: 2
+
+sentry:
+  dsn: https://b0e61ee9ddb2c12240759111df8b607c@o4505869811908608.ingest.us.sentry.io/4507831077240832
+  exception-resolver-order: -2147483647
+  tracesSampleRate: 1.0

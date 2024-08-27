@@ -27,7 +27,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE card SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE card SET deleted = true WHERE card_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Card extends BaseEntity {
 
@@ -107,6 +107,16 @@ public class Card extends BaseEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void updateCardTypeList(List<CardType> cardTypeList) {
+        this.cardTypeList = cardTypeList;
+    }
+
+    public boolean isTagListContain(List<Tag> tagList) {
+        return cardTagList.stream()
+            .map(CardTag::getTag)
+            .anyMatch(tagList::contains);
     }
 
 

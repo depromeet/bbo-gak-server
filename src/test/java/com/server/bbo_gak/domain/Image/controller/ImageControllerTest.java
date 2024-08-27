@@ -22,10 +22,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest
 @ActiveProfiles("test")
-@Sql("/image-test-data.sql")
+@Sql({"/all-data-delete.sql", "/image-test-data.sql"})
 public class ImageControllerTest extends AbstractRestDocsTests {
 
     private static final String DEFAULT_URL = "/api/v1/images/presigned-urls";

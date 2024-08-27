@@ -11,6 +11,7 @@ import com.server.bbo_gak.domain.card.entity.CardMemo;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class CardMemoService {
 
         return card.getCardMemoList().stream()
             .map(CardMemoGetResponse::from)
+            .sorted(Comparator.comparing(CardMemoGetResponse::updatedDate).reversed())
             .toList();
     }
 

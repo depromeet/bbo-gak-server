@@ -14,7 +14,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,7 +28,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Entity
 @SQLRestriction("deleted = false")
-@SQLDelete(sql = "UPDATE recruit SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE recruit SET deleted = true WHERE recruit_id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Recruit extends BaseEntity {
 
@@ -71,6 +73,13 @@ public class Recruit extends BaseEntity {
         recruitSchedule.setRecruit(this);
         this.scheduleList.add(recruitSchedule);
         return this;
+    }
+
+    public RecruitSchedule getNearestSchedule() {
+        return this.scheduleList.stream()
+            .filter(schedule -> schedule.getDeadLine().isAfter(LocalDate.now()))
+            .min(Comparator.comparing(RecruitSchedule::getDeadLine))
+            .orElse(null);
     }
 
     public void updateTitle(String title) {
