@@ -7,6 +7,7 @@ import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
+import com.server.bbo_gak.domain.user.entity.Job;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.entity.UserRepository;
@@ -51,7 +52,10 @@ public class AuthServiceImpl implements AuthService {
         }
         TokenDto tokenDto = jwtTokenService.createTokenDto(user.getId(), user.getRole()); // 토큰 발급
 
-        return LoginResponse.of(tokenDto);
+        // Job이 UNDEFINED인지 확인 (UNDEFINED라면 isFirstLogin 최초로그인값 true)
+        boolean isJobUndefined = user.getJob() == Job.UNDEFINED;
+
+        return LoginResponse.of(tokenDto, isJobUndefined);
     }
 
     @Override

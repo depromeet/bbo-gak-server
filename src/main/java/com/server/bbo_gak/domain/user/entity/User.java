@@ -45,7 +45,7 @@ public class User extends BaseEntity {
         return User.builder()
             .role(UserRole.USER)
             .oauthInfo(oauthInfo)
-            .job(Job.DEVELOPER)
+            .job(Job.UNDEFINED)
             .build();
     }
 }
