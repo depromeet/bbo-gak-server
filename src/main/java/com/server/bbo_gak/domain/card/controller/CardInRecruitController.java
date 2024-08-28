@@ -7,6 +7,7 @@ import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResp
 import com.server.bbo_gak.domain.card.service.CardInRecruitService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class CardInRecruitController {
         @AuthUser User user,
         @PathVariable("recruit-id") Long recruitId,
         @PathVariable("card-id") Long cardId,
-        @RequestBody CopyCardFromMyInfoRequest request) {
+        @RequestBody @Valid CopyCardFromMyInfoRequest request) {
 
         return ResponseEntity.ok(cardInRecruitService.copyCardFromMyInfo(user, cardId, recruitId, request));
     }

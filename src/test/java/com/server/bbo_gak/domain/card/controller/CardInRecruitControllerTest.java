@@ -126,7 +126,7 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
 
             Long originalCardId = 1L;
 
-            CopyCardFromMyInfoRequest request = new CopyCardFromMyInfoRequest(List.of("인터뷰_준비", "과제_준비"), "공고");
+            CopyCardFromMyInfoRequest request = new CopyCardFromMyInfoRequest(List.of("인터뷰_준비", "과제_준비"));
 
             ResultActions resultActions = mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL + "/recruits/{recruit-id}/cards/{card-id}", request,

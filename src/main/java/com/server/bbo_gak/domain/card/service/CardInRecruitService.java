@@ -119,8 +119,8 @@ public class CardInRecruitService {
         saveDataList(card.getCardImageList(), cardImageRepository,
             cardImage -> CardImage.of(copiedCard, cardImage.getFileName()));
 
-        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(request.cardTypeValueGroup(), card,
-            request.cardTypeValueList());
+        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(CardTypeValueGroup.RECRUIT.getValue(),
+            copiedCard, request.cardTypeValueList());
 
         cardCopyInfoRepository.save(new CardCopyInfo(copiedCard));
 
