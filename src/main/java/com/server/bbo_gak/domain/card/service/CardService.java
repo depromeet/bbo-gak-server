@@ -19,6 +19,8 @@ import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.domain.card.entity.Tag;
+import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
+import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
@@ -40,6 +42,7 @@ public class CardService {
     private final CardTagRepository cardTagRepository;
     private final TagRepository tagRepository;
     private final CardTypeRepository cardTypeRepository;
+    private final RecruitRepository recruitRepository;
 
     private final CardTypeService cardTypeService;
 
@@ -93,7 +96,11 @@ public class CardService {
 
         Card card = cardRepository.save(Card.creatEmptyCard(user));
 
-        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(request.cardTypeValueGroup(), card,
+        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(request.cardTypeValueGroup());
+
+        updateRecruitOfCard(request, cardTypeValueGroup, card, user);
+
+        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(cardTypeValueGroup, card,
             request.cardTypeValueList());
 
         cardTypeRepository.saveAll(cardTypeList);
@@ -107,6 +114,19 @@ public class CardService {
         cardTagRepository.saveAll(cardTagList);
 
         return new CardCreateResponse(card.getId());
+    }
+
+    private void updateRecruitOfCard(CardCreateRequest request, CardTypeValueGroup cardTypeValueGroup,
+        Card card, User user) {
+
+        if (request.recruitId() != null && cardTypeValueGroup.getValue()
+            .equals(CardTypeValueGroup.RECRUIT.getValue())) {
+
+            Recruit recruit = recruitRepository.findByUserIdAndId(user.getId(), request.recruitId())
+                .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
+
+            card.updateRecruit(recruit);
+        }
     }
 
     @Transactional

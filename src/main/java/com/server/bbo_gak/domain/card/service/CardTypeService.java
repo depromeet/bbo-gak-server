@@ -25,10 +25,8 @@ public class CardTypeService {
 
 
     @Transactional(readOnly = true)
-    public List<CardType> getValidCardTypeList(String cardTypeValueGroupValue, Card card,
+    public List<CardType> getValidCardTypeList(CardTypeValueGroup cardTypeValueGroup, Card card,
         List<String> cardTypeValueList) {
-
-        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(cardTypeValueGroupValue);
 
         List<CardType> cardTypeList = cardTypeValueList.stream()
             .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
@@ -65,13 +63,14 @@ public class CardTypeService {
     @Transactional
     public void updateCardType(User user, Long cardId, CardTypeUpdateRequest request) {
 
+        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(request.cardTypeValueGroup());
+
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
 
         cardTypeRepository.deleteAll(card.getCardTypeList());
 
-        List<CardType> cardTypeList = getValidCardTypeList(request.cardTypeValueGroup(), card,
-            request.cardTypeValueList());
+        List<CardType> cardTypeList = getValidCardTypeList(cardTypeValueGroup, card, request.cardTypeValueList());
 
         cardTypeRepository.saveAll(cardTypeList);
 

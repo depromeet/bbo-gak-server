@@ -162,21 +162,47 @@ public class CardControllerTest extends AbstractRestDocsTests {
     @Nested
     class 카드_신규_생성 {
 
-        CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
-            "내_정보");
 
         @Test
         @Transactional
         public void 성공() throws Exception {
 
+            CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
+                null, "내_정보");
+
             mockMvc.perform(post(DEFAULT_URL + "/card").contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andDo(document("[create] 카드 신규 생성", preprocessResponse(prettyPrint()),
+                .andExpect(status().isOk()).andDo(document("[카드_신규_생성] 성공", preprocessResponse(prettyPrint()),
                     resource(ResourceSnippetParameters.builder().description("카드 신규 생성").tags("Card")
                         .requestSchema(Schema.schema("CardCreateRequest"))
                         .requestFields(
                             fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
                             fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"),
+                            fieldWithPath("recruitId").type(JsonFieldType.NUMBER).description("공고 ID").optional(),
+                            fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING)
+                                .description("카드 타입 그룹값(내_정보 or 공고)")
+                        )
+                        .responseSchema(Schema.schema("CardCreateResponse"))
+                        .responseFields(fieldWithPath("cardId").type(JsonFieldType.NUMBER).description("Card ID"))
+                        .build())));
+        }
+
+        @Test
+        @Transactional
+        public void 성공_공고에서() throws Exception {
+
+            CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
+                1L, "공고");
+
+            mockMvc.perform(post(DEFAULT_URL + "/card").contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andDo(document("[카드_신규_생성] 성공_공고에서", preprocessResponse(prettyPrint()),
+                    resource(ResourceSnippetParameters.builder().description("[카드_신규_생성] 성공_공고에서").tags("Card")
+                        .requestSchema(Schema.schema("CardCreateRequest"))
+                        .requestFields(
+                            fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
+                            fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"),
+                            fieldWithPath("recruitId").type(JsonFieldType.NUMBER).description("공고 ID").optional(),
                             fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING)
                                 .description("카드 타입 그룹값(내_정보 or 공고)")
                         )
