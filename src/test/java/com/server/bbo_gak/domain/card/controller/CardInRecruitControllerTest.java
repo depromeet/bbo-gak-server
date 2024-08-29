@@ -12,12 +12,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
-import com.server.bbo_gak.domain.card.dao.CardCopyInfoRepository;
 import com.server.bbo_gak.domain.card.dao.CardRepository;
+import com.server.bbo_gak.domain.card.dto.request.CopyCardFromMyInfoRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
 import com.server.bbo_gak.global.RestDocsFactory;
+import jakarta.persistence.EntityManager;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
     private CardRepository cardRepository;
 
     @Autowired
-    private CardCopyInfoRepository cardCopyInfoRepository;
+    private EntityManager entityManager;
 
     @Autowired
     private RestDocsFactory restDocsFactory;
@@ -116,27 +118,27 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
     }
 
     @Nested
+    @Transactional
     class 카드_공고로_복사 {
 
         @Test
-        @Transactional
         public void 성공() throws Exception {
 
             Long originalCardId = 1L;
 
+            CopyCardFromMyInfoRequest request = new CopyCardFromMyInfoRequest(List.of("인터뷰_준비", "과제_준비"), "공고");
+
             ResultActions resultActions = mockMvc.perform(
-                    restDocsFactory.createRequest(DEFAULT_URL + "/recruits/{recruit-id}/cards/{card-id}", null,
+                    restDocsFactory.createRequest(DEFAULT_URL + "/recruits/{recruit-id}/cards/{card-id}", request,
                         HttpMethod.POST, objectMapper, 1L, originalCardId))
                 .andExpect(status().isOk());
 
             resultActions.andDo(
                 result ->
                     restDocsFactory.getSuccessResource("[카드_공고로_복사] 성공", "카드_공고로_복사", cardInRecruit,
-                            null,
+                            request,
                             objectMapper.readValue(result.getResponse().getContentAsString(), CardCreateResponse.class))
                         .handle(result));
-
-
         }
     }
 }
