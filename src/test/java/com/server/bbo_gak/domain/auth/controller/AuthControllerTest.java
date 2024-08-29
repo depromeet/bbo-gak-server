@@ -6,7 +6,6 @@ import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.docume
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.hamcrest.Matchers.matchesPattern;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -21,9 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
-import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
 import com.server.bbo_gak.domain.auth.dto.response.oauth.OauthUserInfoResponse;
-import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
@@ -146,7 +143,8 @@ public class AuthControllerTest extends AbstractRestDocsTests {
                                             )
                                             .responseFields(  // 응답 필드
                                                     fieldWithPath("accessToken").description("accessToken"),
-                                                    fieldWithPath("refreshToken").description("refreshToken")
+                                                    fieldWithPath("refreshToken").description("refreshToken"),
+                                                    fieldWithPath("isFirstLogin").description("isFirstLogin")
                                             )
                                             .build()
                             )));

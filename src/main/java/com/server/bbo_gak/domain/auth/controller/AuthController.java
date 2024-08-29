@@ -5,7 +5,6 @@ import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
-import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -32,7 +31,7 @@ public class AuthController {
     @PostMapping("/social-login")
     public ResponseEntity<LoginResponse> socialLogin(
         @RequestHeader(SOCIAL_TOKEN_NAME) final String socialAccessToken,
-        @RequestParam(name = "provider") OauthProvider provider
+        @RequestParam(name = "provider") String provider
     ) {
         LoginResponse response = authService.socialLogin(socialAccessToken, provider);
         //TODO: 쿠키 만들어서 헤더에 넘겨야함.

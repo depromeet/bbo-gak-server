@@ -26,7 +26,7 @@ public enum ErrorCode {
 
     //OAuth
     AUTH_GET_USER_INFO_FAILED(HttpStatus.UNAUTHORIZED, "SocialAccessToken을 통해 사용자 정보를 가져오는 데에 실패했습니다."),
-    INVALID_PROVIDER_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 방식의 로그인입니다."),
+    INVALID_PROVIDER_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 provider를 입력하셨습니다."),
 
     PASSWORD_NOT_MATCHES(HttpStatus.BAD_REQUEST, "비밀번호를 잘못 입력하셨습니다."),
 
