@@ -2,15 +2,12 @@ package com.server.bbo_gak.domain.card.service;
 
 import com.server.bbo_gak.domain.card.dao.CardRepository;
 import com.server.bbo_gak.domain.card.dao.CardTypeRepository;
-import com.server.bbo_gak.domain.card.dto.request.CardTypeUpdateRequest;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
-import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
 import com.server.bbo_gak.global.error.exception.InvalidValueException;
-import com.server.bbo_gak.global.error.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,10 +22,8 @@ public class CardTypeService {
 
 
     @Transactional(readOnly = true)
-    public List<CardType> getValidCardTypeList(String cardTypeValueGroupValue, Card card,
+    public List<CardType> getValidCardTypeList(CardTypeValueGroup cardTypeValueGroup, Card card,
         List<String> cardTypeValueList) {
-
-        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(cardTypeValueGroupValue);
 
         List<CardType> cardTypeList = cardTypeValueList.stream()
             .map(cardTypeValue -> new CardType(card, CardTypeValue.findByValue(cardTypeValue)))
@@ -49,10 +44,11 @@ public class CardTypeService {
         }
 
         // 공고에서 카드 생성인 경우
-        if (cardTypeValueGroup.equals(CardTypeValueGroup.RECRUIT)) {
+        if (cardTypeValueGroup.equals(CardTypeValueGroup.RECRUIT) || cardTypeValueGroup.equals(
+            CardTypeValueGroup.RECRUIT_EXCEPT_COPIED)) {
 
             for (CardType cardType : cardTypeList) {
-                if (!CardTypeValueGroup.RECRUIT.contains(cardType.getCardTypeValue())) {
+                if (!cardTypeValueGroup.contains(cardType.getCardTypeValue())) {
                     throw new InvalidValueException(ErrorCode.CARD_TYPE_NOT_MATCHED);
                 }
             }
@@ -60,22 +56,5 @@ public class CardTypeService {
             return cardTypeList;
         }
         throw new InvalidValueException(ErrorCode.CARD_TYPE_NOT_FOUND);
-    }
-
-    @Transactional
-    public void updateCardType(User user, Long cardId, CardTypeUpdateRequest request) {
-
-        Card card = cardRepository.findByIdAndUser(cardId, user)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
-
-        cardTypeRepository.deleteAll(card.getCardTypeList());
-
-        List<CardType> cardTypeList = getValidCardTypeList(request.cardTypeValueGroup(), card,
-            request.cardTypeValueList());
-
-        cardTypeRepository.saveAll(cardTypeList);
-
-        // 양방향 연관 관계 고려 메소드
-        card.updateCardTypeList(cardTypeList);
     }
 }

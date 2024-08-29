@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.card.controller;
 
-import com.server.bbo_gak.domain.card.dto.request.CopyCardFromMyInfoRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +24,10 @@ public class CardInRecruitController {
     private final CardInRecruitService cardInRecruitService;
 
     @GetMapping("/recruits/{recruit-id}/cards/type-count")
-    public ResponseEntity<CardTypeCountInRecruitGetResponse> getCardTypeCounts(@AuthUser User user) {
-        return ResponseEntity.ok(cardInRecruitService.getCardTypeCountsInRecruit(user));
+    public ResponseEntity<CardTypeCountInRecruitGetResponse> getCardTypeCounts(
+        @AuthUser User user,
+        @PathVariable("recruit-id") Long recruitId) {
+        return ResponseEntity.ok(cardInRecruitService.getCardTypeCountsInRecruit(user, recruitId));
     }
 
     @GetMapping("/recruits/{recruit-id}/cards")
@@ -44,10 +44,9 @@ public class CardInRecruitController {
     public ResponseEntity<CardCreateResponse> createCard(
         @AuthUser User user,
         @PathVariable("recruit-id") Long recruitId,
-        @PathVariable("card-id") Long cardId,
-        @RequestBody CopyCardFromMyInfoRequest request) {
+        @PathVariable("card-id") Long cardId) {
 
-        return ResponseEntity.ok(cardInRecruitService.copyCardFromMyInfo(user, cardId, recruitId, request));
+        return ResponseEntity.ok(cardInRecruitService.copyCardFromMyInfo(user, cardId, recruitId));
     }
 
 }

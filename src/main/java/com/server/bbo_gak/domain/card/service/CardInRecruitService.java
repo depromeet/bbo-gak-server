@@ -8,7 +8,6 @@ import com.server.bbo_gak.domain.card.dao.CardRepository;
 import com.server.bbo_gak.domain.card.dao.CardTagRepository;
 import com.server.bbo_gak.domain.card.dao.CardTypeRepository;
 import com.server.bbo_gak.domain.card.dao.TagRepository;
-import com.server.bbo_gak.domain.card.dto.request.CopyCardFromMyInfoRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardListGetResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
@@ -54,11 +53,11 @@ public class CardInRecruitService {
     private final CardTypeService cardTypeService;
 
     @Transactional(readOnly = true)
-    public CardTypeCountInRecruitGetResponse getCardTypeCountsInRecruit(User user) {
+    public CardTypeCountInRecruitGetResponse getCardTypeCountsInRecruit(User user, Long recruitId) {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.RECRUIT.getCardTypeValueList();
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, true);
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, recruitId);
 
         return CardTypeCountInRecruitGetResponse.from(cards);
     }
@@ -80,8 +79,7 @@ public class CardInRecruitService {
     }
 
     @Transactional
-    public CardCreateResponse copyCardFromMyInfo(User user, Long cardId, Long recruitId,
-        CopyCardFromMyInfoRequest request) {
+    public CardCreateResponse copyCardFromMyInfo(User user, Long cardId, Long recruitId) {
 
         Card card = cardRepository.findByIdAndUser(cardId, user)
             .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
@@ -89,26 +87,16 @@ public class CardInRecruitService {
         Recruit recruit = recruitRepository.findByUserIdAndId(user.getId(), recruitId)
             .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
 
-        // 이미 있는 카드인 경우, 단순히 카드 타입만 추가
-        if (cardCopyInfoRepository.findByCard(card).isPresent()) {
-
-            Card existedCard = cardCopyInfoRepository.findByCard(card).get().getCard();
-
-            cardTypeService.updateCardType(user, existedCard.getId(), request.toCardTypeUpdateRequest());
-
-            return new CardCreateResponse(existedCard.getId());
-        }
-
         Card copiedCard = Card.copyCardFromMyInfo(card, user, recruit);
 
         cardRepository.save(copiedCard);
 
-        copyCardDataListFromCard(card, copiedCard, request);
+        copyCardDataListFromCard(card, copiedCard);
 
         return new CardCreateResponse(copiedCard.getId());
     }
 
-    private void copyCardDataListFromCard(Card card, Card copiedCard, CopyCardFromMyInfoRequest request) {
+    private void copyCardDataListFromCard(Card card, Card copiedCard) {
 
         saveDataList(card.getCardMemoList(), cardMemoRepository,
             cardMemo -> new CardMemo(copiedCard, cardMemo.getContent()));
@@ -119,13 +107,8 @@ public class CardInRecruitService {
         saveDataList(card.getCardImageList(), cardImageRepository,
             cardImage -> CardImage.of(copiedCard, cardImage.getFileName()));
 
-        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(request.cardTypeValueGroup(), card,
-            request.cardTypeValueList());
-
+        cardTypeRepository.save(new CardType(copiedCard, CardTypeValue.COPY_FROM_MY_INFO));
         cardCopyInfoRepository.save(new CardCopyInfo(copiedCard));
-
-        cardTypeRepository.saveAll(cardTypeList);
-
     }
 
     private <T, R> void saveDataList(List<T> items, JpaRepository<R, ?> repository, Function<T, R> mapper) {

@@ -15,7 +15,8 @@ public enum CardTypeValue {
     INTERVIEW_QUESTION("면접_질문"),
     DOCUMENT_PREPARING("서류_준비"),
     ASSIGNMENT_PREPARING("과제_준비"),
-    INTERVIEW_PREPARING("인터뷰_준비");
+    INTERVIEW_PREPARING("인터뷰_준비"),
+    COPY_FROM_MY_INFO("내_정보_복사");
 
     private final String value;
 

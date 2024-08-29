@@ -41,7 +41,7 @@ public enum ErrorCode {
     //Card
     CARD_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드를 찾을 수 없습니다"),
     CARD_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입을 찾을 수 없습니다"),
-    CARD_TYPE_VALUE_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입 그룹(내 정보 or 공고)을 찾을 수 없습니다."),
+    CARD_TYPE_VALUE_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 카드 타입 그룹(내 정보 or 공고 or 공고_복사본_제외)을 찾을 수 없습니다."),
     CARD_TYPE_NOT_MATCHED(HttpStatus.BAD_REQUEST, "카드 타입이 맞지 않습니다"),
     MY_INFO_CARD_TYPE_OVERSIZE(HttpStatus.BAD_REQUEST, "내 정보에서는 하나의 카드 타입만 할당 가능합니다."),
 

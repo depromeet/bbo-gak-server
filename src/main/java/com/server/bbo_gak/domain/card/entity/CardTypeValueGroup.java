@@ -14,7 +14,12 @@ public enum CardTypeValueGroup {
         CardTypeValue.PERSONAL_STATEMENT}),
 
     RECRUIT("공고", new CardTypeValue[]{CardTypeValue.ASSIGNMENT_PREPARING, CardTypeValue.DOCUMENT_PREPARING,
-        CardTypeValue.INTERVIEW_PREPARING});
+        CardTypeValue.INTERVIEW_PREPARING, CardTypeValue.COPY_FROM_MY_INFO}),
+
+    RECRUIT_EXCEPT_COPIED("공고_복사본_제외",
+        new CardTypeValue[]{CardTypeValue.ASSIGNMENT_PREPARING, CardTypeValue.DOCUMENT_PREPARING,
+            CardTypeValue.INTERVIEW_PREPARING});
+
 
     private String value;
     private CardTypeValue[] cardTypeValueList;
@@ -26,7 +31,16 @@ public enum CardTypeValueGroup {
             .orElseThrow((() -> new NotFoundException(ErrorCode.CARD_TYPE_VALUE_GROUP_NOT_FOUND)));
     }
 
+    public static CardTypeValueGroup findByCardTypeValue(CardTypeValue cardTypeValue) {
+        return Arrays.stream(CardTypeValueGroup.values())
+            .filter(cardTypeValueGroup -> cardTypeValueGroup.contains(cardTypeValue))
+            .findFirst()
+            .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_TYPE_VALUE_GROUP_NOT_FOUND));
+    }
+
     public boolean contains(CardTypeValue cardTypeValue) {
         return Arrays.asList(cardTypeValueList).contains(cardTypeValue);
     }
+
+
 }
