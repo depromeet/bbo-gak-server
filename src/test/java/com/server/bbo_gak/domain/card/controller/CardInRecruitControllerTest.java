@@ -13,13 +13,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import com.server.bbo_gak.domain.card.dao.CardRepository;
-import com.server.bbo_gak.domain.card.dto.request.CopyCardFromMyInfoRequest;
 import com.server.bbo_gak.domain.card.dto.response.CardCreateResponse;
 import com.server.bbo_gak.domain.card.dto.response.CardTypeCountInRecruitGetResponse;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
 import com.server.bbo_gak.global.RestDocsFactory;
 import jakarta.persistence.EntityManager;
-import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,8 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("서류_준비").value(1))
                 .andExpect(jsonPath("과제_준비").value(2))
-                .andExpect(jsonPath("인터뷰_준비").value(3))
+                .andExpect(jsonPath("인터뷰_준비").value(2))
+                .andExpect(jsonPath("내_정보_복사").value(1))
                 .andDo(
                     result -> restDocsFactory.getSuccessResource("[카드_타입_카운트_조회_공고에서] 성공", "카드_타입_카운트_조회_공고에서",
                             cardInRecruit,
@@ -96,7 +95,7 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
                             HttpMethod.GET, objectMapper, 1L)
                         .queryParam("type", "인터뷰_준비"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andDo(document("[카드_리스트_조회_공고에서] 성공", preprocessResponse(prettyPrint()), resource(getBuild())));
         }
 
@@ -126,17 +125,15 @@ public class CardInRecruitControllerTest extends AbstractRestDocsTests {
 
             Long originalCardId = 1L;
 
-            CopyCardFromMyInfoRequest request = new CopyCardFromMyInfoRequest(List.of("인터뷰_준비", "과제_준비"));
-
             ResultActions resultActions = mockMvc.perform(
-                    restDocsFactory.createRequest(DEFAULT_URL + "/recruits/{recruit-id}/cards/{card-id}", request,
+                    restDocsFactory.createRequest(DEFAULT_URL + "/recruits/{recruit-id}/cards/{card-id}", null,
                         HttpMethod.POST, objectMapper, 1L, originalCardId))
                 .andExpect(status().isOk());
 
             resultActions.andDo(
                 result ->
                     restDocsFactory.getSuccessResource("[카드_공고로_복사] 성공", "카드_공고로_복사", cardInRecruit,
-                            request,
+                            null,
                             objectMapper.readValue(result.getResponse().getContentAsString(), CardCreateResponse.class))
                         .handle(result));
         }

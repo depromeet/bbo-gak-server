@@ -2,6 +2,7 @@ package com.server.bbo_gak.domain.card.dto.response;
 
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
+import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.global.utils.BaseDateTimeFormatter;
 import java.util.List;
 import lombok.AccessLevel;
@@ -12,6 +13,7 @@ public record CardGetResponse(
     String title,
     String content,
     String updatedDate,
+    String cardTypeValueGroup,
     List<String> cardTypeValueList,
     List<TagGetResponse> tagList
 ) {
@@ -29,6 +31,8 @@ public record CardGetResponse(
         return CardGetResponse.builder()
             .title(card.getTitle())
             .content(card.getContent())
+            .cardTypeValueGroup(
+                CardTypeValueGroup.findByCardTypeValue(card.getCardTypeList().getFirst().getCardTypeValue()).getValue())
             .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
             .cardTypeValueList(cardTypeValueList)
             .tagList(tagGetResponseList)

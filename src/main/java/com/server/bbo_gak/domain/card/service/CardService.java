@@ -51,7 +51,7 @@ public class CardService {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.MY_INFO.getCardTypeValueList();
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, false);
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, null);
 
         return CardTypeCountGetResponse.from(cards);
     }
@@ -131,7 +131,21 @@ public class CardService {
 
     @Transactional
     public void updateCardType(User user, Long cardId, CardTypeUpdateRequest request) {
-        cardTypeService.updateCardType(user, cardId, request);
+
+        Card card = cardRepository.findByIdAndUser(cardId, user)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.CARD_NOT_FOUND));
+
+        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByValue(request.cardTypeValueGroup());
+
+        cardTypeRepository.deleteAll(card.getCardTypeList());
+
+        List<CardType> cardTypeList = cardTypeService.getValidCardTypeList(cardTypeValueGroup, card,
+            request.cardTypeValueList());
+
+        cardTypeRepository.saveAll(cardTypeList);
+
+        // 양방향 연관 관계 고려 메소드
+        card.updateCardTypeList(cardTypeList);
     }
 
     @Transactional

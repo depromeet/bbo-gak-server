@@ -37,7 +37,8 @@ public class Card extends BaseEntity {
     private Long id;
 
     private String title;
-
+    
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime accessTime;
