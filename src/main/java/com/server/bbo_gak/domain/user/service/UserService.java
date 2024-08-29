@@ -9,6 +9,8 @@ public interface UserService {
 
     void updateUser();
 
+    void updateUserJob(User user, String job);
+
     void getUser();
 
     void deleteUser();

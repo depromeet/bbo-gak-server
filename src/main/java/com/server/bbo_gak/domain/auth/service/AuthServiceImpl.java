@@ -53,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         TokenDto tokenDto = jwtTokenService.createTokenDto(user.getId(), user.getRole()); // 토큰 발급
 
         // Job이 UNDEFINED인지 확인 (UNDEFINED라면 isFirstLogin 최초로그인값 true)
-        boolean isJobUndefined = user.getJob() == Job.UNDEFINED;
+        boolean isJobUndefined = user.getJob() == Job.UNDEFINE;
 
         return LoginResponse.of(tokenDto, isJobUndefined);
     }
