@@ -114,7 +114,7 @@ bootJar {
 }
 
 openapi3 {
-    server = "https://dev.bbogak.com"
+    server = System.getenv('API_SERVER_URL') ?: "http://localhost:8080"
     title = "뽀각 API 문서"
     description = "뽀각 API 문서입니다."
     version = "0.0.1"
@@ -124,4 +124,3 @@ openapi3 {
     // /static/docs/open-api-3.0.1.json 생성 → jar 파일만 배포할 예정이기에 build 에 출력
     outputDirectory = 'build/resources/main/static/docs'
 }
-
