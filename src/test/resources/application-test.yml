@@ -44,6 +44,12 @@ google:
     client_secret: test
     redirect_uri: test
 
+kakao:
+  login:
+    client_id: test
+    client_secret: test
+    redirect_uri: test
+
 scheduler:
   thread:
     pool:

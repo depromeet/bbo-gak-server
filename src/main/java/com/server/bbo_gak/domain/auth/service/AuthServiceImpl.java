@@ -1,12 +1,13 @@
 package com.server.bbo_gak.domain.auth.service;
 
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
+import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
 import com.server.bbo_gak.domain.auth.dto.response.oauth.OauthUserInfoResponse;
-import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUser;
 import com.server.bbo_gak.domain.auth.entity.AuthTestUserRepository;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
+import com.server.bbo_gak.domain.auth.service.oauth.KakaoService;
 import com.server.bbo_gak.domain.user.entity.Job;
 import com.server.bbo_gak.domain.user.entity.OauthProvider;
 import com.server.bbo_gak.domain.user.entity.User;
@@ -32,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenService jwtTokenService;
     private final GoogleService googleService;
+    private final KakaoService kakaoService;
     private final UserService userService;
     private final UserRepository userRepository;
 
@@ -44,8 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
         // DB에서 회원 찾기
         User user = userRepository.findUserByOauthInfo(oauthUserInfo.toEntity())
-                .orElseGet(() -> userService.createUser(oauthUserInfo)); //DB에 회원이 없으면 회원가입
-
+            .orElseGet(() -> userService.createUser(oauthUserInfo)); //DB에 회원이 없으면 회원가입
 
         if (refreshTokenRepository.existsRefreshTokenByMemberId(user.getId())) {
             refreshTokenRepository.deleteById(user.getId()); //기존 토큰 삭제
@@ -104,6 +105,7 @@ public class AuthServiceImpl implements AuthService {
     private OauthUserInfoResponse getMemberInfo(String socialAccessToken, OauthProvider provider) {
         return switch (provider) {
             case GOOGLE -> googleService.getOauthUserInfo(socialAccessToken);
+            case KAKAO -> kakaoService.getOauthUserInfo(socialAccessToken);
         };
     }
 }
