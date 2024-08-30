@@ -15,7 +15,7 @@ public enum RecruitStatus {
     DOCUMENT_PASSED("서류 통과"),
     DOCUMENT_REJECTION("서류 탈락"),
     INTERVIEW_PASSED("면접 통과"),
-    INTERVIEW_REJECTION("서류 탈락"),
+    INTERVIEW_REJECTION("면접 탈락"),
     FINAL_ACCEPTANCE("최종 합격"),
     FINAL_REJECTED("최종 탈락");
 

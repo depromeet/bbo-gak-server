@@ -80,7 +80,7 @@ public class RecruitService {
 
     private Map<Boolean, List<Recruit>> partitionRecruits(List<Recruit> recruits) {
         return recruits.stream()
-            .filter(recruit -> !RecruitStatusCategory.isRejectionStatus(
+            .filter(recruit -> !RecruitStatusCategory.isRejectionStatusOrFinalAcceptance(
                 recruit.getRecruitStatus())) // 불합격 상태 필터링
             .collect(Collectors.partitioningBy(this::isNeedsScheduleUpdate));
     }
