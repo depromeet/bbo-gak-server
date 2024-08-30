@@ -7,6 +7,7 @@ import com.server.bbo_gak.domain.card.dto.response.TagGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.Tag;
+import com.server.bbo_gak.domain.user.entity.Job;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
@@ -27,7 +28,7 @@ public class TagService {
     @Transactional(readOnly = true)
     public List<TagGetResponse> getAllTagList(User user) {
 
-        return tagRepository.findAllByJob(user.getJob()).stream()
+        return tagRepository.findAllByJobIsIn(List.of(user.getJob(), Job.ALL)).stream()
             .map(TagGetResponse::from)
             .toList();
     }
