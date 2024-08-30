@@ -1,7 +1,6 @@
 package com.server.bbo_gak.domain.recruit.service;
 
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
-import com.server.bbo_gak.domain.recruit.dao.RecruitScheduleRepository;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
@@ -30,7 +29,6 @@ public class RecruitService {
     private final RecruitRepository recruitRepository;
     private final SeasonService seasonService;
     private final RecruitScheduleService recruitScheduleService;
-    private final RecruitScheduleRepository recruitScheduleRepository;
 
     public List<RecruitGetResponse> getTotalRecruitList(User user) {
         List<Recruit> recruits = recruitRepository.findAllByUserId(user.getId());
@@ -82,7 +80,7 @@ public class RecruitService {
 
     private Map<Boolean, List<Recruit>> partitionRecruits(List<Recruit> recruits) {
         return recruits.stream()
-            .filter(recruit -> !RecruitStatusCategory.isRejectionStatus(
+            .filter(recruit -> !RecruitStatusCategory.isRejectionStatusOrFinalAcceptance(
                 recruit.getRecruitStatus())) // 불합격 상태 필터링
             .collect(Collectors.partitioningBy(this::isNeedsScheduleUpdate));
     }
@@ -121,7 +119,6 @@ public class RecruitService {
                 RecruitScheduleCreateRequest.of(
                     request.recruitScheduleStage(), request.deadLine())
             );
-            recruitScheduleRepository.save(recruitSchedule);
             recruit.addSchedule(recruitSchedule);
         }
     }
