@@ -48,7 +48,7 @@ public class RecruitService {
     }
 
     public List<RecruitGetTitleListResponse> getRecruitRecent5TitleList(User user) {
-        return recruitRepository.findTop5ByUserIdOrderByCreatedDateAsc(user.getId())
+        return recruitRepository.findTop5ByUserIdOrderByCreatedDateDesc(user.getId())
             .stream()
             .map(RecruitGetTitleListResponse::from)
             .toList();
