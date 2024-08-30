@@ -40,8 +40,11 @@ public class RecruitService {
             .toList();
     }
 
-    public List<RecruitGetTitleListResponse> getRecruitTitleList(User user) {
-        recruitRepository.findAllByUserId(user.getId())
+    public List<RecruitGetTitleListResponse> getRecruitRecent5TitleList(User user) {
+        return recruitRepository.findTop5ByUserIdOrderByCreatedDateAsc(user.getId())
+            .stream()
+            .map(RecruitGetTitleListResponse::from)
+            .toList();
     }
 
     public List<RecruitGetResponse> getRecruitListBySeason(User user, String seasonName) {
