@@ -92,6 +92,7 @@ public class TagControllerTest extends AbstractRestDocsTests {
 
         private MockHttpServletRequestBuilder getRequest() {
             return get(DEFAULT_URL + "/recruits/{recruit-id}/tags", 1L)
+                .queryParam("type", "인터뷰_준비")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
         }
@@ -101,6 +102,9 @@ public class TagControllerTest extends AbstractRestDocsTests {
                 .description("전체 카드 태그 목록").tags("Tag")
                 .pathParameters(
                     parameterWithName("recruit-id").description("recruit-id")
+                )
+                .queryParameters(
+                    parameterWithName("type").description("type")
                 )
                 .responseSchema(Schema.schema("TagGetResponse"))
                 .responseFields(
