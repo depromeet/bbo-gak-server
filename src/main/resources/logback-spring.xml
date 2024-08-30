@@ -1,0 +1,18 @@
+<configuration>
+  <appender class="net.logstash.logback.appender.LogstashTcpSocketAppender" name="LOGSTASH">
+    <!-- Logstash가 수신할 호스트와 포트 -->
+    <destination>dev.bbogak.com:5000</destination>
+
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+  </appender>
+
+  <!-- 로그 레벨 설정 (INFO_LOG) -->
+  <logger level="DEBUG" name="INFO_LOG">
+    <appender-ref ref="LOGSTASH"/>
+  </logger>
+
+  <!-- ROOT 로거에 대한 설정 -->
+  <root level="INFO">
+    <appender-ref ref="LOGSTASH"/>
+  </root>
+</configuration>
