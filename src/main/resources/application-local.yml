@@ -19,7 +19,7 @@ cors-allowed-origins:
   http://118.67.129.12,
   https://bbogak.com,
   https://www.bbogak.com,
-  https://dev.bbogak.com
+  https://dev.bbogak.com,
   https://web-dev.bbogak.com
 
 
