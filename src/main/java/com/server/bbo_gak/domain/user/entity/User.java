@@ -40,16 +40,24 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Job job;
 
+    @Enumerated(EnumType.STRING)
+    private OnboardStatus onboardStatus;
+
     // User 생성 팩토리 메서드
     public static User from(OauthInfo oauthInfo) {
         return User.builder()
             .role(UserRole.USER)
             .oauthInfo(oauthInfo)
             .job(Job.UNDEFINE)
+            .onboardStatus(OnboardStatus.NOT_STARTED)
             .build();
     }
 
     public void updateJob(Job job) {
         this.job = job;
+    }
+
+    public void updateOnboardStatus(OnboardStatus onboardStatus) {
+        this.onboardStatus = onboardStatus;
     }
 }
