@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,9 +32,10 @@ public class TagController {
     @GetMapping("/recruits/{recruit-id}/tags")
     public ResponseEntity<List<TagGetResponse>> getAllRecruitsTagList(
         @AuthUser User user,
-        @PathVariable("recruit-id") Long recruitId
+        @PathVariable("recruit-id") Long recruitId,
+        @RequestParam("type") String type
     ) {
-        return ResponseEntity.ok(tagService.getAllRecruitsTagList(user, recruitId));
+        return ResponseEntity.ok(tagService.getAllRecruitsTagList(user, recruitId, type));
     }
 
     @GetMapping("/cards/{card-id}/tags")
