@@ -40,13 +40,6 @@ public class RecruitService {
             .toList();
     }
 
-    public List<RecruitGetTitleListResponse> getRecruitRecent5TitleList(User user) {
-        return recruitRepository.findTop5ByUserIdOrderByCreatedDateAsc(user.getId())
-            .stream()
-            .map(RecruitGetTitleListResponse::from)
-            .toList();
-    }
-
     public List<RecruitGetResponse> getRecruitListBySeason(User user, String seasonName) {
         Season season = seasonService.getSeasonByName(user, seasonName);
         return recruitRepository.findAllByUserIdAndSeason(user.getId(), season).stream()
@@ -54,6 +47,12 @@ public class RecruitService {
             .toList();
     }
 
+    public List<RecruitGetTitleListResponse> getRecruitRecent5TitleList(User user) {
+        return recruitRepository.findTop5ByUserIdOrderByCreatedDateAsc(user.getId())
+            .stream()
+            .map(RecruitGetTitleListResponse::from)
+            .toList();
+    }
 
     // TODO: 진행중인 공고는 일정등록이 안된 것을 우선으로 그 이후에는 RecruitSchedule이 현재와 가까운 순으로 정렬한다.
     public List<RecruitGetResponse> getProgressingRecruitList(User user) {
