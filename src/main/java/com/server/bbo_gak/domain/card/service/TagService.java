@@ -7,6 +7,9 @@ import com.server.bbo_gak.domain.card.dto.response.TagGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.Tag;
+import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
+import com.server.bbo_gak.domain.recruit.entity.Recruit;
+import com.server.bbo_gak.domain.user.entity.Job;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
@@ -23,11 +26,25 @@ public class TagService {
     private final CardRepository cardRepository;
     private final TagRepository tagRepository;
     private final CardTagRepository cardTagRepository;
+    private final RecruitRepository recruitRepository;
 
     @Transactional(readOnly = true)
     public List<TagGetResponse> getAllTagList(User user) {
 
-        return tagRepository.findAllByJob(user.getJob()).stream()
+        return tagRepository.findAllByJobIsIn(List.of(user.getJob(), Job.ALL)).stream()
+            .map(TagGetResponse::from)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TagGetResponse> getAllRecruitsTagList(User user, Long recruitId) {
+
+        Recruit recruit = recruitRepository.findByUserIdAndId(user.getId(), recruitId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.RECRUIT_NOT_FOUND));
+
+        return recruit.getCardList().stream()
+            .flatMap(card -> card.getCardTagList().stream().map(CardTag::getTag))
+            .distinct()
             .map(TagGetResponse::from)
             .toList();
     }

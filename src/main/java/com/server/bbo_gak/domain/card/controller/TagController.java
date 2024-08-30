@@ -28,6 +28,14 @@ public class TagController {
         return ResponseEntity.ok(tagService.getAllTagList(user));
     }
 
+    @GetMapping("/recruits/{recruit-id}/tags")
+    public ResponseEntity<List<TagGetResponse>> getAllRecruitsTagList(
+        @AuthUser User user,
+        @PathVariable("recruit-id") Long recruitId
+    ) {
+        return ResponseEntity.ok(tagService.getAllRecruitsTagList(user, recruitId));
+    }
+
     @GetMapping("/cards/{card-id}/tags")
     public ResponseEntity<List<TagGetResponse>> getcCardTagList(
         @AuthUser User user,
