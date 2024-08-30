@@ -36,23 +36,25 @@ public class GoogleService implements OauthService {
         return new OauthUserInfoResponse(response.id(), response.email(), response.name(), GOOGLE);
     }
 
-    private GoogleOauthUserInfoResponse getGoogleOauthUserInfo(String accessToken){
+    private GoogleOauthUserInfoResponse getGoogleOauthUserInfo(String accessToken) {
         try {
             RestClient restClient = RestClient.create();
             return restClient.get()
-                    .uri(GOOGLE_USER_INFO_URI)
-                    .header(AUTHORIZATION, TOKEN_PREFIX + accessToken)
-                    .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError,
-                            (googleRequest, googleResponse) -> {
-                                throw new BusinessException("Client error: " + googleResponse.getStatusCode(), AUTH_GET_USER_INFO_FAILED);
-                            })
-                    .onStatus(HttpStatusCode::is5xxServerError, (googleRequest, googleResponse) -> {
-                        throw new BusinessException("Server error: " + googleResponse.getStatusCode(), AUTH_GET_USER_INFO_FAILED);
+                .uri(GOOGLE_USER_INFO_URI)
+                .header(AUTHORIZATION, TOKEN_PREFIX + accessToken)
+                .header("Content-type", "application/x-www-form-urlencoded;charset=utf-8")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError,
+                    (googleRequest, googleResponse) -> {
+                        throw new BusinessException("Client error: " + googleResponse.getStatusCode(),
+                            AUTH_GET_USER_INFO_FAILED);
                     })
-                    .body(GoogleOauthUserInfoResponse.class);
-        }  catch (RestClientException e) { // RestClient 관련 에러
+                .onStatus(HttpStatusCode::is5xxServerError, (googleRequest, googleResponse) -> {
+                    throw new BusinessException("Server error: " + googleResponse.getStatusCode(),
+                        AUTH_GET_USER_INFO_FAILED);
+                })
+                .body(GoogleOauthUserInfoResponse.class);
+        } catch (RestClientException e) { // RestClient 관련 에러
             throw new BusinessException("RestClientException: " + e.getMessage(), AUTH_GET_USER_INFO_FAILED);
         } catch (Exception e) { // 그 외 일반적인 예외
             throw new BusinessException("Unexpected error: " + e.getMessage(), AUTH_GET_USER_INFO_FAILED);
@@ -60,7 +62,7 @@ public class GoogleService implements OauthService {
     }
 
     // 프론트와 연결끝나면 지워도 됨.
-    public String getToken(String code) {
+    public String getGoogleToken(String code) {
 
         Map<String, String> params = new LinkedHashMap<>();
         params.put("client_id", googleOAuthConfig.getGoogleClientId());
@@ -79,4 +81,6 @@ public class GoogleService implements OauthService {
         assert response != null;
         return response.accessToken();
     }
+
+
 }

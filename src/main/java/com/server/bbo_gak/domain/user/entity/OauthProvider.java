@@ -5,7 +5,8 @@ import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import java.util.Arrays;
 
 public enum OauthProvider {
-    GOOGLE;
+    GOOGLE,
+    KAKAO;
 
     public static OauthProvider findByName(String name) {
         return Arrays.stream(OauthProvider.values())
