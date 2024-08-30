@@ -1,7 +1,9 @@
 package com.server.bbo_gak.domain.user.controller;
 
 import com.server.bbo_gak.domain.user.dto.request.UserJobUpdateRequest;
+import com.server.bbo_gak.domain.user.dto.request.UserOnboardStatusUpdateRequest;
 import com.server.bbo_gak.domain.user.dto.response.UserInfoResponse;
+import com.server.bbo_gak.domain.user.dto.response.UserOnboardStatusGetResponse;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.domain.user.service.UserService;
 import com.server.bbo_gak.global.annotation.AuthUser;
@@ -31,6 +33,22 @@ public class UserController {
         @RequestBody UserJobUpdateRequest request
     ) {
         userService.updateUserJob(user, request.job());
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/onboard-status")
+    public ResponseEntity<UserOnboardStatusGetResponse> getMemberOnboardStatus(
+        @AuthUser User user
+    ) {
+        return ResponseEntity.ok(userService.getUserOnboardStatus(user));
+    }
+
+    @PutMapping("/onboard-status")
+    public ResponseEntity<Void> updateMemberOnboardStatus(
+        @AuthUser User user,
+        @RequestBody UserOnboardStatusUpdateRequest request
+    ) {
+        userService.updateUserOnboardStatus(user, request.onboardStatus());
         return ResponseEntity.ok(null);
     }
 
