@@ -56,7 +56,7 @@ public class UserControllerTest extends AbstractRestDocsTests {
       mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/onboard-status", null, HttpMethod.GET,
               objectMapper))
           .andExpect(status().isOk())
-          .andDo(restDocsFactory.getSuccessResource("[온보딩상태_조회] 성공", "온보딩상태 조회", "user", null, response));
+          .andDo(restDocsFactory.getSuccessResource("[온보딩상태_조회] 성공-온보딩 완료 상태", "온보딩상태 조회", "user", null, response));
 
     }
 
@@ -70,7 +70,7 @@ public class UserControllerTest extends AbstractRestDocsTests {
       mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/onboard-status", null, HttpMethod.GET,
               objectMapper))
           .andExpect(status().isOk())
-          .andDo(restDocsFactory.getSuccessResource("[온보딩상태_조회] 성공", "온보딩상태 조회", "user", null, response));
+          .andDo(restDocsFactory.getSuccessResource("[온보딩상태_조회] 성공-온보딩 미완료 상태", "온보딩상태 조회", "user", null, response));
 
     }
   }
