@@ -23,3 +23,8 @@ management:
     health:
       enabled: true
 
+cors-allowed-origins:
+  https://bbogak.com,
+  https://www.bbogak.com,
+  https://dev.bbogak.com
+  https://web-dev.bbogak.com

@@ -10,3 +10,14 @@ logging:
   level:
     org.springframework.orm.jpa: INFO
     org.springframework.transaction: INFO
+
+cors-allowed-origins:
+  http://localhost:8080,
+  http://localhost:3000,
+  http://114.70.23.79:8080,
+  http://52.65.6.74:8080,
+  http://118.67.129.12,
+  https://bbogak.com,
+  https://www.bbogak.com,
+  https://dev.bbogak.com
+  https://web-dev.bbogak.com

@@ -6,6 +6,7 @@ import com.server.bbo_gak.global.security.jwt.filter.JwtExceptionFilter;
 import com.server.bbo_gak.global.security.jwt.service.JwtTokenService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final JwtTokenService jwtTokenService;
+
     private String[] allowUrls = {"/", "/api/v1/users/test/login", "/docs/**", "/v3/**", "/favicon.ico",
         "/api/v1/users/refreshToken", "/api/v1/users/social-login", "/api/v1/users/test/**",
         "/api/docs/**", "/api/v3/**", "/api/health-check/**"};
+
+    @Value("${cors-allowed-origins}")
+    private List<String> corsAllowedOrigins;
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -63,10 +68,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(
-            List.of("http://114.70.23.79:8080", "http://localhost:8080", "http://52.65.6.74:8080",
-                "http://localhost:3000", "http://118.67.129.12", "https://bbogak.com", "https://www.bbogak.com",
-                "https://dev.bbogak.com"));
+        configuration.setAllowedOrigins(corsAllowedOrigins);
         configuration.addAllowedMethod("*");
         configuration.setAllowedHeaders(List.of("*")); // 허용할 헤더
         configuration.setAllowCredentials(true);
