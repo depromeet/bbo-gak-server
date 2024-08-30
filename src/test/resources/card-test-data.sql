@@ -59,7 +59,7 @@ VALUES (8, 'INTERVIEW_PREPARING', 4, false, '2024-07-24 21:26:28.000000', '2024-
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (9, 'ASSIGNMENT_PREPARING', 4, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
-VALUES (10, 'INTERVIEW_PREPARING', 5, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+VALUES (10, 'COPY_FROM_MY_INFO', 5, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (11, 'INTERVIEW_PREPARING', 6, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)

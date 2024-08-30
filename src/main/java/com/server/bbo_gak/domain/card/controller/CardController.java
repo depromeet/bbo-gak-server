@@ -11,6 +11,7 @@ import com.server.bbo_gak.domain.card.dto.response.CardTypeCountGetResponse;
 import com.server.bbo_gak.domain.card.service.CardService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +58,7 @@ public class CardController {
     @PostMapping("/card")
     public ResponseEntity<CardCreateResponse> createCard(
         @AuthUser User user,
-        @RequestBody CardCreateRequest cardCreateRequest) {
+        @RequestBody @Valid CardCreateRequest cardCreateRequest) {
 
         return ResponseEntity.ok(cardService.createCard(user, cardCreateRequest));
     }

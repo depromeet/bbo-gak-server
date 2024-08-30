@@ -24,8 +24,10 @@ public class CardInRecruitController {
     private final CardInRecruitService cardInRecruitService;
 
     @GetMapping("/recruits/{recruit-id}/cards/type-count")
-    public ResponseEntity<CardTypeCountInRecruitGetResponse> getCardTypeCounts(@AuthUser User user) {
-        return ResponseEntity.ok(cardInRecruitService.getCardTypeCountsInRecruit(user));
+    public ResponseEntity<CardTypeCountInRecruitGetResponse> getCardTypeCounts(
+        @AuthUser User user,
+        @PathVariable("recruit-id") Long recruitId) {
+        return ResponseEntity.ok(cardInRecruitService.getCardTypeCountsInRecruit(user, recruitId));
     }
 
     @GetMapping("/recruits/{recruit-id}/cards")

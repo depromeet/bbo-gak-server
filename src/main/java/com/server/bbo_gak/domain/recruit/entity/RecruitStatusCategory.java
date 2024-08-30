@@ -25,7 +25,7 @@ public enum RecruitStatusCategory {
 
     private final List<RecruitStatus> statuses;
 
-    public static boolean isRejectionStatus(RecruitStatus status) {
-        return REJECTION_STATUS.getStatuses().contains(status);
+    public static boolean isRejectionStatusOrFinalAcceptance(RecruitStatus status) {
+        return REJECTION_STATUS.getStatuses().contains(status) || RecruitStatus.FINAL_ACCEPTANCE.equals(status);
     }
 }

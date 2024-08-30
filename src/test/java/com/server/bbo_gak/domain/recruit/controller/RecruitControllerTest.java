@@ -19,6 +19,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateStatusRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitUpdateTitleRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetTitleListResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitScheduleGetResponse;
 import com.server.bbo_gak.domain.recruit.entity.RecruitScheduleStage;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
@@ -128,6 +129,29 @@ public class RecruitControllerTest extends AbstractRestDocsTests {
                 .andExpect(status().isNotFound())
                 .andDo(restDocsFactory.getFailureResource("[PATCH] 분기 수정 실패", "Recruit", request));
         }
+    }
+
+    @Nested
+    class 공고타이틀_리스트_조회 {
+
+        @Test
+        public void 성공() throws Exception {
+
+            RecruitGetTitleListResponse response = RecruitGetTitleListResponse.builder()
+                .id(1L)
+                .title("공고")
+                .build();
+
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/titles", null, HttpMethod.GET, objectMapper,
+                        1L))
+                .andExpect(status().isOk())
+                .andDo(
+                    restDocsFactory.getSuccessResourceList("[GET] 공고 타이틀 최신순 5개 조회", "공고 타이틀 최신순 5개 가져오기", "Recruit",
+                        List.of(),
+                        List.of(response)));
+        }
+
     }
 
     @Nested

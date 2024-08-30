@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    List<Tag> findAllByJob(Job job);
+    List<Tag> findAllByJobIsIn(List<Job> jobList);
 
     List<Tag> findAllByIdIsNotIn(List<Long> idList);
 

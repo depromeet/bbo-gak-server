@@ -13,7 +13,8 @@ import lombok.Builder;
 public record CardTypeCountInRecruitGetResponse(
     Long 서류_준비,
     Long 과제_준비,
-    Long 인터뷰_준비
+    Long 인터뷰_준비,
+    Long 내_정보_복사
 ) {
 
     public static CardTypeCountInRecruitGetResponse from(List<Card> cards) {
@@ -26,6 +27,7 @@ public record CardTypeCountInRecruitGetResponse(
             .서류_준비(cardTypeValueCountMap.getOrDefault(CardTypeValue.DOCUMENT_PREPARING, 0L))
             .과제_준비(cardTypeValueCountMap.getOrDefault(CardTypeValue.ASSIGNMENT_PREPARING, 0L))
             .인터뷰_준비(cardTypeValueCountMap.getOrDefault(CardTypeValue.INTERVIEW_PREPARING, 0L))
+            .내_정보_복사(cardTypeValueCountMap.getOrDefault(CardTypeValue.COPY_FROM_MY_INFO, 0L))
             .build();
     }
 

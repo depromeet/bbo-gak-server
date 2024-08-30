@@ -20,7 +20,7 @@ public class CardDao {
     private final JPAQueryFactory query;
 
     public List<Card> findAllByUserIdAndCardTypeValueList(User user, CardTypeValue[] cardTypeValueList,
-        boolean isRecruit) {
+        Long recruitId) {
 
         QCard qCard = QCard.card;
         QCardType qCardType = QCardType.cardType;
@@ -29,7 +29,7 @@ public class CardDao {
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
                 .and(qCardType.cardTypeValue.in(cardTypeValueList))
-                .and(createRecruitBooleanBuilder(qCard, isRecruit)))
+                .and(createRecruitBooleanBuilder(qCard, recruitId)))
             .distinct()
             .fetch();
     }
@@ -49,25 +49,14 @@ public class CardDao {
             .fetch();
     }
 
-    private BooleanBuilder createRecruitBooleanBuilder(QCard qCard, boolean isRecruit) {
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (isRecruit) {
-            return builder.and(qCard.recruit.isNotNull());
-        }
-
-        return builder.and(qCard.recruit.isNull());
-    }
-
     private BooleanBuilder createRecruitBooleanBuilder(QCard qCard, Long recruitId) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
         if (recruitId == null) {
-            return builder.and(qCard.recruit.isNull()).and(qCard.copyFlag.isFalse());
+            return null;
         }
 
-        return builder.and(qCard.recruit.id.eq(recruitId)).and(qCard.copyFlag.isTrue());
+        return builder.and(qCard.recruit.id.eq(recruitId));
     }
 }

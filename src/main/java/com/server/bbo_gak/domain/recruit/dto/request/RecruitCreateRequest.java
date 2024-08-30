@@ -18,7 +18,7 @@ public record RecruitCreateRequest(
             .season(season)
             .title(title)
             .siteUrl(siteUrl)
-            .recruitStatus(RecruitStatus.APPLICATION_COMPLETED)
+            .recruitStatus(RecruitStatus.PREPARATION_IN_PROGRESS)
             .user(user)
             .build();
     }

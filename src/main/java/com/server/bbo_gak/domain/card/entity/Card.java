@@ -37,7 +37,8 @@ public class Card extends BaseEntity {
     private Long id;
 
     private String title;
-
+    
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime accessTime;
@@ -108,6 +109,11 @@ public class Card extends BaseEntity {
     public void updateContent(String content) {
         this.content = content;
     }
+
+    public void updateRecruit(Recruit recruit) {
+        this.recruit = recruit;
+    }
+
 
     public void updateCardTypeList(List<CardType> cardTypeList) {
         this.cardTypeList = cardTypeList;

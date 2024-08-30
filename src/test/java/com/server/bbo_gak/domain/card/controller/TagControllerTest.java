@@ -75,6 +75,46 @@ public class TagControllerTest extends AbstractRestDocsTests {
         }
     }
 
+    @Nested
+    class 전체_태그_목록_조회_공고에서 {
+
+        @Test
+        @Transactional
+        public void 성공() throws Exception {
+
+            // TEST
+            ResultActions resultActions = mockMvc.perform(getRequest())
+                .andExpect(status().isOk());
+
+            // DOCS
+            resultActions.andDo(document("[전체_태그_목록_조회_공고에서] 성공", resource(getSuccessResponseResource())));
+        }
+
+        private MockHttpServletRequestBuilder getRequest() {
+            return get(DEFAULT_URL + "/recruits/{recruit-id}/tags", 1L)
+                .queryParam("type", "인터뷰_준비")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+        }
+
+        private ResourceSnippetParameters getSuccessResponseResource() {
+            return ResourceSnippetParameters.builder()
+                .description("전체 카드 태그 목록").tags("Tag")
+                .pathParameters(
+                    parameterWithName("recruit-id").description("recruit-id")
+                )
+                .queryParameters(
+                    parameterWithName("type").description("type")
+                )
+                .responseSchema(Schema.schema("TagGetResponse"))
+                .responseFields(
+                    fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
+                    fieldWithPath("[].name").type(JsonFieldType.STRING).description("태그 이름"),
+                    fieldWithPath("[].type").type(JsonFieldType.STRING).description("태그 타입"))
+                .build();
+        }
+    }
+
 
     @Nested
     class 카드_태그_목록_조회 {

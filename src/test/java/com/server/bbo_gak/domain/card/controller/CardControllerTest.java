@@ -28,10 +28,13 @@ import com.server.bbo_gak.domain.card.dto.request.CardCreateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTypeUpdateRequest;
 import com.server.bbo_gak.domain.card.entity.Card;
+import com.server.bbo_gak.domain.card.entity.CardType;
+import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
 import com.server.bbo_gak.global.RestDocsFactory;
 import jakarta.persistence.EntityManager;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +96,11 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .responseSchema(Schema.schema("CardGetResponse"))
                         .responseFields(fieldWithPath("title").type(JsonFieldType.STRING).description("Card 제목"),
                             fieldWithPath("content").type(JsonFieldType.STRING).description("Card 내용"),
+                            fieldWithPath("recruitTitle").type(JsonFieldType.STRING).optional().description("공고 제목"),
                             fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("Card 타입값 리스트"),
+                            fieldWithPath("createdDate").type(JsonFieldType.STRING).description("Card 생성일시"),
                             fieldWithPath("updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
+                            fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING).description("Card 그룹 이름"),
                             fieldWithPath("tagList.[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
                             fieldWithPath("tagList.[].name").type(JsonFieldType.STRING).description("태그 이름"),
                             fieldWithPath("tagList.[].type").type(JsonFieldType.STRING).description("태그 타입"))
@@ -162,21 +168,47 @@ public class CardControllerTest extends AbstractRestDocsTests {
     @Nested
     class 카드_신규_생성 {
 
-        CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
-            "내_정보");
 
         @Test
         @Transactional
         public void 성공() throws Exception {
 
+            CardCreateRequest request = new CardCreateRequest(Arrays.asList("경험_정리"), Arrays.asList(1L, 2L),
+                null, "내_정보");
+
             mockMvc.perform(post(DEFAULT_URL + "/card").contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andDo(document("[create] 카드 신규 생성", preprocessResponse(prettyPrint()),
-                    resource(ResourceSnippetParameters.builder().description("카드 신규 생성").tags("Card")
+                .andExpect(status().isOk()).andDo(document("카드_신규_생성", preprocessResponse(prettyPrint()),
+                    resource(ResourceSnippetParameters.builder().description("카드_신규_생성").tags("Card")
                         .requestSchema(Schema.schema("CardCreateRequest"))
                         .requestFields(
                             fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
                             fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"),
+                            fieldWithPath("recruitId").type(JsonFieldType.NUMBER).description("공고 ID").optional(),
+                            fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING)
+                                .description("카드 타입 그룹값(내_정보 or 공고)")
+                        )
+                        .responseSchema(Schema.schema("CardCreateResponse"))
+                        .responseFields(fieldWithPath("cardId").type(JsonFieldType.NUMBER).description("Card ID"))
+                        .build())));
+        }
+
+        @Test
+        @Transactional
+        public void 성공_공고에서() throws Exception {
+
+            CardCreateRequest request = new CardCreateRequest(Arrays.asList("인터뷰_준비"), Arrays.asList(1L, 2L),
+                1L, "공고");
+
+            mockMvc.perform(post(DEFAULT_URL + "/card").contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andDo(document("카드_신규_생성", preprocessResponse(prettyPrint()),
+                    resource(ResourceSnippetParameters.builder().description("카드_신규_생성").tags("Card")
+                        .requestSchema(Schema.schema("CardCreateRequest"))
+                        .requestFields(
+                            fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("카드 타입값"),
+                            fieldWithPath("tagIdList").type(JsonFieldType.ARRAY).description("태그 ID"),
+                            fieldWithPath("recruitId").type(JsonFieldType.NUMBER).description("공고 ID").optional(),
                             fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING)
                                 .description("카드 타입 그룹값(내_정보 or 공고)")
                         )
@@ -195,7 +227,8 @@ public class CardControllerTest extends AbstractRestDocsTests {
         public void 성공() throws Exception {
 
             String expectedCardTypeValue = "면접_질문";
-            CardTypeUpdateRequest request = new CardTypeUpdateRequest(Arrays.asList(expectedCardTypeValue), "내_정보");
+            CardTypeUpdateRequest request = new CardTypeUpdateRequest(Arrays.asList(expectedCardTypeValue),
+                CardTypeValueGroup.MY_INFO.getValue());
 
             mockMvc.perform(
                     restDocsFactory.createRequest(DEFAULT_URL + "/cards/{card-id}/card-type", request, HttpMethod.PUT,
@@ -210,6 +243,27 @@ public class CardControllerTest extends AbstractRestDocsTests {
             System.out.println(card.getCardTypeList().size());
             assertEquals(expectedCardTypeValue, actualCardTypeValue);
 
+        }
+
+        @Test
+        @Transactional
+        public void 성공_공고에서() throws Exception {
+
+            List<String> expectedCardTypeValue = Arrays.asList("서류_준비", "인터뷰_준비");
+            CardTypeUpdateRequest request = new CardTypeUpdateRequest(expectedCardTypeValue,
+                CardTypeValueGroup.RECRUIT_EXCEPT_COPIED.getValue());
+
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/cards/{card-id}/card-type", request, HttpMethod.PUT,
+                        objectMapper, 1L))
+                .andExpect(status().isOk())
+                .andDo(restDocsFactory.getSuccessResource("[카드_타입_수정] 성공_공고에서", "카드_타입_수정", "Card", request, null));
+
+            Card card = cardRepository.findById(1L).get();
+
+            for (CardType cardType : card.getCardTypeList()) {
+                assertTrue(expectedCardTypeValue.contains(cardType.getCardTypeValue().getValue()));
+            }
         }
     }
 

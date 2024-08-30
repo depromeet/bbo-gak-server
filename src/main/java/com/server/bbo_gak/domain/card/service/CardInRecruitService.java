@@ -50,13 +50,14 @@ public class CardInRecruitService {
     private final CardCopyInfoRepository cardCopyInfoRepository;
     private final TagRepository tagRepository;
 
+    private final CardTypeService cardTypeService;
 
     @Transactional(readOnly = true)
-    public CardTypeCountInRecruitGetResponse getCardTypeCountsInRecruit(User user) {
+    public CardTypeCountInRecruitGetResponse getCardTypeCountsInRecruit(User user, Long recruitId) {
 
         CardTypeValue[] cardTypeValueList = CardTypeValueGroup.RECRUIT.getCardTypeValueList();
 
-        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, true);
+        List<Card> cards = cardDao.findAllByUserIdAndCardTypeValueList(user, cardTypeValueList, recruitId);
 
         return CardTypeCountInRecruitGetResponse.from(cards);
     }
@@ -89,17 +90,16 @@ public class CardInRecruitService {
         Card copiedCard = Card.copyCardFromMyInfo(card, user, recruit);
 
         cardRepository.save(copiedCard);
+
         copyCardDataListFromCard(card, copiedCard);
 
         return new CardCreateResponse(copiedCard.getId());
     }
 
     private void copyCardDataListFromCard(Card card, Card copiedCard) {
+
         saveDataList(card.getCardMemoList(), cardMemoRepository,
             cardMemo -> new CardMemo(copiedCard, cardMemo.getContent()));
-
-        saveDataList(card.getCardTypeList(), cardTypeRepository,
-            cardType -> new CardType(copiedCard, cardType.getCardTypeValue()));
 
         saveDataList(card.getCardTagList(), cardTagRepository,
             cardTag -> new CardTag(copiedCard, cardTag.getTag()));
@@ -107,6 +107,7 @@ public class CardInRecruitService {
         saveDataList(card.getCardImageList(), cardImageRepository,
             cardImage -> CardImage.of(copiedCard, cardImage.getFileName()));
 
+        cardTypeRepository.save(new CardType(copiedCard, CardTypeValue.COPY_FROM_MY_INFO));
         cardCopyInfoRepository.save(new CardCopyInfo(copiedCard));
     }
 

@@ -1,11 +1,11 @@
 package com.server.bbo_gak.domain.auth.controller;
 
 import com.server.bbo_gak.domain.auth.dto.request.LoginRequest;
-import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
 import com.server.bbo_gak.domain.auth.dto.request.RefreshTokenRequest;
+import com.server.bbo_gak.domain.auth.dto.response.LoginResponse;
 import com.server.bbo_gak.domain.auth.service.AuthService;
 import com.server.bbo_gak.domain.auth.service.oauth.GoogleService;
-import com.server.bbo_gak.domain.user.entity.OauthProvider;
+import com.server.bbo_gak.domain.auth.service.oauth.KakaoService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
 import com.server.bbo_gak.global.security.jwt.dto.TokenDto;
@@ -24,15 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final String SOCIAL_TOKEN_NAME = "SOCIAL-AUTH-TOKEN";
     private final AuthService authService;
     private final GoogleService googleService;
-
-    private static final String SOCIAL_TOKEN_NAME = "SOCIAL-AUTH-TOKEN";
+    private final KakaoService kakaoService;
 
     @PostMapping("/social-login")
     public ResponseEntity<LoginResponse> socialLogin(
         @RequestHeader(SOCIAL_TOKEN_NAME) final String socialAccessToken,
-        @RequestParam(name = "provider") OauthProvider provider
+        @RequestParam(name = "provider") String provider
     ) {
         LoginResponse response = authService.socialLogin(socialAccessToken, provider);
         //TODO: 쿠키 만들어서 헤더에 넘겨야함.
@@ -42,9 +42,14 @@ public class AuthController {
     /**
      * 프론트 연결 끝나면 지우기
      */
-    @PostMapping("/test/access-token")
+    @PostMapping("/test/google/access-token")
     public String googleTest(@RequestParam("code") String code) {
-        return googleService.getToken(code);
+        return googleService.getGoogleToken(code);
+    }
+
+    @PostMapping("/test/kakao/access-token")
+    public String kakaoTest(@RequestParam("code") String code) {
+        return kakaoService.getKakaoToken(code);
     }
 
     @PostMapping("/test/login")

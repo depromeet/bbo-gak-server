@@ -6,13 +6,15 @@ import lombok.Builder;
 @Builder
 public record LoginResponse(
     String accessToken,
-    String refreshToken
+    String refreshToken,
+    Boolean isFirstLogin
 ) {
 
-    public static LoginResponse of(TokenDto tokenDto) {
+    public static LoginResponse of(TokenDto tokenDto, Boolean isFirstLogin) {
         return LoginResponse.builder()
             .accessToken(tokenDto.accessToken())
             .refreshToken(tokenDto.refreshToken())
+            .isFirstLogin(isFirstLogin)
             .build();
     }
 }
