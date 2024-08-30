@@ -5,6 +5,7 @@ import com.server.bbo_gak.domain.recruit.dto.request.RecruitCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.request.RecruitScheduleCreateRequest;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetInnerResponse;
 import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetResponse;
+import com.server.bbo_gak.domain.recruit.dto.response.RecruitGetTitleListResponse;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.domain.recruit.entity.RecruitSchedule;
 import com.server.bbo_gak.domain.recruit.entity.RecruitStatus;
@@ -46,6 +47,12 @@ public class RecruitService {
             .toList();
     }
 
+    public List<RecruitGetTitleListResponse> getRecruitRecent5TitleList(User user) {
+        return recruitRepository.findTop5ByUserIdOrderByCreatedDateAsc(user.getId())
+            .stream()
+            .map(RecruitGetTitleListResponse::from)
+            .toList();
+    }
 
     // TODO: 진행중인 공고는 일정등록이 안된 것을 우선으로 그 이후에는 RecruitSchedule이 현재와 가까운 순으로 정렬한다.
     public List<RecruitGetResponse> getProgressingRecruitList(User user) {

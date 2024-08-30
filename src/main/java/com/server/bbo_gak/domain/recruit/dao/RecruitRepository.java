@@ -13,4 +13,6 @@ public interface RecruitRepository extends JpaRepository<Recruit, Long> {
     List<Recruit> findAllByUserId(Long userId);
 
     List<Recruit> findAllByUserIdAndSeason(Long userId, Season season);
+
+    List<Recruit> findTop5ByUserIdOrderByCreatedDateAsc(Long userId);
 }
