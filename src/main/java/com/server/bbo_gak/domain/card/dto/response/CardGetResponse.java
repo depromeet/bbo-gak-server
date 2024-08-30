@@ -12,6 +12,7 @@ import lombok.Builder;
 public record CardGetResponse(
     String title,
     String content,
+    String createdDate,
     String updatedDate,
     String cardTypeValueGroup,
     List<String> cardTypeValueList,
@@ -33,6 +34,7 @@ public record CardGetResponse(
             .content(card.getContent())
             .cardTypeValueGroup(
                 CardTypeValueGroup.findByCardTypeValue(card.getCardTypeList().getFirst().getCardTypeValue()).getValue())
+            .createdDate(card.getCreatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
             .updatedDate(card.getUpdatedDate().format(BaseDateTimeFormatter.getLocalDateTimeFormatter()))
             .cardTypeValueList(cardTypeValueList)
             .tagList(tagGetResponseList)

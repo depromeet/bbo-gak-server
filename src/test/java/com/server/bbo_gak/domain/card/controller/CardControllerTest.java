@@ -97,6 +97,7 @@ public class CardControllerTest extends AbstractRestDocsTests {
                         .responseFields(fieldWithPath("title").type(JsonFieldType.STRING).description("Card 제목"),
                             fieldWithPath("content").type(JsonFieldType.STRING).description("Card 내용"),
                             fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("Card 타입값 리스트"),
+                            fieldWithPath("createdDate").type(JsonFieldType.STRING).description("Card 생성일시"),
                             fieldWithPath("updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
                             fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING).description("Card 그룹 이름"),
                             fieldWithPath("tagList.[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
