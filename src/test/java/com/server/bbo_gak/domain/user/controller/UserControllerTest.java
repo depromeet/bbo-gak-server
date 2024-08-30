@@ -50,7 +50,7 @@ public class UserControllerTest extends AbstractRestDocsTests {
     public void 성공_온보딩_완료_상태() throws Exception {
 
       //given
-      UserOnboardStatusGetResponse response = new UserOnboardStatusGetResponse("온보딩_완료");
+      UserOnboardStatusGetResponse response = new UserOnboardStatusGetResponse(true);
 
       //then
       mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/onboard-status", null, HttpMethod.GET,
@@ -64,7 +64,7 @@ public class UserControllerTest extends AbstractRestDocsTests {
     public void 성공_온보딩_미완료_상태() throws Exception {
 
       //given
-      UserOnboardStatusGetResponse response = new UserOnboardStatusGetResponse("온보딩_미완료");
+      UserOnboardStatusGetResponse response = new UserOnboardStatusGetResponse(false);
 
       //then
       mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/onboard-status", null, HttpMethod.GET,
@@ -82,7 +82,7 @@ public class UserControllerTest extends AbstractRestDocsTests {
     public void 성공() throws Exception {
 
       //given
-      UserOnboardStatusUpdateRequest request = new UserOnboardStatusUpdateRequest("온보딩_완료");
+      UserOnboardStatusUpdateRequest request = new UserOnboardStatusUpdateRequest(true);
 
       //then
       mockMvc.perform(restDocsFactory.createRequest(DEFAULT_URL + "/onboard-status", request, HttpMethod.PUT,

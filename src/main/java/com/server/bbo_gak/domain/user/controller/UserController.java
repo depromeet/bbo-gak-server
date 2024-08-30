@@ -48,7 +48,7 @@ public class UserController {
         @AuthUser User user,
         @RequestBody UserOnboardStatusUpdateRequest request
     ) {
-        userService.updateUserOnboardStatus(user, request.onboardStatus());
+        userService.updateUserOnboardStatus(user, request.isOnboardComplete());
         return ResponseEntity.ok(null);
     }
 

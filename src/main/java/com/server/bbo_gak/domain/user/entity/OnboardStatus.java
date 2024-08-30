@@ -9,14 +9,14 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OnboardStatus {
-    NOT_STARTED("온보딩_미완료"),
-    COMPLETED("온보딩_완료");
+    NOT_STARTED(false),
+    COMPLETED(true);
 
-    private final String value;
+    private final Boolean value; // 온보딩 수행 여부 (true면 온보딩 완료)
 
-    public static OnboardStatus findByValue(String value) {
+    public static OnboardStatus findByValue(Boolean isOnboardComplete) {
         return Arrays.stream(OnboardStatus.values())
-            .filter(onboardStatus -> onboardStatus.getValue().equals(value))
+            .filter(onboardStatus -> onboardStatus.getValue().equals(isOnboardComplete))
             .findFirst()
             .orElseThrow((() -> new NotFoundException(ErrorCode.ONBOARD_STATUS_NOT_FOUND)));
     }

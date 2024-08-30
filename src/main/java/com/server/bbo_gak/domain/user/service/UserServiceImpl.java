@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public void updateUserOnboardStatus(User user, String onboardStatus){
-        user.updateOnboardStatus(OnboardStatus.findByValue(onboardStatus));
+    public void updateUserOnboardStatus(User user, Boolean isOnboardComplete){
+        user.updateOnboardStatus(OnboardStatus.findByValue(isOnboardComplete));
         userRepository.save(user);
     }
 

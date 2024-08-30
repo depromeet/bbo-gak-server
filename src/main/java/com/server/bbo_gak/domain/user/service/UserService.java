@@ -12,7 +12,7 @@ public interface UserService {
 
     void updateUserJob(User user, String job);
 
-    void updateUserOnboardStatus(User user, String onboardStatus);
+    void updateUserOnboardStatus(User user, Boolean isOnboardComplete);
 
     void getUser();
 

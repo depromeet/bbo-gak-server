@@ -33,7 +33,7 @@ public enum ErrorCode {
     //User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
     JOB_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 직업을 찾을 수 없습니다"),
-    ONBOARD_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 온보딩 상태를 찾을 수 없습니다"),
+    ONBOARD_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 온보딩 상태를 찾을 수 없습니다. (잘못된 온보딩 상태를 입력하셨습니다)"),
 
     //Image
     IMAGE_FILE_EXTENSION_NOT_FOUND(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
