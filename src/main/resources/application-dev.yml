@@ -8,8 +8,20 @@ spring:
 
 logging:
   level:
-    org.springframework.orm.jpa: INFO
-    org.springframework.transaction: INFO
+    root: info
+    org.springframework.security: info
+
+server:
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /api/health-check
+  endpoint:
+    health:
+      enabled: true
 
 cors-allowed-origins:
   http://localhost:8080,

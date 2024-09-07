@@ -3,11 +3,6 @@ spring:
     activate:
       on-profile: prod
   jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        use_sql_comments: true
     hibernate:
       ddl-auto: update
 
@@ -22,6 +17,11 @@ management:
   endpoint:
     health:
       enabled: true
+
+logging:
+  level:
+    root: error
+    org.springframework.security: error
 
 cors-allowed-origins:
   https://bbogak.com,
