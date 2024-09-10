@@ -59,3 +59,14 @@ sentry:
   dsn: https://b0e61ee9ddb2c12240759111df8b607c@o4505869811908608.ingest.us.sentry.io/4507831077240832
   exception-resolver-order: -2147483647
   tracesSampleRate: 1.0
+
+cors-allowed-origins:
+  http://localhost:8080,
+  http://localhost:3000,
+  http://114.70.23.79:8080,
+  http://52.65.6.74:8080,
+  http://118.67.129.12,
+  https://bbogak.com,
+  https://www.bbogak.com,
+  https://dev.bbogak.com,
+  https://web-dev.bbogak.com

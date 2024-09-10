@@ -3,6 +3,7 @@ package com.server.bbo_gak.global.config;
 import com.server.bbo_gak.global.annotation.AuthenticationArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,12 +21,14 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthenticationArgumentResolver authenticationArgumentResolver;
 
+    @Value("${cors-allowed-origins}")
+    private List<String> corsAllowedOrigins;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
         registry.addMapping("/**")
-            .allowedOrigins("http://114.70.23.79:8080", "http://localhost:8080", "http://52.65.6.74:8080",
-                "http://localhost:3000", "https://www.bbogak.com", "https://dev.bbogak.com")
+            .allowedOrigins(corsAllowedOrigins.toArray(new String[0]))
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true);

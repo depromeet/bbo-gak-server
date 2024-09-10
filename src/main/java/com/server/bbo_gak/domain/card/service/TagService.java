@@ -8,7 +8,6 @@ import com.server.bbo_gak.domain.card.dto.response.TagGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTag;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
-import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.domain.card.entity.Tag;
 import com.server.bbo_gak.domain.recruit.dao.RecruitRepository;
 import com.server.bbo_gak.domain.recruit.entity.Recruit;
@@ -16,7 +15,6 @@ import com.server.bbo_gak.domain.user.entity.Job;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.error.exception.BusinessException;
 import com.server.bbo_gak.global.error.exception.ErrorCode;
-import com.server.bbo_gak.global.error.exception.InvalidValueException;
 import com.server.bbo_gak.global.error.exception.NotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -109,16 +107,4 @@ public class TagService {
             }
         }
     }
-
-    private CardTypeValueGroup getRecruitCardTypeValueGroup(String type) {
-        CardTypeValueGroup cardTypeValueGroup = CardTypeValueGroup.findByCardTypeValue(CardTypeValue.findByValue(type));
-
-        if (cardTypeValueGroup.equals(CardTypeValueGroup.RECRUIT)) {
-            throw new InvalidValueException(ErrorCode.RECRUIT_CARD_TYPE_NOT_MATCHED);
-        }
-
-        return cardTypeValueGroup;
-    }
-
-
 }

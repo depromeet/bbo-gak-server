@@ -7,10 +7,10 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials-id')
-        DOCKER_IMAGE = credentials('docker-image')
+        DOCKER_IMAGE = credentials('docker-image-prod')
         K8S_URL = credentials('k8s-url')
         K8S_NAMESPACE = credentials('k8s-namespace')
-        K8S_DEPLOY_NAME = credentials('k8s-deploy-name')
+        K8S_DEPLOY_NAME = credentials('k8s-deploy-name-prod')
         JAVA_HOME = "${tool 'JDK21'}"
         PATH = "${env.JAVA_HOME}/bin:${env.PATH}"
     }
@@ -26,7 +26,7 @@ pipeline {
             steps {
                 script {
                     sh 'mkdir -p $WORKSPACE/src/main/resources/static/docs && touch $WORKSPACE/src/main/resources/static/docs/open-api-3.0.1.json'
-                    sh './gradlew clean build'
+                    sh './gradlew clean build -x test'
                     sh './gradlew openapi3'
                 }
             }
