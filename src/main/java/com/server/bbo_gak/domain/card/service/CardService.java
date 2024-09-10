@@ -76,15 +76,9 @@ public class CardService {
         List<Card> cards = cardDao.findAllByUserIdAndCardTypeValue(user, CardTypeValue.findByValue(cardTypeValue),
             null);
 
+        // TODO 필터링 로직 디비로 가게 하기
         return cards.stream()
-            .filter(card -> {
-
-                if (tagList.isEmpty()) {
-                    return true;
-                }
-
-                return card.isTagListContain(tagList);
-            })
+            .filter(card -> tagList.isEmpty() || card.isTagListContain(tagList))
             .sorted(Comparator.comparing(Card::getUpdatedDate).reversed())
             .map(card -> CardListGetResponse.of(card, card.getCardTagList()))
             .collect(Collectors.toList());
