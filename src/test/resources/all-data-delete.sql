@@ -1,5 +1,6 @@
 SET REFERENTIAL_INTEGRITY FALSE;
 truncate table card_memo;
+truncate table card_tag_search_history;
 truncate table card_image;
 truncate table notification;
 truncate table recruit_schedule;

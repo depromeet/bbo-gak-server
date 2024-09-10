@@ -1,6 +1,5 @@
 package com.server.bbo_gak.domain.card.dao;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardTypeValue;
@@ -28,8 +27,9 @@ public class CardDao {
         return query.selectFrom(qCard)
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
+                .and(cardTypeValueList.length == 0 ? null : qCardType.cardTypeValue.in(cardTypeValueList))
                 .and(qCardType.cardTypeValue.in(cardTypeValueList))
-                .and(createRecruitBooleanBuilder(qCard, recruitId)))
+                .and(recruitId == null ? null : qCard.recruit.id.eq(recruitId)))
             .distinct()
             .fetch();
     }
@@ -43,20 +43,9 @@ public class CardDao {
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
                 .and(qCardType.cardTypeValue.eq(cardTypeValue))
-                .and(createRecruitBooleanBuilder(qCard, recruitId))
+                .and(recruitId == null ? null : qCard.recruit.id.eq(recruitId))
             )
             .distinct()
             .fetch();
-    }
-
-    private BooleanBuilder createRecruitBooleanBuilder(QCard qCard, Long recruitId) {
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (recruitId == null) {
-            return null;
-        }
-
-        return builder.and(qCard.recruit.id.eq(recruitId));
     }
 }
