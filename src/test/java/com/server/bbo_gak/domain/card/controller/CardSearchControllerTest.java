@@ -64,4 +64,29 @@ public class CardSearchControllerTest extends AbstractRestDocsTests {
                 .build();
         }
     }
+
+    @Nested
+    class 카드_태그_검색_히스토리_조회 {
+
+        @Test
+        @Transactional
+        public void 성공() throws Exception {
+
+            mockMvc.perform(get(DEFAULT_URL + "/search/card-tag-history").contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("[카드_태그_검색_히스토리_조회] 성공", preprocessResponse(prettyPrint()), resource(getBuild())));
+        }
+
+        private ResourceSnippetParameters getBuild() {
+            return ResourceSnippetParameters.builder()
+                .description("카드_태그_검색_히스토리_조회").tags(cardSearch)
+                .responseSchema(Schema.schema("TagGetResponse"))
+                .responseFields(
+                    fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
+                    fieldWithPath("[].name").type(JsonFieldType.STRING).description("태그 이름"),
+                    fieldWithPath("[].type").type(JsonFieldType.STRING).description("태그 타입"))
+                .build();
+        }
+    }
 }

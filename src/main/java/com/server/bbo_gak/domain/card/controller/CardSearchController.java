@@ -1,6 +1,7 @@
 package com.server.bbo_gak.domain.card.controller;
 
 import com.server.bbo_gak.domain.card.dto.response.CardSearchByTagListResponse;
+import com.server.bbo_gak.domain.card.dto.response.TagGetResponse;
 import com.server.bbo_gak.domain.card.service.CardSearchService;
 import com.server.bbo_gak.domain.user.entity.User;
 import com.server.bbo_gak.global.annotation.AuthUser;
@@ -25,5 +26,10 @@ public class CardSearchController {
         @RequestParam(value = "card-type-value-group", required = false) String cardTypeValueGroup,
         @RequestParam(value = "tag-ids") List<Long> tagIdList) {
         return ResponseEntity.ok(cardSearchService.searchCardByTagList(user, cardTypeValueGroup, tagIdList));
+    }
+
+    @GetMapping("/search/card-tag-history")
+    public ResponseEntity<List<TagGetResponse>> getCardTagSearchHistory(@AuthUser User user) {
+        return ResponseEntity.ok(cardSearchService.getCardTagSearchHistoryList(user));
     }
 }
