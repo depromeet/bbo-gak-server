@@ -7,10 +7,9 @@ import com.server.bbo_gak.domain.recruit.entity.Recruit;
 import com.server.bbo_gak.global.utils.BaseDateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import lombok.AccessLevel;
 import lombok.Builder;
 
-@Builder(access = AccessLevel.PRIVATE)
+@Builder
 public record CardGetResponse(
     String title,
     String content,

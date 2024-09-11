@@ -325,28 +325,40 @@ public class RestDocsFactory {
     }
 
     private <T> void generateFieldDescriptors(T dto, String pathPrefix, List<FieldDescriptor> fields) {
+        if (isSimpleType(dto)) {
+            return;
+        }
+
         Field[] declaredFields = dto.getClass().getDeclaredFields();
         for (Field field : declaredFields) {
             field.setAccessible(true);
-            String name = pathPrefix + field.getName();
-            JsonFieldType type = determineFieldType(field.getType());
-            Object value = getFieldValue(dto, field);
+            String fieldPath = pathPrefix + field.getName();
+            JsonFieldType fieldType = determineFieldType(field.getType());
+            Object fieldValue = getFieldValue(dto, field);
 
-            if (type == JsonFieldType.OBJECT) {
-                // 중첩된 객체 처리
-                fields.add(fieldWithPath(name)
-                    .type(JsonFieldType.OBJECT)
-                    .description(field.getName())
-                    .optional());
-                if (value != null) {
-                    generateFieldDescriptors(value, name + ".", fields);
+            FieldDescriptor descriptor = fieldWithPath(fieldPath)
+                .type(fieldType)
+                .description(field.getName())
+                .optional();
+
+            if (fieldType != JsonFieldType.OBJECT && fieldType != JsonFieldType.ARRAY) {
+                descriptor.attributes(
+                    Attributes.key("example").value(fieldValue != null ? fieldValue.toString() : "null"));
+            }
+
+            fields.add(descriptor);
+
+            // 리스트 타입 처리
+            if (fieldType == JsonFieldType.ARRAY && fieldValue instanceof List<?> list) {
+                if (!list.isEmpty()) {
+                    Object firstElement = list.getFirst();
+                    generateFieldDescriptors(firstElement, fieldPath + "[].", fields);
                 }
-            } else {
-                fields.add(fieldWithPath(name)
-                    .type(type)
-                    .description(field.getName())
-                    .optional()
-                    .attributes(Attributes.key("example").value(value != null ? value.toString() : "null")));
+            }
+
+            // 오브젝트 타입 처리
+            if (fieldType == JsonFieldType.OBJECT && fieldValue != null) {
+                generateFieldDescriptors(fieldValue, fieldPath + ".", fields);
             }
         }
     }
@@ -357,6 +369,10 @@ public class RestDocsFactory {
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Failed to access field: " + field.getName(), e);
         }
+    }
+
+    private boolean isSimpleType(Object dto) {
+        return dto instanceof String || dto instanceof Number || dto instanceof Boolean || dto.getClass().isEnum();
     }
 
     private JsonFieldType determineFieldType(Class<?> fieldType) {

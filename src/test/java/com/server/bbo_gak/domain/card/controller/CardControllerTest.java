@@ -27,14 +27,19 @@ import com.server.bbo_gak.domain.card.dto.request.CardContentUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardCreateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTitleUpdateRequest;
 import com.server.bbo_gak.domain.card.dto.request.CardTypeUpdateRequest;
+import com.server.bbo_gak.domain.card.dto.response.CardGetResponse;
+import com.server.bbo_gak.domain.card.dto.response.TagGetResponse;
 import com.server.bbo_gak.domain.card.entity.Card;
 import com.server.bbo_gak.domain.card.entity.CardType;
 import com.server.bbo_gak.domain.card.entity.CardTypeValueGroup;
 import com.server.bbo_gak.global.AbstractRestDocsTests;
 import com.server.bbo_gak.global.RestDocsFactory;
 import jakarta.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,38 +91,52 @@ public class CardControllerTest extends AbstractRestDocsTests {
     @Nested
     class 카드_단건_조회 {
 
+        private CardGetResponse response;
+
+        @BeforeEach
+        void setUp() {
+            TagGetResponse tag1 = TagGetResponse.builder()
+                .id(1L)
+                .name("스프링")
+                .type("역량")
+                .build();
+
+            List<TagGetResponse> tagList = List.of(tag1);
+
+            List<String> cardTypeValueList = List.of("Type1", "Type2");
+
+            CardGetResponse response = CardGetResponse.builder()
+                .title("test_title")
+                .content("test_content")
+                .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .updatedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .recruitTitle("Recruit Title")
+                .cardTypeValueGroup("Type1")
+                .cardTypeValueList(cardTypeValueList)
+                .tagList(tagList)
+                .build();
+        }
+
         @Test
         public void 성공() throws Exception {
-            mockMvc.perform(get(DEFAULT_URL + "/cards/{card-id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andDo(
-                document("[select] 카드 단건 조회", preprocessResponse(prettyPrint()), resource(
-                    ResourceSnippetParameters.builder().description("카드 단건 조회").tags("Card")
-                        .pathParameters(parameterWithName("card-id").description("card-id"))
-                        .responseSchema(Schema.schema("CardGetResponse"))
-                        .responseFields(fieldWithPath("title").type(JsonFieldType.STRING).description("Card 제목"),
-                            fieldWithPath("content").type(JsonFieldType.STRING).description("Card 내용"),
-                            fieldWithPath("recruitTitle").type(JsonFieldType.STRING).optional().description("공고 제목"),
-                            fieldWithPath("cardTypeValueList").type(JsonFieldType.ARRAY).description("Card 타입값 리스트"),
-                            fieldWithPath("createdDate").type(JsonFieldType.STRING).description("Card 생성일시"),
-                            fieldWithPath("updatedDate").type(JsonFieldType.STRING).description("Card 수정일시"),
-                            fieldWithPath("cardTypeValueGroup").type(JsonFieldType.STRING).description("Card 그룹 이름"),
-                            fieldWithPath("tagList.[].id").type(JsonFieldType.NUMBER).description("태그 ID"),
-                            fieldWithPath("tagList.[].name").type(JsonFieldType.STRING).description("태그 이름"),
-                            fieldWithPath("tagList.[].type").type(JsonFieldType.STRING).description("태그 타입"))
-                        .build())));
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/cards/{card-id}", null, HttpMethod.GET, objectMapper,
+                        1L))
+                .andExpect(status().isOk())
+                .andDo(
+                    restDocsFactory.getSuccessResource("[select] 카드 단건 조회", "카드 단건 조회", "Card",
+                        null, response));
         }
 
         @Test
         public void 카드_찾기_실패() throws Exception {
-            mockMvc.perform(get(DEFAULT_URL + "/cards/{card-id}", 9999).contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound()).andDo(
-                document("[select] 카드 찾기 실패", preprocessResponse(prettyPrint()), resource(
-                    ResourceSnippetParameters.builder().description("카드 단건 조회").tags("Card")
-                        .pathParameters(parameterWithName("card-id").description("card-id"))
-                        .responseSchema(Schema.schema("ErrorResponse")).responseFields(
-                            fieldWithPath("message").type(JsonFieldType.STRING).description("Error message"),
-                            fieldWithPath("status").type(JsonFieldType.STRING).description("HTTP status code")).build())));
-
+            mockMvc.perform(
+                    restDocsFactory.createRequest(DEFAULT_URL + "/cards/{card-id}", null, HttpMethod.GET, objectMapper,
+                        9999L))
+                .andExpect(status().isNotFound())
+                .andDo(
+                    restDocsFactory.getFailureResource("[select] 카드 찾기 실패", "Card",
+                        null));
         }
     }
 
