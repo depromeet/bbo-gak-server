@@ -28,7 +28,6 @@ public class CardDao {
             .leftJoin(qCard.cardTypeList, qCardType).fetchJoin()
             .where(qCard.user.id.eq(user.getId())
                 .and(cardTypeValueList.length == 0 ? null : qCardType.cardTypeValue.in(cardTypeValueList))
-                .and(qCardType.cardTypeValue.in(cardTypeValueList))
                 .and(recruitId == null ? null : qCard.recruit.id.eq(recruitId)))
             .distinct()
             .fetch();

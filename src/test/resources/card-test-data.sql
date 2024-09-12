@@ -51,7 +51,7 @@ VALUES (4, 'EXPERIENCE', 2, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (5, 'INTERVIEW_QUESTION', 1, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
-VALUES (6, 'INTERVIEW_QUESTION', 2, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
+VALUES (6, 'PERSONAL_STATEMENT', 3, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)
 VALUES (7, 'DOCUMENT_PREPARING', 4, false, '2024-07-24 21:26:28.000000', '2024-07-24 21:26:28.000000');
 INSERT INTO card_type (card_type_id, card_type_value, card_id, deleted, update_at, created_at)

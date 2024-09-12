@@ -39,7 +39,6 @@ public class CardSearchControllerTest extends AbstractRestDocsTests {
 
             mockMvc.perform(get(DEFAULT_URL + "/search/cards").contentType(MediaType.APPLICATION_JSON)
                     .queryParam("tag-ids", "1,2")
-                    .queryParam("card-type-value-group", "내_정보")
                     .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("[카드_검색_태그_리스트로] 성공", preprocessResponse(prettyPrint()), resource(getBuild())));
@@ -48,8 +47,7 @@ public class CardSearchControllerTest extends AbstractRestDocsTests {
         private ResourceSnippetParameters getBuild() {
             return ResourceSnippetParameters.builder().description("카드_검색_태그_리스트로").tags(cardSearch)
                 .queryParameters(
-                    parameterWithName("tag-ids").description("태그 아이디 리스트"),
-                    parameterWithName("card-type-value-group").description("카드 타입 그룹").optional())
+                    parameterWithName("tag-ids").description("태그 아이디 리스트"))
                 .responseSchema(Schema.schema("CardListGetResponse"))
                 .responseFields(fieldWithPath("[].id").type(JsonFieldType.NUMBER).description("Card ID"),
                     fieldWithPath("[].title").type(JsonFieldType.STRING).description("Card 제목"),
