@@ -23,9 +23,8 @@ public class CardSearchController {
     @GetMapping("/search/cards")
     public ResponseEntity<List<CardSearchByTagListResponse>> searchCardByTagList(
         @AuthUser User user,
-        @RequestParam(value = "card-type-value-group", required = false) String cardTypeValueGroup,
         @RequestParam(value = "tag-ids") List<Long> tagIdList) {
-        return ResponseEntity.ok(cardSearchService.searchCardByTagList(user, cardTypeValueGroup, tagIdList));
+        return ResponseEntity.ok(cardSearchService.searchCardByTagList(user, tagIdList));
     }
 
     @GetMapping("/search/card-tag-history")
