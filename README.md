@@ -13,6 +13,9 @@
 
 ![image](https://github.com/user-attachments/assets/3205444a-237d-42aa-b27c-2fcba4b2bc8e)
 
+#Architecture
+![219](https://github.com/user-attachments/assets/88ff6b38-d1e5-449f-9e97-ccf3c936b607)
+
 
 |[BE 파트장 정상벽](https://github.com/JeongSangByuk)|[BE 개발자 박세준](https://github.com/sejoon00)|[BE 개발자 이준영](https://github.com/lee-june-young)|
 |:--------:|:--------:|:--------:|
