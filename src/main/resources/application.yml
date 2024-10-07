@@ -23,7 +23,6 @@ scheduler:
 
 sentry:
   dsn: ${SENTRY_DSN}
-  exception-resolver-order: -2147483647
   enable-tracing: true
   tracesSampleRate: 1.0
   debug: true
