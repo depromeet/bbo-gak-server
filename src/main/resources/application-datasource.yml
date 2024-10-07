@@ -8,6 +8,7 @@ spring:
     password: ${MYSQL_PASSWORD}
     username: ${MYSQL_USERNAME}
   jpa:
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
